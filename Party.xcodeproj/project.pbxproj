@@ -11,15 +11,28 @@
 		1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B3F25388957008F0F7D /* OnboardingViewController.swift */; };
 		1F710B422538895A008F0F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F710B412538895A008F0F7D /* Assets.xcassets */; };
 		1F710B452538895A008F0F7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F710B432538895A008F0F7D /* LaunchScreen.storyboard */; };
+		1F710B4D25388C98008F0F7D /* UIColor + HexValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B4C25388C98008F0F7D /* UIColor + HexValue.swift */; };
+		1F710B4F25388CBD008F0F7D /* UIView + Borders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B4E25388CBD008F0F7D /* UIView + Borders.swift */; };
+		1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B5025388CD8008F0F7D /* TextField + Padding.swift */; };
+		1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B5125388CD8008F0F7D /* UIViewController.swift */; };
+		1FF469F125388DB600926E82 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF469F025388DB600926E82 /* Colors.swift */; };
+		1FF469F525388E9900926E82 /* ButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF469F425388E9900926E82 /* ButtonView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
 		1F710B3A25388957008F0F7D /* Party.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Party.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F710B3D25388957008F0F7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F710B3F25388957008F0F7D /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		1F710B412538895A008F0F7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F710B442538895A008F0F7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1F710B462538895A008F0F7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F710B4C25388C98008F0F7D /* UIColor + HexValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor + HexValue.swift"; sourceTree = "<group>"; };
+		1F710B4E25388CBD008F0F7D /* UIView + Borders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView + Borders.swift"; sourceTree = "<group>"; };
+		1F710B5025388CD8008F0F7D /* TextField + Padding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextField + Padding.swift"; sourceTree = "<group>"; };
+		1F710B5125388CD8008F0F7D /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		1FF469F025388DB600926E82 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		1FF469F425388E9900926E82 /* ButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,10 +46,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F61CEC42538925D00096D71 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		1F710B3125388957008F0F7D = {
 			isa = PBXGroup;
 			children = (
 				1F710B3C25388957008F0F7D /* Party */,
+				1F61CEC42538925D00096D71 /* Fonts */,
 				1F710B3B25388957008F0F7D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,13 +74,51 @@
 		1F710B3C25388957008F0F7D /* Party */ = {
 			isa = PBXGroup;
 			children = (
-				1F710B3D25388957008F0F7D /* AppDelegate.swift */,
+				1FF469F225388E7100926E82 /* App */,
 				1F710B3F25388957008F0F7D /* OnboardingViewController.swift */,
+				1FF469F625388EA500926E82 /* Custom Views */,
+				1FF469F325388E7800926E82 /* Supporting Files */,
+				1F710B5425388CF2008F0F7D /* Helpers */,
+			);
+			path = Party;
+			sourceTree = "<group>";
+		};
+		1F710B5425388CF2008F0F7D /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				1FF469F025388DB600926E82 /* Colors.swift */,
+				1F710B4C25388C98008F0F7D /* UIColor + HexValue.swift */,
+				1F710B4E25388CBD008F0F7D /* UIView + Borders.swift */,
+				1F710B5125388CD8008F0F7D /* UIViewController.swift */,
+				1F710B5025388CD8008F0F7D /* TextField + Padding.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		1FF469F225388E7100926E82 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				1F710B3D25388957008F0F7D /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		1FF469F325388E7800926E82 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
 				1F710B412538895A008F0F7D /* Assets.xcassets */,
 				1F710B432538895A008F0F7D /* LaunchScreen.storyboard */,
 				1F710B462538895A008F0F7D /* Info.plist */,
 			);
-			path = Party;
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1FF469F625388EA500926E82 /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				1FF469F425388E9900926E82 /* ButtonView.swift */,
+			);
+			path = "Custom Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,6 +192,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F710B3E25388957008F0F7D /* AppDelegate.swift in Sources */,
+				1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */,
+				1FF469F525388E9900926E82 /* ButtonView.swift in Sources */,
+				1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */,
+				1FF469F125388DB600926E82 /* Colors.swift in Sources */,
+				1F710B4D25388C98008F0F7D /* UIColor + HexValue.swift in Sources */,
+				1F710B4F25388CBD008F0F7D /* UIView + Borders.swift in Sources */,
 				1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -200,7 +266,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -254,7 +320,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -270,7 +336,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P4RLTSR7RF;
-				INFOPLIST_FILE = Party/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Party/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -288,7 +355,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P4RLTSR7RF;
-				INFOPLIST_FILE = Party/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Party/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
