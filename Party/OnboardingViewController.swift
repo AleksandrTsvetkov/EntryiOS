@@ -42,6 +42,8 @@ class OnboardingViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private var authViewIsHiddenConstraint: NSLayoutConstraint!
+    private var authViewIsVisibleConstraint: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +66,8 @@ class OnboardingViewController: UIViewController {
         view.addSubview(authView)
         authView.isHidden = true
         
-        
+        authViewIsHiddenConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 500)
+        authViewIsVisibleConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
             exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
@@ -89,7 +92,7 @@ class OnboardingViewController: UIViewController {
             authView.heightAnchor.constraint(equalToConstant: 476),
             authView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             authView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            authViewIsHiddenConstraint,
             
             blurEffectView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -105,6 +108,11 @@ class OnboardingViewController: UIViewController {
     @objc private func buttonViewTapped() {
         blurEffectView.isHidden = false
         authView.isHidden = false
+        self.authViewIsHiddenConstraint.isActive = false
+        self.authViewIsVisibleConstraint.isActive = true
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        })
     }
     
     @objc private func exitButtonTapped() {
@@ -130,23 +138,28 @@ class OnboardingViewController: UIViewController {
         let translation = gesture.translation(in: view)
         if translation.y > 0 {
             self.authView.transform = CGAffineTransform(translationX: 0, y: translation.y)
-            let newAlpha = 1 + translation.y / -200
-            self.authView.alpha = newAlpha < 0 ? 0 : newAlpha
+            let newAlpha = 1 + translation.y / -120
             self.blurEffectView.alpha = newAlpha < 0 ? 0 : newAlpha
         }
     }
     
     private func handlePanEndedState(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.authView.transform = .identity
-            if translation.y > 100 {
+        self.blurEffectView.alpha = 1
+        if translation.y > 120 {
+            self.authViewIsVisibleConstraint.isActive = false
+            self.authViewIsHiddenConstraint.isActive = true
+            self.blurEffectView.isHidden = true
+        }
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.view.layoutIfNeeded()
+        }, completion: { _ in
+            if translation.y > 120 {
                 self.authView.isHidden = true
-                self.blurEffectView.isHidden = true
             }
-            self.authView.alpha = 1
-            self.blurEffectView.alpha = 1
+            self.authView.transform = .identity
         })
+        
     }
 }
 
