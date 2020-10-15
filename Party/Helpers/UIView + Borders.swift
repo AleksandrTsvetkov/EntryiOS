@@ -1,8 +1,8 @@
 //
 //  UIView + Borders.swift
-//  VideoGorod
+//  Party
 //
-//  Created by Александр Цветков on 28.09.2020.
+//  Created by Александр Цветков on 16.10.2020.
 //  Copyright © 2020 Александр Цветков. All rights reserved.
 //
 

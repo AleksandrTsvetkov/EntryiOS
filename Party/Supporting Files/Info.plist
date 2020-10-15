@@ -24,6 +24,8 @@
 	<array>
 		<string>SFProText-Semibold.ttf</string>
 		<string>SFProText-Regular.ttf</string>
+		<string>SFProDisplay-Bold.ttf</string>
+		<string>SFProDisplay-Medium.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

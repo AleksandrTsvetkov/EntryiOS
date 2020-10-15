@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "Technologies and Extensions-Apple ID-Buttons - Logo-only-Sign in with Apple-White.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Technologies and Extensions-Apple ID-Buttons - Logo-only-Sign in with Apple-White@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Technologies and Extensions-Apple ID-Buttons - Logo-only-Sign in with Apple-White@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

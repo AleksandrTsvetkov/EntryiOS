@@ -1,0 +1,65 @@
+//
+//  AuthTypeView.swift
+//  Party
+//
+//  Created by Александр Цветков on 15.10.2020.
+//  Copyright © 2020 Александр Цветков. All rights reserved.
+//
+
+import UIKit
+
+class AuthView: UIView {
+    
+    private let label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.font = UIFont(name: "SFProDisplay-Bold", size: 22)
+        label.textColor = .white
+        label.text = "How do you wish to proceed?"
+        return label
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    convenience init() {
+        self.init(frame: .zero)
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = Colors.lightBlack.getValue()
+        setupViews()
+    }
+    
+    private func setupViews() {
+        let stackView = UIStackView()
+        for i in 0...4 {
+            let view = AuthTypeView(type: AuthType.allCases[i])
+            stackView.addArrangedSubview(view)
+        }
+        stackView.axis = .vertical
+        stackView.spacing = 14
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(stackView)
+        addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.heightAnchor.constraint(equalToConstant: 26),
+            label.topAnchor.constraint(equalTo: self.topAnchor, constant: 40),
+            label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            label.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20),
+            label.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -20),
+            label.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -33),
+            
+            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
+            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+        ])
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}

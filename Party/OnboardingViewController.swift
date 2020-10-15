@@ -34,14 +34,25 @@ class OnboardingViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+    private let authView = AuthView()
+    private let blurEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupViews()
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
-        buttonView.addGestureRecognizer(tap)
+        let tap0 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        buttonView.addGestureRecognizer(tap0)
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(exitButtonTapped))
+        exitButton.addGestureRecognizer(tap1)
+        authView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
     }
 
     private func setupViews() {
@@ -49,6 +60,10 @@ class OnboardingViewController: UIViewController {
         view.addSubview(whyImageView)
         view.addSubview(exitButton)
         view.addSubview(buttonView)
+        view.addSubview(blurEffectView)
+        view.addSubview(authView)
+        authView.isHidden = true
+        
         
         NSLayoutConstraint.activate([
             exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
@@ -57,7 +72,7 @@ class OnboardingViewController: UIViewController {
             exitButton.widthAnchor.constraint(equalToConstant: 30),
             
             whyImageView.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 41),
-            whyImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 33),
+            whyImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             whyImageView.heightAnchor.constraint(equalToConstant: 36),
             whyImageView.widthAnchor.constraint(equalToConstant: 186),
             
@@ -69,12 +84,69 @@ class OnboardingViewController: UIViewController {
             buttonView.heightAnchor.constraint(equalToConstant: 50),
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            buttonView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
+            buttonView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            
+            authView.heightAnchor.constraint(equalToConstant: 476),
+            authView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            authView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            blurEffectView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            blurEffectView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
+    override func viewWillLayoutSubviews() {
+        authView.roundCorners(corners: [.topLeft, .topRight], radius: 10)
+    }
+    
     @objc private func buttonViewTapped() {
-        
+        blurEffectView.isHidden = false
+        authView.isHidden = false
+    }
+    
+    @objc private func exitButtonTapped() {
+        blurEffectView.isHidden = true
+        authView.isHidden = true
+    }
+    
+    @objc private func handlePan(gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            break
+        case .changed:
+            handlePanChangedState(gesture: gesture)
+        case .ended:
+            handlePanEndedState(gesture: gesture)
+        default:
+            break
+        }
+    }
+    
+    //MARK: HANDLE PAN GESTURES
+    private func handlePanChangedState(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        if translation.y > 0 {
+            self.authView.transform = CGAffineTransform(translationX: 0, y: translation.y)
+            let newAlpha = 1 + translation.y / -200
+            self.authView.alpha = newAlpha < 0 ? 0 : newAlpha
+            self.blurEffectView.alpha = newAlpha < 0 ? 0 : newAlpha
+        }
+    }
+    
+    private func handlePanEndedState(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.authView.transform = .identity
+            if translation.y > 100 {
+                self.authView.isHidden = true
+                self.blurEffectView.isHidden = true
+            }
+            self.authView.alpha = 1
+            self.blurEffectView.alpha = 1
+        })
     }
 }
 

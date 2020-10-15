@@ -38,7 +38,6 @@ class ButtonView: UIView {
     convenience init(color: UIColor, title: String, left: CGFloat, right: CGFloat) {
         let frame = CGRect(x: 0, y: 0, width: 0, height: 50)
         self.init(frame: frame)
-        
         translatesAutoresizingMaskIntoConstraints = false
         label.text = title
         setupViews(color: color, left: left, right: right)

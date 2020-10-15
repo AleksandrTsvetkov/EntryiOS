@@ -8,7 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		1F61CEC62538D33E00096D71 /* FeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC52538D33E00096D71 /* FeatureView.swift */; };
-		1F61CEC92538E71200096D71 /* AuthTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC82538E71200096D71 /* AuthTypeView.swift */; };
+		1F61CEC92538E71200096D71 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC82538E71200096D71 /* AuthView.swift */; };
+		1F61CECB2538F0F100096D71 /* AuthTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CECA2538F0F100096D71 /* AuthTypeView.swift */; };
+		1F61CECF2538F7D500096D71 /* UIView + Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CECE2538F7D500096D71 /* UIView + Corners.swift */; };
+		1F61CED02539002100096D71 /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F61CECC2538F5BC00096D71 /* SFProDisplay-Bold.ttf */; };
+		1F61CED12539002500096D71 /* SFProDisplay-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F61CECD2538F5BC00096D71 /* SFProDisplay-Medium.ttf */; };
+		1F61CED22539002700096D71 /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F61CEC72538D4E900096D71 /* SFProText-Regular.ttf */; };
+		1F61CED32539002900096D71 /* SFProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */; };
 		1F710B3E25388957008F0F7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B3D25388957008F0F7D /* AppDelegate.swift */; };
 		1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B3F25388957008F0F7D /* OnboardingViewController.swift */; };
 		1F710B422538895A008F0F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F710B412538895A008F0F7D /* Assets.xcassets */; };
@@ -25,7 +31,11 @@
 		1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
 		1F61CEC52538D33E00096D71 /* FeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureView.swift; sourceTree = "<group>"; };
 		1F61CEC72538D4E900096D71 /* SFProText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Regular.ttf"; sourceTree = "<group>"; };
-		1F61CEC82538E71200096D71 /* AuthTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTypeView.swift; sourceTree = "<group>"; };
+		1F61CEC82538E71200096D71 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		1F61CECA2538F0F100096D71 /* AuthTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTypeView.swift; sourceTree = "<group>"; };
+		1F61CECC2538F5BC00096D71 /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
+		1F61CECD2538F5BC00096D71 /* SFProDisplay-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Medium.ttf"; sourceTree = "<group>"; };
+		1F61CECE2538F7D500096D71 /* UIView + Corners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Corners.swift"; sourceTree = "<group>"; };
 		1F710B3A25388957008F0F7D /* Party.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Party.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F710B3D25388957008F0F7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F710B3F25388957008F0F7D /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
@@ -54,6 +64,8 @@
 		1F61CEC42538925D00096D71 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				1F61CECC2538F5BC00096D71 /* SFProDisplay-Bold.ttf */,
+				1F61CECD2538F5BC00096D71 /* SFProDisplay-Medium.ttf */,
 				1F61CEC72538D4E900096D71 /* SFProText-Regular.ttf */,
 				1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */,
 			);
@@ -93,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				1FF469F025388DB600926E82 /* Colors.swift */,
+				1F61CECE2538F7D500096D71 /* UIView + Corners.swift */,
 				1F710B4C25388C98008F0F7D /* UIColor + HexValue.swift */,
 				1F710B4E25388CBD008F0F7D /* UIView + Borders.swift */,
 				1F710B5125388CD8008F0F7D /* UIViewController.swift */,
@@ -124,7 +137,8 @@
 			children = (
 				1FF469F425388E9900926E82 /* ButtonView.swift */,
 				1F61CEC52538D33E00096D71 /* FeatureView.swift */,
-				1F61CEC82538E71200096D71 /* AuthTypeView.swift */,
+				1F61CEC82538E71200096D71 /* AuthView.swift */,
+				1F61CECA2538F0F100096D71 /* AuthTypeView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -187,8 +201,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F61CED02539002100096D71 /* SFProDisplay-Bold.ttf in Resources */,
+				1F61CED12539002500096D71 /* SFProDisplay-Medium.ttf in Resources */,
 				1F710B422538895A008F0F7D /* Assets.xcassets in Resources */,
+				1F61CED22539002700096D71 /* SFProText-Regular.ttf in Resources */,
 				1F710B452538895A008F0F7D /* LaunchScreen.storyboard in Resources */,
+				1F61CED32539002900096D71 /* SFProText-Semibold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,10 +218,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F710B3E25388957008F0F7D /* AppDelegate.swift in Sources */,
+				1F61CECF2538F7D500096D71 /* UIView + Corners.swift in Sources */,
 				1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */,
 				1FF469F525388E9900926E82 /* ButtonView.swift in Sources */,
+				1F61CECB2538F0F100096D71 /* AuthTypeView.swift in Sources */,
 				1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */,
-				1F61CEC92538E71200096D71 /* AuthTypeView.swift in Sources */,
+				1F61CEC92538E71200096D71 /* AuthView.swift in Sources */,
 				1FF469F125388DB600926E82 /* Colors.swift in Sources */,
 				1F710B4D25388C98008F0F7D /* UIColor + HexValue.swift in Sources */,
 				1F61CEC62538D33E00096D71 /* FeatureView.swift in Sources */,
