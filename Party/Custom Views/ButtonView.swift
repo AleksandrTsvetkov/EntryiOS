@@ -13,6 +13,7 @@ class ButtonView: UIView {
     private let backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
         return view
     }()
     private let label: UILabel = {
@@ -34,19 +35,35 @@ class ButtonView: UIView {
         super.init(frame: frame)
     }
     
-    convenience init(backgroundColor: UIColor, title: String, left: CGFloat, right: CGFloat) {
+    convenience init(color: UIColor, title: String, left: CGFloat, right: CGFloat) {
         let frame = CGRect(x: 0, y: 0, width: 0, height: 50)
         self.init(frame: frame)
-        setupViews()
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        label.text = title
+        setupViews(color: color, left: left, right: right)
     }
     
-    private func setupViews() {
+    private func setupViews(color: UIColor, left: CGFloat, right: CGFloat) {
+        backgroundColor = .clear
         addSubview(backgroundView)
         addSubview(label)
         addSubview(imageView)
+        backgroundView.backgroundColor = color
         
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: self.leadingAnchor)
+            backgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: left),
+            backgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -right),
+            backgroundView.heightAnchor.constraint(equalToConstant: 50),
+            
+            label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 16),
+            label.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
+            label.heightAnchor.constraint(equalToConstant: 15),
+            
+            imageView.heightAnchor.constraint(equalToConstant: 18),
+            imageView.widthAnchor.constraint(equalToConstant: 18),
+            imageView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
+            imageView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -17)
         ])
     }
     

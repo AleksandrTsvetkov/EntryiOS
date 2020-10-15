@@ -11,11 +11,14 @@ import UIKit
 enum Colors {
     
     case gray
+    case pink
     
     func getValue() -> UIColor {
         switch self {
         case .gray:
             return UIColor(hex: "EBEBF5", alpha: 0.6)
+        case .pink:
+            return UIColor(hex: "BF5AF2")
         }
     }
 }

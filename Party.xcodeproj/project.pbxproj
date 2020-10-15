@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F61CEC62538D33E00096D71 /* FeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC52538D33E00096D71 /* FeatureView.swift */; };
+		1F61CEC92538E71200096D71 /* AuthTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC82538E71200096D71 /* AuthTypeView.swift */; };
 		1F710B3E25388957008F0F7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B3D25388957008F0F7D /* AppDelegate.swift */; };
 		1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B3F25388957008F0F7D /* OnboardingViewController.swift */; };
 		1F710B422538895A008F0F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F710B412538895A008F0F7D /* Assets.xcassets */; };
@@ -21,6 +23,9 @@
 
 /* Begin PBXFileReference section */
 		1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
+		1F61CEC52538D33E00096D71 /* FeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureView.swift; sourceTree = "<group>"; };
+		1F61CEC72538D4E900096D71 /* SFProText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Regular.ttf"; sourceTree = "<group>"; };
+		1F61CEC82538E71200096D71 /* AuthTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTypeView.swift; sourceTree = "<group>"; };
 		1F710B3A25388957008F0F7D /* Party.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Party.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F710B3D25388957008F0F7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F710B3F25388957008F0F7D /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
@@ -49,6 +54,7 @@
 		1F61CEC42538925D00096D71 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				1F61CEC72538D4E900096D71 /* SFProText-Regular.ttf */,
 				1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */,
 			);
 			path = Fonts;
@@ -77,8 +83,8 @@
 				1FF469F225388E7100926E82 /* App */,
 				1F710B3F25388957008F0F7D /* OnboardingViewController.swift */,
 				1FF469F625388EA500926E82 /* Custom Views */,
-				1FF469F325388E7800926E82 /* Supporting Files */,
 				1F710B5425388CF2008F0F7D /* Helpers */,
+				1FF469F325388E7800926E82 /* Supporting Files */,
 			);
 			path = Party;
 			sourceTree = "<group>";
@@ -117,6 +123,8 @@
 			isa = PBXGroup;
 			children = (
 				1FF469F425388E9900926E82 /* ButtonView.swift */,
+				1F61CEC52538D33E00096D71 /* FeatureView.swift */,
+				1F61CEC82538E71200096D71 /* AuthTypeView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -195,8 +203,10 @@
 				1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */,
 				1FF469F525388E9900926E82 /* ButtonView.swift in Sources */,
 				1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */,
+				1F61CEC92538E71200096D71 /* AuthTypeView.swift in Sources */,
 				1FF469F125388DB600926E82 /* Colors.swift in Sources */,
 				1F710B4D25388C98008F0F7D /* UIColor + HexValue.swift in Sources */,
+				1F61CEC62538D33E00096D71 /* FeatureView.swift in Sources */,
 				1F710B4F25388CBD008F0F7D /* UIView + Borders.swift in Sources */,
 				1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */,
 			);
@@ -345,7 +355,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Tsvetkov.Alexander.Party;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -364,7 +374,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Tsvetkov.Alexander.Party;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
