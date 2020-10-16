@@ -28,6 +28,7 @@ class RegistrationViewController: UIViewController {
         view.font = UIFont(name: "SFProText-Regular", size: 17)
         view.textAlignment = .left
         view.text = "Осталось"
+        view.isHidden = true
         view.textColor = Colors.gray.getValue()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -36,11 +37,14 @@ class RegistrationViewController: UIViewController {
         let view = UILabel()
         view.font = UIFont(name: "SFProDisplay-Regular", size: 28)
         view.textAlignment = .left
+        view.isHidden = true
         view.text = "00:59"
         view.textColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private var timer: Timer?
+    private var timerCount: Int = 59
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,11 +60,13 @@ class RegistrationViewController: UIViewController {
         view.addSubview(label)
         view.addSubview(textFieldView)
         view.addSubview(codeTextField)
+        view.addSubview(timerLabel)
+        view.addSubview(timeLabel)
         codeTextField.isHidden = true
         textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged(_:)), for: .editingChanged)
         codeTextField.didEnterLastDigit = { [weak self] code in
             guard let _ = self else { return }
-            print(code)
+            
         }
         
         NSLayoutConstraint.activate([
@@ -75,7 +81,15 @@ class RegistrationViewController: UIViewController {
             
             codeTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             codeTextField.heightAnchor.constraint(equalToConstant: 36),
-            codeTextField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 110)
+            codeTextField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 110),
+            
+            timerLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 127),
+            timerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            timerLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            timeLabel.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 13),
+            timeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            timeLabel.heightAnchor.constraint(equalToConstant: 34)
         ])
     }
     
@@ -87,8 +101,18 @@ class RegistrationViewController: UIViewController {
                 } else {
                     floatingLabelTextField.errorMessage = ""
                     if text.count == 12 {
+                        DispatchQueue.main.async {
+                            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                                self.timerCount -= 1
+                                self.timeLabel.text = "00:\(self.timerCount)"
+                                if self.timerCount == 0 { self.timer?.invalidate() }
+                                
+                            })
+                        }
                         codeTextField.isHidden = false
                         textFieldView.isHidden = true
+                        timerLabel.isHidden = false
+                        timeLabel.isHidden = false
                         codeTextField.becomeFirstResponder()
                     }
                 }
