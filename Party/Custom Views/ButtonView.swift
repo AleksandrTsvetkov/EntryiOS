@@ -10,6 +10,21 @@ import UIKit
 
 class ButtonView: UIView {
     
+    enum ButtonState {
+        case next
+        case error
+    }
+    var state: ButtonState = .next {
+        willSet {
+            switch newValue {
+            case .next:
+                self.setTitle(title: "Дальше")
+            case .error:
+                self.setTitle(title: "Попробовать еще раз")
+            }
+        }
+    }
+    
     private let backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -41,6 +56,18 @@ class ButtonView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         label.text = title
         setupViews(color: color, left: left, right: right)
+    }
+    
+    func setColor(color: UIColor) {
+        backgroundView.backgroundColor = color
+    }
+    
+    func setTitle(title: String) {
+        label.text = title
+    }
+    
+    func checkTitle(_ title: String) -> Bool {
+        return label.text == title
     }
     
     private func setupViews(color: UIColor, left: CGFloat, right: CGFloat) {

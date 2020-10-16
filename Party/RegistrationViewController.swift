@@ -43,8 +43,19 @@ class RegistrationViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private let errorLabel: UILabel = {
+        let view = UILabel()
+        view.textAlignment = .left
+        view.isHidden = true
+        view.text = "Произошла ошибка!"
+        view.textColor = .white
+        view.font = UIFont(name: "SFProDisplay-Regular", size: 22)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     private var timer: Timer?
     private var timerCount: Int = 59
+    private lazy var buttonView = ButtonView(color: Colors.pink.getValue(), title: "Дальше", left: 16, right: 16)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,11 +73,30 @@ class RegistrationViewController: UIViewController {
         view.addSubview(codeTextField)
         view.addSubview(timerLabel)
         view.addSubview(timeLabel)
+        view.addSubview(buttonView)
+        view.addSubview(errorLabel)
         codeTextField.isHidden = true
+        textFieldView.floatingTextField.becomeFirstResponder()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        buttonView.addGestureRecognizer(tap)
         textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged(_:)), for: .editingChanged)
         codeTextField.didEnterLastDigit = { [weak self] code in
-            guard let _ = self else { return }
-            
+            guard let self = self else { return }
+            switch code {
+            case "7777":
+                self.buttonView.setColor(color: Colors.pink.getValue())
+                self.buttonView.setTitle(title: "Дальше")
+                self.codeTextField.resignFirstResponder()
+            case "6666":
+                self.buttonView.setColor(color: Colors.red.getValue())
+                self.buttonView.state = .error
+                self.errorLabel.isHidden = false
+                self.timeLabel.isHidden = true
+                self.timerLabel.isHidden = true
+                self.codeTextField.resignFirstResponder()
+            default:
+                break
+            }
         }
         
         NSLayoutConstraint.activate([
@@ -89,7 +119,17 @@ class RegistrationViewController: UIViewController {
             
             timeLabel.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 13),
             timeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            timeLabel.heightAnchor.constraint(equalToConstant: 34)
+            timeLabel.heightAnchor.constraint(equalToConstant: 34),
+            
+            buttonView.heightAnchor.constraint(equalToConstant: 50),
+            buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            
+            errorLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 200),
+            errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            errorLabel.heightAnchor.constraint(equalToConstant: 28),
         ])
     }
     
@@ -105,8 +145,10 @@ class RegistrationViewController: UIViewController {
                             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
                                 self.timerCount -= 1
                                 self.timeLabel.text = "00:\(self.timerCount)"
-                                if self.timerCount == 0 { self.timer?.invalidate() }
-                                
+                                if self.timerCount == 0 {
+                                    self.timer?.invalidate()
+                                    self.timerCount = 59
+                                }
                             })
                         }
                         codeTextField.isHidden = false
@@ -117,6 +159,26 @@ class RegistrationViewController: UIViewController {
                     }
                 }
             }
+        }
+    }
+    
+    @objc private func buttonViewTapped() {
+        if buttonView.state == .error {
+            buttonView.state = .next
+            codeTextField.becomeFirstResponder()
+            timeLabel.isHidden = false
+            timerLabel.isHidden = false
+            errorLabel.isHidden = true
+            timerCount = 59
+            self.timer?.invalidate()
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                self.timerCount -= 1
+                self.timeLabel.text = "00:\(self.timerCount)"
+                if self.timerCount == 0 {
+                    self.timer?.invalidate()
+                    self.timerCount = 59
+                }
+            })
         }
     }
     
