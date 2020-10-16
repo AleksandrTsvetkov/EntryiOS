@@ -34,20 +34,21 @@ class OnboardingViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    private let authView = AuthView()
-    private let blurEffectView: UIVisualEffectView = {
+    let authView = AuthView()
+    let blurEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let view = UIVisualEffectView(effect: blurEffect)
         view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private var authViewIsHiddenConstraint: NSLayoutConstraint!
-    private var authViewIsVisibleConstraint: NSLayoutConstraint!
-
+    var authViewIsHiddenConstraint: NSLayoutConstraint!
+    var authViewIsVisibleConstraint: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        
         setupViews()
         
         let tap0 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
@@ -56,7 +57,7 @@ class OnboardingViewController: UIViewController {
         exitButton.addGestureRecognizer(tap1)
         authView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
     }
-
+    
     private func setupViews() {
         view.addSubview(stackView)
         view.addSubview(whyImageView)
@@ -65,6 +66,7 @@ class OnboardingViewController: UIViewController {
         view.addSubview(blurEffectView)
         view.addSubview(authView)
         authView.isHidden = true
+        authView.delegate = self
         
         authViewIsHiddenConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 500)
         authViewIsVisibleConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -94,15 +96,17 @@ class OnboardingViewController: UIViewController {
             authView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             authViewIsHiddenConstraint,
             
-            blurEffectView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            blurEffectView.topAnchor.constraint(equalTo: view.topAnchor),
             blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            blurEffectView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
     override func viewWillLayoutSubviews() {
         authView.roundCorners(corners: [.topLeft, .topRight], radius: 10)
+        navigationController?.navigationBar.isHidden = true
+        
     }
     
     @objc private func buttonViewTapped() {
@@ -110,7 +114,7 @@ class OnboardingViewController: UIViewController {
         authView.isHidden = false
         self.authViewIsHiddenConstraint.isActive = false
         self.authViewIsVisibleConstraint.isActive = true
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.view.layoutIfNeeded()
         })
     }
@@ -145,21 +149,31 @@ class OnboardingViewController: UIViewController {
     
     private func handlePanEndedState(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
-        self.blurEffectView.alpha = 1
         if translation.y > 120 {
             self.authViewIsVisibleConstraint.isActive = false
             self.authViewIsHiddenConstraint.isActive = true
-            self.blurEffectView.isHidden = true
         }
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        if translation.y > 120 {
+            UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 self.view.layoutIfNeeded()
-        }, completion: { _ in
-            if translation.y > 120 {
+                self.authView.transform = .identity
+            }, completion: { _ in
                 self.authView.isHidden = true
-            }
-            self.authView.transform = .identity
-        })
-        
+                self.blurEffectView.isHidden = true
+                self.blurEffectView.alpha = 1
+            })
+        }
+        self.authView.transform = .identity
     }
 }
 
+extension OnboardingViewController: AuthTapDelegate {
+    func authTapped(tag: Int) {
+        if tag == 0 {
+            let vc = RegistrationViewController()
+            vc.delegate = self
+            navigationController?.navigationBar.isHidden = false
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+}

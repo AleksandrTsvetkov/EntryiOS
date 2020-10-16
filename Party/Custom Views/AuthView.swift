@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol AuthTapDelegate: class {
+    func authTapped(tag: Int)
+}
+
 class AuthView: UIView {
     
     private let label: UILabel = {
@@ -19,6 +23,7 @@ class AuthView: UIView {
         label.text = "How do you wish to proceed?"
         return label
     }()
+    weak var delegate: AuthTapDelegate!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +41,8 @@ class AuthView: UIView {
         let stackView = UIStackView()
         for i in 0...4 {
             let view = AuthTypeView(type: AuthType.allCases[i])
+            view.tag = i
+            view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(authTapped(sender:))))
             stackView.addArrangedSubview(view)
         }
         stackView.axis = .vertical
@@ -56,6 +63,11 @@ class AuthView: UIView {
             stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
         ])
+    }
+    
+    @objc private func authTapped(sender: UITapGestureRecognizer) {
+        guard let button = sender.view as? AuthTypeView else { return }
+        delegate.authTapped(tag: button.tag)
     }
     
     required init?(coder: NSCoder) {
