@@ -14,7 +14,8 @@ enum Colors {
     case pink
     case lightBlack
     case red
-    case textFieldBackground
+    case textFieldBackgroundResponder
+    case textFieldBackgroundNotResponder
     case textFieldBorder
     
     func getValue() -> UIColor {
@@ -27,8 +28,10 @@ enum Colors {
             return UIColor(hex: "202020", alpha: 0.92)
         case .red:
             return UIColor(hex: "FF453A")
-        case .textFieldBackground:
+        case .textFieldBackgroundResponder:
             return UIColor(hex: "2C2C2E")
+        case .textFieldBackgroundNotResponder:
+            return UIColor(hex: "1C1C1E")
         case .textFieldBorder:
             return UIColor(hex: "707070")
         }

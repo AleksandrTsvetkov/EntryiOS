@@ -17,7 +17,7 @@ class TextFieldView: UITextField {
         view.layer.borderWidth = 0.5
         view.layer.borderColor = Colors.textFieldBorder.getValue().cgColor
         view.layer.cornerRadius = 10
-        view.backgroundColor = Colors.textFieldBackground.getValue()
+        view.backgroundColor = Colors.textFieldBackgroundNotResponder.getValue()
         return view
     }()
     let floatingTextField: SkyFloatingLabelTextField = {
@@ -64,6 +64,10 @@ class TextFieldView: UITextField {
             floatingTextField.leadingAnchor.constraint(equalTo: textFieldBackgroundView.leadingAnchor, constant: 14),
             floatingTextField.trailingAnchor.constraint(equalTo: textFieldBackgroundView.trailingAnchor, constant: -14),
         ])
+    }
+    
+    func setBackgroundColor(color: UIColor) {
+        textFieldBackgroundView.backgroundColor = color
     }
     
     required init?(coder: NSCoder) {

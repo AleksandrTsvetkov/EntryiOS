@@ -10,13 +10,13 @@ import UIKit
 
 class OneTimeCodeTextField: UITextField {
     
-    var didEnterLastDigit: ((String) -> Void)?
+    var didEnterDigit: ((String) -> Void)?
     var labels: Array<UILabel> = []
-    private lazy var tapRecognizer: UITapGestureRecognizer = {
-        let recognizer = UITapGestureRecognizer()
-        recognizer.addTarget(self, action: #selector(becomeFirstResponder))
-        return recognizer
-    }()
+    var amountOfDigitsNow: Int = 0 {
+        didSet {
+            print(amountOfDigitsNow)
+        }
+    }
     
     convenience init() {
         self.init(frame: .zero)
@@ -33,7 +33,6 @@ class OneTimeCodeTextField: UITextField {
         addSubview(labelsStackView)
         
         delegate = self
-        addGestureRecognizer(tapRecognizer)
         addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         
         NSLayoutConstraint.activate([
@@ -78,7 +77,7 @@ class OneTimeCodeTextField: UITextField {
     
     @objc private func textDidChange() {
         guard let text = self.text, text.count <= labels.count else { return }
-        
+        amountOfDigitsNow = text.count
         for i in 0..<labels.count {
             let currentLabel = labels[i]
             
@@ -91,9 +90,7 @@ class OneTimeCodeTextField: UITextField {
                 currentLabel.text = "—"
             }
         }
-        if text.count == labels.count {
-            didEnterLastDigit?(text)
-        }
+            didEnterDigit?(text)
     }
     override init(frame: CGRect) {
         super.init(frame: frame)

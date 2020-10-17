@@ -21,7 +21,7 @@ class SignUpViewController: UIViewController {
         view.textColor = .white
         return view
     }()
-    private let textFieldView = TextFieldView(text: "+7", placeholder: "Мой телефон")
+    private let textFieldView = TextFieldView(text: "", placeholder: "Мой телефон")
     private let codeTextField = OneTimeCodeTextField()
     private let timerLabel: UILabel = {
         let view = UILabel()
@@ -38,7 +38,7 @@ class SignUpViewController: UIViewController {
         view.font = UIFont(name: "SFProDisplay-Regular", size: 28)
         view.textAlignment = .left
         view.isHidden = true
-        view.text = "00:59"
+        view.text = "01:00"
         view.textColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -54,7 +54,7 @@ class SignUpViewController: UIViewController {
         return view
     }()
     private var timer: Timer?
-    private var timerCount: Int = 59
+    private var timerCount: Int = 60
     private lazy var buttonView = ButtonView(color: Colors.pink.getValue(), title: "Дальше", left: 16, right: 16)
     
     override func viewDidLoad() {
@@ -76,24 +76,31 @@ class SignUpViewController: UIViewController {
         view.addSubview(buttonView)
         view.addSubview(errorLabel)
         codeTextField.isHidden = true
-        textFieldView.floatingTextField.becomeFirstResponder()
         let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
         buttonView.addGestureRecognizer(tap)
-        textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged(_:)), for: .editingChanged)
-        codeTextField.didEnterLastDigit = { [weak self] code in
+        textFieldView.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
+        textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        
+        codeTextField.didEnterDigit = { [weak self] code in
             guard let self = self else { return }
             switch code {
             case "7777":
-                self.buttonView.setColor(color: Colors.pink.getValue())
-                self.buttonView.setTitle(title: "Дальше")
-                self.codeTextField.resignFirstResponder()
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    guard self.codeTextField.amountOfDigitsNow == 4 && code == "7777" else { return }
+                    self.buttonView.setColor(color: Colors.pink.getValue())
+                    self.buttonView.state = .next
+                    self.codeTextField.resignFirstResponder()
+                }
             case "6666":
-                self.buttonView.setColor(color: Colors.red.getValue())
-                self.buttonView.state = .error
-                self.errorLabel.isHidden = false
-                self.timeLabel.isHidden = true
-                self.timerLabel.isHidden = true
-                self.codeTextField.resignFirstResponder()
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    guard self.codeTextField.amountOfDigitsNow == 4 && code == "6666" else { return }
+                    self.buttonView.setColor(color: Colors.red.getValue())
+                    self.buttonView.state = .error
+                    self.errorLabel.isHidden = false
+                    self.timeLabel.isHidden = true
+                    self.timerLabel.isHidden = true
+                    self.codeTextField.resignFirstResponder()
+                }
             default:
                 break
             }
@@ -141,42 +148,68 @@ class SignUpViewController: UIViewController {
                 } else {
                     floatingLabelTextField.errorMessage = ""
                     if text.count == 12 {
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                            guard self.textFieldView.floatingTextField.text?.count == 12 && String(text.dropFirst()).isNumeric else { return }
+                            self.timer?.invalidate()
                             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                                switch self.timerCount {
+                                case 60:
+                                    self.timeLabel.text = "01:00"
+                                case 0...9:
+                                    self.timeLabel.text = "01:0\(self.timerCount)"
+                                default:
+                                    self.timeLabel.text = "00:\(self.timerCount)"
+                                }
                                 self.timerCount -= 1
-                                self.timeLabel.text = "00:\(self.timerCount)"
                                 if self.timerCount == 0 {
                                     self.timer?.invalidate()
-                                    self.timerCount = 59
+                                    self.timerCount = 60
+                                    self.codeTextField.resignFirstResponder()
+                                    self.buttonView.setColor(color: Colors.red.getValue())
+                                    self.buttonView.state = .error
+                                    self.errorLabel.isHidden = false
                                 }
                             })
-                        }
-                        codeTextField.isHidden = false
-                        textFieldView.isHidden = true
-                        timerLabel.isHidden = false
-                        timeLabel.isHidden = false
-                        codeTextField.becomeFirstResponder()
+                            self.codeTextField.isHidden = false
+                            self.textFieldView.isHidden = true
+                            self.timerLabel.isHidden = false
+                            self.timeLabel.isHidden = false
+                            self.codeTextField.becomeFirstResponder()
+                        } // Dispatch
                     }
                 }
             }
         }
-    }
+    } // textFieldChanged
     
     @objc private func buttonViewTapped() {
         if buttonView.state == .error {
+            timeLabel.text = "01:00"
+            buttonView.setColor(color: Colors.pink.getValue())
             buttonView.state = .next
             codeTextField.becomeFirstResponder()
             timeLabel.isHidden = false
             timerLabel.isHidden = false
             errorLabel.isHidden = true
-            timerCount = 59
+            timerCount = 60
             self.timer?.invalidate()
             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                switch self.timerCount {
+                case 60:
+                    self.timeLabel.text = "01:00"
+                case 0...9:
+                    self.timeLabel.text = "00:0\(self.timerCount)"
+                default:
+                    self.timeLabel.text = "00:\(self.timerCount)"
+                }
                 self.timerCount -= 1
-                self.timeLabel.text = "00:\(self.timerCount)"
                 if self.timerCount == 0 {
                     self.timer?.invalidate()
-                    self.timerCount = 59
+                    self.timerCount = 60
+                    self.codeTextField.resignFirstResponder()
+                    self.buttonView.setColor(color: Colors.red.getValue())
+                    self.buttonView.state = .error
+                    self.errorLabel.isHidden = false
                 }
             })
         }
