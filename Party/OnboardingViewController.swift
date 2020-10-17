@@ -114,7 +114,7 @@ class OnboardingViewController: UIViewController {
         authView.isHidden = false
         self.authViewIsHiddenConstraint.isActive = false
         self.authViewIsVisibleConstraint.isActive = true
-        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.4, animations: {
             self.view.layoutIfNeeded()
         })
     }
@@ -154,7 +154,7 @@ class OnboardingViewController: UIViewController {
             self.authViewIsHiddenConstraint.isActive = true
         }
         if translation.y > 120 {
-            UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            UIView.animate(withDuration: 0.4, animations: {
                 self.view.layoutIfNeeded()
                 self.authView.transform = .identity
             }, completion: { _ in
@@ -170,7 +170,7 @@ class OnboardingViewController: UIViewController {
 extension OnboardingViewController: AuthTapDelegate {
     func authTapped(tag: Int) {
         if tag == 0 {
-            let vc = RegistrationViewController()
+            let vc = SignUpViewController()
             vc.delegate = self
             navigationController?.navigationBar.isHidden = false
             navigationController?.pushViewController(vc, animated: true)
