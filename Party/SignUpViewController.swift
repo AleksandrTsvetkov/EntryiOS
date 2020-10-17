@@ -151,7 +151,7 @@ class SignUpViewController: UIViewController {
                 textFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 65),
                 timerLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 127),
                 codeTextField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 110),
-                errorLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 200),
+                errorLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 160),
             ])
         }
         
@@ -159,49 +159,49 @@ class SignUpViewController: UIViewController {
     
     @objc private func textFieldChanged(_ textfield: UITextField) {
         guard let text = textfield.text else { return }
-            if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
-                floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
-                guard let currentText = floatingLabelTextField.text else { return }
-                if !String(currentText.dropFirst()).isNumeric {
-                    floatingLabelTextField.errorMessage = "Неправильный номер"
-                } else {
-                    floatingLabelTextField.errorMessage = ""
-                    if textFieldView.floatingTextField.text?.count == 12 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                            guard self.textFieldView.floatingTextField.text?.count == 12 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
-                            self.timer?.invalidate()
-                            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
-                                switch self.timerCount {
-                                case 60:
-                                    self.timeLabel.text = "01:00"
-                                case 0...9:
-                                    self.timeLabel.text = "00:0\(self.timerCount)"
-                                default:
-                                    self.timeLabel.text = "00:\(self.timerCount)"
-                                }
-                                self.timerCount -= 1
-                                if self.timerCount == 0 {
-                                    self.timer?.invalidate()
-                                    self.timerCount = 60
-                                    self.codeTextField.resignFirstResponder()
-                                    self.buttonView.setColor(color: Colors.red.getValue())
-                                    self.buttonView.state = .error
-                                    self.codeTextField.text = ""
-                                    self.codeTextField.textDidChange()
-                                    self.errorLabel.isHidden = false
-                                    self.timerLabel.isHidden = true
-                                    self.timeLabel.isHidden = true
-                                }
-                            })
-                            self.codeTextField.isHidden = false
-                            self.textFieldView.isHidden = true
-                            self.timerLabel.isHidden = false
-                            self.timeLabel.isHidden = false
-                            self.codeTextField.becomeFirstResponder()
-                        } // Dispatch
-                    }
+        if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
+            floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
+            guard let currentText = floatingLabelTextField.text else { return }
+            if !String(currentText.dropFirst()).isNumeric {
+                floatingLabelTextField.errorMessage = "Неправильный номер".uppercased()
+            } else {
+                floatingLabelTextField.errorMessage = ""
+                if textFieldView.floatingTextField.text?.count == 12 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                        guard self.textFieldView.floatingTextField.text?.count == 12 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
+                        self.timer?.invalidate()
+                        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                            switch self.timerCount {
+                            case 60:
+                                self.timeLabel.text = "01:00"
+                            case 0...9:
+                                self.timeLabel.text = "00:0\(self.timerCount)"
+                            default:
+                                self.timeLabel.text = "00:\(self.timerCount)"
+                            }
+                            self.timerCount -= 1
+                            if self.timerCount == 0 {
+                                self.timer?.invalidate()
+                                self.timerCount = 60
+                                self.codeTextField.resignFirstResponder()
+                                self.buttonView.setColor(color: Colors.red.getValue())
+                                self.buttonView.state = .error
+                                self.codeTextField.text = ""
+                                self.codeTextField.textDidChange()
+                                self.errorLabel.isHidden = false
+                                self.timerLabel.isHidden = true
+                                self.timeLabel.isHidden = true
+                            }
+                        })
+                        self.codeTextField.isHidden = false
+                        self.textFieldView.isHidden = true
+                        self.timerLabel.isHidden = false
+                        self.timeLabel.isHidden = false
+                        self.codeTextField.becomeFirstResponder()
+                    } // Dispatch
                 }
             }
+        }
     } // textFieldChanged
     
     @objc private func buttonViewTapped() {
@@ -212,9 +212,10 @@ class SignUpViewController: UIViewController {
             timeLabel.isHidden = false
             timerLabel.isHidden = false
             errorLabel.isHidden = true
-                timeLabel.text = "01:00"
-                timerCount = 60
-                self.timer?.invalidate()
+            timeLabel.text = "01:00"
+            timerCount = 60
+            self.timer?.invalidate()
+            DispatchQueue.main.async {
                 self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
                     switch self.timerCount {
                     case 60:
@@ -238,6 +239,7 @@ class SignUpViewController: UIViewController {
                         self.timeLabel.isHidden = true
                     }
                 })
+            }
         } else {
             let vc = RegistrationViewController()
             navigationController?.pushViewController(vc, animated: true)

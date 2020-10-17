@@ -20,13 +20,15 @@ class TextFieldView: UITextField {
         view.backgroundColor = Colors.textFieldBackgroundNotResponder.getValue()
         return view
     }()
-    let floatingTextField: SkyFloatingLabelTextField = {
-        let view = SkyFloatingLabelTextField()
+    let floatingTextField: FloatingField = {
+        let view = FloatingField()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = UIFont(name: "SFProText-Regular", size: 17)
         view.lineHeight = 0
         view.selectedLineHeight = 0
-        view.titleFont = UIFont(name: "SFProText-Regular", size: 12) ?? UIFont.systemFont(ofSize: 33)
+        view.placeholderFont = UIFont(name: "SFProText-Regular", size: 12)
+        view.titleFont = UIFont(name: "SFProText-Regular", size: 12) ?? UIFont.systemFont(ofSize: 52)
+        view.titleFormatter = { $0 }
         view.tintColor = UIColor(hex: "FFFFFF", alpha: 0.65)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = UIColor(hex: "FFFFFF", alpha: 0.65)
@@ -45,7 +47,8 @@ class TextFieldView: UITextField {
         translatesAutoresizingMaskIntoConstraints = false
         
         floatingTextField.text = text
-        floatingTextField.placeholder = placeholder
+        floatingTextField.placeholder = placeholder.uppercased()
+        floatingTextField.title = placeholder.uppercased()
         setupViews()
     }
     
@@ -76,5 +79,11 @@ class TextFieldView: UITextField {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+}
+
+class FloatingField: SkyFloatingLabelTextField {
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 28, right: 0))
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 
 enum Colors {
     
+    case buttonGray
     case gray
     case pink
     case lightBlack
@@ -20,6 +21,8 @@ enum Colors {
     
     func getValue() -> UIColor {
         switch self {
+        case .buttonGray:
+            return UIColor(hex: "757575")
         case .gray:
             return UIColor(hex: "EBEBF5", alpha: 0.6)
         case .pink:
