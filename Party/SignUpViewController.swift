@@ -90,6 +90,8 @@ class SignUpViewController: UIViewController {
                     self.buttonView.setColor(color: Colors.pink.getValue())
                     self.buttonView.state = .next
                     self.codeTextField.resignFirstResponder()
+                    self.timeLabel.isHidden = true
+                    self.timerLabel.isHidden = true
                 }
             case "6666":
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
@@ -99,6 +101,8 @@ class SignUpViewController: UIViewController {
                     self.errorLabel.isHidden = false
                     self.timeLabel.isHidden = true
                     self.timerLabel.isHidden = true
+                    self.codeTextField.text = ""
+                    self.codeTextField.textDidChange()
                     self.codeTextField.resignFirstResponder()
                 }
             default:
@@ -111,16 +115,13 @@ class SignUpViewController: UIViewController {
             label.heightAnchor.constraint(equalToConstant: 40),
             label.topAnchor.constraint(equalTo: view.topAnchor, constant: 14),
             
-            textFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 65),
             textFieldView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             textFieldView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textFieldView.heightAnchor.constraint(equalToConstant: 74),
             
             codeTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             codeTextField.heightAnchor.constraint(equalToConstant: 36),
-            codeTextField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 110),
             
-            timerLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 127),
             timerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             timerLabel.heightAnchor.constraint(equalToConstant: 20),
             
@@ -133,11 +134,27 @@ class SignUpViewController: UIViewController {
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             
-            errorLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 200),
             errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             errorLabel.heightAnchor.constraint(equalToConstant: 28),
         ])
+        
+        if UIScreen.main.bounds.height < 600 {
+            NSLayoutConstraint.activate([
+                textFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
+                timerLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 66),
+                codeTextField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 50),
+                errorLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 50),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                textFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 65),
+                timerLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 127),
+                codeTextField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 110),
+                errorLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 200),
+            ])
+        }
+        
     }
     
     @objc private func textFieldChanged(_ textfield: UITextField) {
@@ -158,7 +175,7 @@ class SignUpViewController: UIViewController {
                                 case 60:
                                     self.timeLabel.text = "01:00"
                                 case 0...9:
-                                    self.timeLabel.text = "01:0\(self.timerCount)"
+                                    self.timeLabel.text = "00:0\(self.timerCount)"
                                 default:
                                     self.timeLabel.text = "00:\(self.timerCount)"
                                 }
@@ -169,7 +186,11 @@ class SignUpViewController: UIViewController {
                                     self.codeTextField.resignFirstResponder()
                                     self.buttonView.setColor(color: Colors.red.getValue())
                                     self.buttonView.state = .error
+                                    self.codeTextField.text = ""
+                                    self.codeTextField.textDidChange()
                                     self.errorLabel.isHidden = false
+                                    self.timerLabel.isHidden = true
+                                    self.timeLabel.isHidden = true
                                 }
                             })
                             self.codeTextField.isHidden = false
@@ -185,34 +206,41 @@ class SignUpViewController: UIViewController {
     
     @objc private func buttonViewTapped() {
         if buttonView.state == .error {
-            timeLabel.text = "01:00"
             buttonView.setColor(color: Colors.pink.getValue())
             buttonView.state = .next
             codeTextField.becomeFirstResponder()
             timeLabel.isHidden = false
             timerLabel.isHidden = false
             errorLabel.isHidden = true
-            timerCount = 60
-            self.timer?.invalidate()
-            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
-                switch self.timerCount {
-                case 60:
-                    self.timeLabel.text = "01:00"
-                case 0...9:
-                    self.timeLabel.text = "00:0\(self.timerCount)"
-                default:
-                    self.timeLabel.text = "00:\(self.timerCount)"
-                }
-                self.timerCount -= 1
-                if self.timerCount == 0 {
-                    self.timer?.invalidate()
-                    self.timerCount = 60
-                    self.codeTextField.resignFirstResponder()
-                    self.buttonView.setColor(color: Colors.red.getValue())
-                    self.buttonView.state = .error
-                    self.errorLabel.isHidden = false
-                }
-            })
+                timeLabel.text = "01:00"
+                timerCount = 60
+                self.timer?.invalidate()
+                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                    switch self.timerCount {
+                    case 60:
+                        self.timeLabel.text = "01:00"
+                    case 0...9:
+                        self.timeLabel.text = "00:0\(self.timerCount)"
+                    default:
+                        self.timeLabel.text = "00:\(self.timerCount)"
+                    }
+                    self.timerCount -= 1
+                    if self.timerCount == 0 {
+                        self.timer?.invalidate()
+                        self.timerCount = 60
+                        self.codeTextField.resignFirstResponder()
+                        self.buttonView.setColor(color: Colors.red.getValue())
+                        self.buttonView.state = .error
+                        self.codeTextField.text = ""
+                        self.codeTextField.textDidChange()
+                        self.errorLabel.isHidden = false
+                        self.timerLabel.isHidden = true
+                        self.timeLabel.isHidden = true
+                    }
+                })
+        } else {
+            let vc = RegistrationViewController()
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
     

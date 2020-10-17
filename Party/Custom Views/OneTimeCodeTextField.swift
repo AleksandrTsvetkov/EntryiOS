@@ -12,11 +12,7 @@ class OneTimeCodeTextField: UITextField {
     
     var didEnterDigit: ((String) -> Void)?
     var labels: Array<UILabel> = []
-    var amountOfDigitsNow: Int = 0 {
-        didSet {
-            print(amountOfDigitsNow)
-        }
-    }
+    var amountOfDigitsNow: Int = 0
     
     convenience init() {
         self.init(frame: .zero)
@@ -75,7 +71,7 @@ class OneTimeCodeTextField: UITextField {
         
     }
     
-    @objc private func textDidChange() {
+    @objc func textDidChange() {
         guard let text = self.text, text.count <= labels.count else { return }
         amountOfDigitsNow = text.count
         for i in 0..<labels.count {
