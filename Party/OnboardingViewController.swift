@@ -71,27 +71,23 @@ class OnboardingViewController: UIViewController {
         authViewIsHiddenConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 500)
         authViewIsVisibleConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
-            exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
+            
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             exitButton.heightAnchor.constraint(equalToConstant: 30),
             exitButton.widthAnchor.constraint(equalToConstant: 30),
             
-            whyImageView.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 41),
             whyImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             whyImageView.heightAnchor.constraint(equalToConstant: 36),
             whyImageView.widthAnchor.constraint(equalToConstant: 186),
             
-            stackView.topAnchor.constraint(equalTo: whyImageView.bottomAnchor, constant: 72),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: buttonView.topAnchor, constant: -100),
             
             buttonView.heightAnchor.constraint(equalToConstant: 50),
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            buttonView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
             
-            authView.heightAnchor.constraint(equalToConstant: 476),
+            authView.heightAnchor.constraint(equalToConstant: 440),
             authView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             authView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             authViewIsHiddenConstraint,
@@ -101,6 +97,24 @@ class OnboardingViewController: UIViewController {
             blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        if UIScreen.main.bounds.height < 600 {
+            NSLayoutConstraint.activate([
+                exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 34),
+                whyImageView.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 20),
+                stackView.topAnchor.constraint(equalTo: whyImageView.bottomAnchor, constant: 42),
+                stackView.bottomAnchor.constraint(lessThanOrEqualTo: buttonView.topAnchor, constant: -44),
+                buttonView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
+                whyImageView.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 41),
+                stackView.topAnchor.constraint(equalTo: whyImageView.bottomAnchor, constant: 72),
+                stackView.bottomAnchor.constraint(lessThanOrEqualTo: buttonView.topAnchor, constant: -100),
+                buttonView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            ])
+        }
     }
     
     override func viewWillLayoutSubviews() {

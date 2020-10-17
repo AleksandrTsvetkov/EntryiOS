@@ -80,7 +80,7 @@ class SignUpViewController: UIViewController {
         buttonView.addGestureRecognizer(tap)
         textFieldView.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
         textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
-        
+        textFieldView.floatingTextField.becomeFirstResponder()
         codeTextField.didEnterDigit = { [weak self] code in
             guard let self = self else { return }
             switch code {
@@ -141,15 +141,17 @@ class SignUpViewController: UIViewController {
     }
     
     @objc private func textFieldChanged(_ textfield: UITextField) {
-        if let text = textfield.text {
+        guard let text = textfield.text else { return }
             if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
-                if !String(text.dropFirst()).isNumeric {
+                floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
+                guard let currentText = floatingLabelTextField.text else { return }
+                if !String(currentText.dropFirst()).isNumeric {
                     floatingLabelTextField.errorMessage = "Неправильный номер"
                 } else {
                     floatingLabelTextField.errorMessage = ""
-                    if text.count == 12 {
+                    if textFieldView.floatingTextField.text?.count == 12 {
                         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                            guard self.textFieldView.floatingTextField.text?.count == 12 && String(text.dropFirst()).isNumeric else { return }
+                            guard self.textFieldView.floatingTextField.text?.count == 12 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
                             self.timer?.invalidate()
                             self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
                                 switch self.timerCount {
@@ -179,7 +181,6 @@ class SignUpViewController: UIViewController {
                     }
                 }
             }
-        }
     } // textFieldChanged
     
     @objc private func buttonViewTapped() {
