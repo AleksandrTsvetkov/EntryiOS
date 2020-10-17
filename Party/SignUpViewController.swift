@@ -21,7 +21,7 @@ class SignUpViewController: UIViewController {
         view.textColor = .white
         return view
     }()
-    private let textFieldView = TextFieldView(text: "", placeholder: "Мой телефон")
+    private let textFieldView = TextFieldView(text: "", placeholder: "МОЙ ТЕЛЕФОН")
     private let codeTextField = OneTimeCodeTextField()
     private let timerLabel: UILabel = {
         let view = UILabel()
@@ -163,7 +163,7 @@ class SignUpViewController: UIViewController {
             floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
             guard let currentText = floatingLabelTextField.text else { return }
             if !String(currentText.dropFirst()).isNumeric {
-                floatingLabelTextField.errorMessage = "Неправильный номер".uppercased()
+                floatingLabelTextField.errorMessage = "НЕПРАВИЛЬНЫЙ НОМЕР".uppercased()
             } else {
                 floatingLabelTextField.errorMessage = ""
                 if textFieldView.floatingTextField.text?.count == 12 {

@@ -20,7 +20,7 @@ class RegistrationViewController: UIViewController {
         return view
     }()
     private lazy var buttonView = ButtonView(color: Colors.buttonGray.getValue(), title: "Дальше", left: 16, right: 16)
-    private let tableView = UITableView()
+    private let tableView = UITableView(frame: .zero, style: .grouped)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,12 +29,21 @@ class RegistrationViewController: UIViewController {
         self.navigationItem.hidesBackButton = true
         let newBackButton = UIBarButtonItem(image: UIImage(named: "phoneBackButton"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = newBackButton
+        
+        tableView.keyboardDismissMode = .onDrag
+        tableView.isUserInteractionEnabled = true
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(RegistrationCell.self, forCellReuseIdentifier: RegistrationCell.reuseId)
+        setupViews()
     }
     
     private func setupViews() {
+        view.addSubview(tableView)
         view.addSubview(label)
         view.addSubview(buttonView)
-        view.addSubview(tableView)
         
         buttonView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +60,7 @@ class RegistrationViewController: UIViewController {
             
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(lessThanOrEqualTo: buttonView.topAnchor, constant: -50)
+            tableView.heightAnchor.constraint(equalToConstant: 376)
         ])
         
         if UIScreen.main.bounds.height < 600 {
@@ -68,5 +77,26 @@ class RegistrationViewController: UIViewController {
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
+}
 
+extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 88
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: RegistrationCell.reuseId, for: indexPath) as! RegistrationCell
+        cell.configure(withType: FieldType.allCases[indexPath.row])
+        return cell
+    }
+    
+    
 }

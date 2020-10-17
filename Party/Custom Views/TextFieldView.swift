@@ -47,8 +47,8 @@ class TextFieldView: UITextField {
         translatesAutoresizingMaskIntoConstraints = false
         
         floatingTextField.text = text
-        floatingTextField.placeholder = placeholder.uppercased()
-        floatingTextField.title = placeholder.uppercased()
+        floatingTextField.placeholder = placeholder
+        floatingTextField.title = placeholder
         setupViews()
     }
     
@@ -84,6 +84,10 @@ class TextFieldView: UITextField {
 
 class FloatingField: SkyFloatingLabelTextField {
     override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 28, right: 0))
+        return bounds.inset(by: UIEdgeInsets(top: -10, left: 0, bottom: 28, right: 0))
+    }
+    
+    override func titleLabelRectForBounds(_ bounds: CGRect, editing: Bool) -> CGRect {
+        return bounds.inset(by: UIEdgeInsets(top: -10, left: 0, bottom: 28, right: 0))
     }
 }
