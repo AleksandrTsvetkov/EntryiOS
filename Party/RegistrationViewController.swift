@@ -56,20 +56,21 @@ class RegistrationViewController: UIViewController {
             buttonView.heightAnchor.constraint(equalToConstant: 50),
             buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            
             
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.heightAnchor.constraint(equalToConstant: 376)
         ])
-        
         if UIScreen.main.bounds.height < 600 {
             NSLayoutConstraint.activate([
-                tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 34),
+                tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
+                buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             ])
         } else {
             NSLayoutConstraint.activate([
-                tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 65),
+                tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 60),
+                buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             ])
         }
     }
