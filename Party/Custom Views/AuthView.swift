@@ -18,7 +18,9 @@ class AuthView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.font = UIFont(name: "SFProDisplay-Bold", size: 22)
+        let width = UIScreen.main.bounds.height
+        let fontSize: CGFloat = width < 600 ? 20 : 22
+        label.font = UIFont(name: "SFProDisplay-Bold", size: fontSize)
         label.textColor = .white
         label.text = "How do you wish to proceed?"
         return label
@@ -56,13 +58,23 @@ class AuthView: UIView {
             label.heightAnchor.constraint(equalToConstant: 26),
             label.topAnchor.constraint(equalTo: self.topAnchor, constant: 40),
             label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            label.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20),
-            label.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -20),
             label.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -33),
             
             stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
         ])
+        
+        if UIScreen.main.bounds.height < 600 {
+            NSLayoutConstraint.activate([
+                label.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 8),
+                label.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -8),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                label.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20),
+                label.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -20),
+            ])
+        }
     }
     
     @objc private func authTapped(sender: UITapGestureRecognizer) {
