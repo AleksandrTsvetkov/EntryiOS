@@ -78,8 +78,10 @@ class SignUpViewController: UIViewController {
         codeTextField.isHidden = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
         buttonView.addGestureRecognizer(tap)
+        textFieldView.configure(withKeyboardType: .namePhonePad, textContentType: .telephoneNumber)
         textFieldView.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
         textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        textFieldView.floatingTextField.autocorrectionType = .yes
         textFieldView.floatingTextField.becomeFirstResponder()
         codeTextField.didEnterDigit = { [weak self] code in
             guard let self = self else { return }

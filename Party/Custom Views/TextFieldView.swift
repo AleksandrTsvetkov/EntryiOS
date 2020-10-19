@@ -9,7 +9,7 @@
 import UIKit
 import SkyFloatingLabelTextField
 
-class TextFieldView: UITextField {
+class TextFieldView: UIView {
 
     private let textFieldBackgroundView: UIView = {
         let view = UIView()
@@ -36,16 +36,13 @@ class TextFieldView: UITextField {
         view.selectedTitleColor = Colors.pink.getValue()
         view.errorColor = Colors.red.getValue()
         view.keyboardAppearance = .dark
-        view.keyboardType = .namePhonePad
-        view.autocorrectionType = .yes
-        view.textContentType = .telephoneNumber
+        view.autocorrectionType = .no
         return view
     }()
     
     convenience init(text: String, placeholder: String) {
         self.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        
         floatingTextField.text = text
         floatingTextField.placeholder = placeholder
         floatingTextField.title = placeholder
@@ -63,14 +60,24 @@ class TextFieldView: UITextField {
             textFieldBackgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
             floatingTextField.topAnchor.constraint(equalTo: textFieldBackgroundView.topAnchor, constant: 18),
-            floatingTextField.bottomAnchor.constraint(equalTo: textFieldBackgroundView.bottomAnchor, constant: -14),
+            floatingTextField.bottomAnchor.constraint(equalTo: textFieldBackgroundView.bottomAnchor, constant: -4),
             floatingTextField.leadingAnchor.constraint(equalTo: textFieldBackgroundView.leadingAnchor, constant: 14),
             floatingTextField.trailingAnchor.constraint(equalTo: textFieldBackgroundView.trailingAnchor, constant: -14),
         ])
     }
     
+    func setPlaceholder(placeholder: String) {
+        floatingTextField.placeholder = placeholder
+        floatingTextField.title = placeholder
+    }
+    
     func setBackgroundColor(color: UIColor) {
         textFieldBackgroundView.backgroundColor = color
+    }
+    
+    func configure(withKeyboardType keyboardType: UIKeyboardType, textContentType: UITextContentType) {
+        floatingTextField.keyboardType = keyboardType
+        floatingTextField.textContentType = textContentType
     }
     
     required init?(coder: NSCoder) {

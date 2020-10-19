@@ -18,6 +18,7 @@ enum Colors {
     case textFieldBackgroundResponder
     case textFieldBackgroundNotResponder
     case textFieldBorder
+    case textFieldCorrect
     
     func getValue() -> UIColor {
         switch self {
@@ -37,6 +38,8 @@ enum Colors {
             return UIColor(hex: "1C1C1E")
         case .textFieldBorder:
             return UIColor(hex: "707070")
+        case .textFieldCorrect:
+            return UIColor(hex: "32D74B")
         }
     }
 }
