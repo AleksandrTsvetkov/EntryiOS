@@ -39,10 +39,6 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         super.viewDidLoad()
         view.backgroundColor = .black
         
-        self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(image: UIImage(named: "phoneBackButton"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.leftBarButtonItem = newBackButton
-        
         tableView.showsVerticalScrollIndicator = false
         tableView.isUserInteractionEnabled = true
         tableView.separatorStyle = .none
@@ -100,7 +96,7 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     //MARK: - Objc methods
     @objc private func buttonViewTapped() {
         if buttonView.isUserInteractionEnabled {
-            print(123)
+            
         }
     }
     

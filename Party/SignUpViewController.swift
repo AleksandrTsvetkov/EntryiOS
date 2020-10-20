@@ -60,11 +60,22 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(image: UIImage(named: "whyBackButton"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.leftBarButtonItem = newBackButton
         textFieldView.floatingTextField.delegate = self
+        let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        buttonView.addGestureRecognizer(tap)
         setupViews()
+    }
+    
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        if parent == nil {
+            delegate.blurEffectView.isHidden = true
+            delegate.authView.isHidden = true
+            delegate.authView.transform = .identity
+            delegate.authViewIsVisibleConstraint.isActive = false
+            delegate.authViewIsHiddenConstraint.isActive = true
+            navigationController?.navigationBar.isHidden = true
+        }
     }
     
     private func setupViews() {
@@ -243,6 +254,7 @@ class SignUpViewController: UIViewController {
             }
         } else {
             let vc = RegistrationViewController()
+            navigationController?.navigationItem.backBarButtonItem?.title = "Телефон"
             navigationController?.pushViewController(vc, animated: true)
         }
     }

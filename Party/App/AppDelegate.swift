@@ -16,13 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        //let rootViewController = OnboardingViewController()
-        let rootViewController = RegistrationViewController()
+        let rootViewController = OnboardingViewController()
+        //let rootViewController = RegistrationViewController()
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigationController.navigationBar.isTranslucent = false
         navigationController.navigationBar.barTintColor = .black
         navigationController.navigationBar.isHidden = true
         navigationController.navigationBar.shadowImage = UIImage()
+        navigationController.navigationBar.tintColor = Colors.pink.getValue()
         window?.backgroundColor = .black
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()

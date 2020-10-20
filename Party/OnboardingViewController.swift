@@ -186,6 +186,7 @@ extension OnboardingViewController: AuthTapDelegate {
         if tag == 0 {
             let vc = SignUpViewController()
             vc.delegate = self
+            navigationController?.navigationItem.backBarButtonItem?.title = "Зачем?"
             navigationController?.navigationBar.isHidden = false
             navigationController?.pushViewController(vc, animated: true)
         }
