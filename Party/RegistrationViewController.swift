@@ -114,11 +114,6 @@ class RegistrationViewController: UIViewController {
 
 extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource {
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell = tableView.cellForRow(at: indexPath) as! RegistrationCell
-//        cell.textFieldView.floatingTextField.becomeFirstResponder()
-//    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 88
     }
@@ -135,6 +130,5 @@ extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource
         cell.configure(withType: FieldType.allCases[indexPath.row])
         return cell
     }
-    
     
 }

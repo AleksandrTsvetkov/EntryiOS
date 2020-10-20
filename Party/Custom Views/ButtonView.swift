@@ -81,6 +81,7 @@ class ButtonView: UIView {
             backgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: left),
             backgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -right),
             backgroundView.heightAnchor.constraint(equalToConstant: 50),
+            backgroundView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
             label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 16),
             label.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),

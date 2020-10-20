@@ -20,11 +20,13 @@ class RegistrationCell: UITableViewCell {
         selectionStyle = .none
         textFieldView.floatingTextField.delegate = self
         textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        
         switch type {
         case .name:
             textFieldView.setPlaceholder(placeholder: "Имя")
         case .birthDate:
             textFieldView.setPlaceholder(placeholder: "Дата рождения")
+            textFieldView.floatingTextField.isUserInteractionEnabled = false
         case .email:
             textFieldView.setPlaceholder(placeholder: "E-mail")
             textFieldView.configure(withKeyboardType: .emailAddress, textContentType: .emailAddress)
@@ -47,14 +49,26 @@ class RegistrationCell: UITableViewCell {
     @objc private func textFieldChanged(_ textfield: UITextField) {
         guard
             let textField = textfield as? FloatingField,
-            let isEmail = textField.text?.isEmail()
+            let text = textField.text
             else { return }
         switch fieldType {
         case .name:
-            break
+            let set = CharacterSet.letters
+            var isValid = true
+            for i in text {
+                if String(i).rangeOfCharacter(from: set) == nil {
+                    isValid = false
+                }
+            }
+            if !isValid {
+                textField.errorMessage = "Неправильные символы".uppercased()
+            } else {
+                textField.errorMessage = ""
+            }
         case .birthDate:
             break
         case .email:
+            let isEmail = text.isEmail()
             textField.errorMessage = isEmail ? "" : "Неправильные символы".uppercased()
         case .password:
             break

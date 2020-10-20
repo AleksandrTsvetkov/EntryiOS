@@ -9,7 +9,7 @@
 import UIKit
 import SkyFloatingLabelTextField
 
-class TextFieldView: UIView {
+class TextFieldView: UIView, ColorDelegate {
 
     private let textFieldBackgroundView: UIView = {
         let view = UIView()
@@ -43,6 +43,7 @@ class TextFieldView: UIView {
     convenience init(text: String, placeholder: String) {
         self.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        floatingTextField.colorDelegate = self
         floatingTextField.text = text
         floatingTextField.placeholder = placeholder
         floatingTextField.title = placeholder
@@ -90,6 +91,9 @@ class TextFieldView: UIView {
 }
 
 class FloatingField: SkyFloatingLabelTextField {
+    
+    var colorDelegate: ColorDelegate?
+    
     override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: UIEdgeInsets(top: -10, left: 0, bottom: 28, right: 0))
     }
@@ -97,4 +101,19 @@ class FloatingField: SkyFloatingLabelTextField {
     override func titleLabelRectForBounds(_ bounds: CGRect, editing: Bool) -> CGRect {
         return bounds.inset(by: UIEdgeInsets(top: -10, left: 0, bottom: 28, right: 0))
     }
+    
+    @discardableResult
+    override func becomeFirstResponder() -> Bool {
+        colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
+        return super.becomeFirstResponder()
+    }
+    
+    override func resignFirstResponder() -> Bool {
+        colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundNotResponder.getValue())
+        return super.resignFirstResponder()
+    }
+}
+
+protocol ColorDelegate {
+    func setBackgroundColor(color: UIColor)
 }
