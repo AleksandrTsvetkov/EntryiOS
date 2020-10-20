@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RegistrationViewController: UIViewController {
+class RegistrationViewController: UIViewController, StatusDelegate {
 
     //MARK: - Properties
     private let label: UILabel = {
@@ -22,6 +22,17 @@ class RegistrationViewController: UIViewController {
     }()
     private lazy var buttonView = ButtonView(color: Colors.buttonGray.getValue(), title: "Дальше", left: 16, right: 16)
     private let tableView = UITableView(frame: .zero, style: .grouped)
+    var fieldsStatus = [false, false, false, false] {
+        willSet {
+            if newValue[0] && newValue[1] && newValue[2] && newValue[3] {
+                buttonView.setColor(color: Colors.pink.getValue())
+                buttonView.isUserInteractionEnabled = true
+            } else {
+                buttonView.setColor(color: Colors.buttonGray.getValue())
+                buttonView.isUserInteractionEnabled = false
+            }
+        }
+    }
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -45,6 +56,8 @@ class RegistrationViewController: UIViewController {
     
     //MARK: - Setup
     private func addObserversAndRecognizers() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        buttonView.addGestureRecognizer(tap)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -85,6 +98,12 @@ class RegistrationViewController: UIViewController {
     }
     
     //MARK: - Objc methods
+    @objc private func buttonViewTapped() {
+        if buttonView.isUserInteractionEnabled {
+            print(123)
+        }
+    }
+    
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
         guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
@@ -112,6 +131,7 @@ class RegistrationViewController: UIViewController {
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -128,6 +148,7 @@ extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RegistrationCell.reuseId, for: indexPath) as! RegistrationCell
         cell.configure(withType: FieldType.allCases[indexPath.row])
+        cell.statusDelegate = self
         return cell
     }
     

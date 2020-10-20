@@ -13,6 +13,7 @@ class RegistrationCell: UITableViewCell {
     static let reuseId = "RegistrationCell"
     var textFieldView = TextFieldView(text: "", placeholder: "")
     var fieldType: FieldType = .name
+    var statusDelegate: StatusDelegate?
     
     func configure(withType type: FieldType) {
         fieldType = type
@@ -26,7 +27,7 @@ class RegistrationCell: UITableViewCell {
             textFieldView.setPlaceholder(placeholder: "Имя")
         case .birthDate:
             textFieldView.setPlaceholder(placeholder: "Дата рождения")
-            textFieldView.floatingTextField.isUserInteractionEnabled = false
+        //textFieldView.floatingTextField.isUserInteractionEnabled = false
         case .email:
             textFieldView.setPlaceholder(placeholder: "E-mail")
             textFieldView.configure(withKeyboardType: .emailAddress, textContentType: .emailAddress)
@@ -60,7 +61,7 @@ class RegistrationCell: UITableViewCell {
                     isValid = false
                 }
             }
-            if !isValid {
+            if !isValid && !text.isEmpty {
                 textField.errorMessage = "Неправильные символы".uppercased()
             } else {
                 textField.errorMessage = ""
@@ -69,9 +70,14 @@ class RegistrationCell: UITableViewCell {
             break
         case .email:
             let isEmail = text.isEmail()
-            textField.errorMessage = isEmail ? "" : "Неправильные символы".uppercased()
+            textField.errorMessage = (isEmail  || text.isEmpty) ? "" : "Неправильные символы".uppercased()
         case .password:
             break
+        }
+        guard let index = FieldType.allCases.firstIndex(of: fieldType) else { return }
+        let noErrors = (textField.errorMessage == "" || textField.errorMessage == nil)
+        if !text.isEmpty && noErrors {
+            statusDelegate?.fieldsStatus[index] = true
         }
     } // textFieldChanged
     
@@ -104,4 +110,8 @@ enum FieldType: CaseIterable {
     case birthDate
     case email
     case password
+}
+
+protocol StatusDelegate {
+    var fieldsStatus: Array<Bool> { get set }
 }
