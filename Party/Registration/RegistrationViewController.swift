@@ -9,7 +9,7 @@
 import UIKit
 
 class RegistrationViewController: UIViewController, StatusDelegate {
-
+    
     //MARK: - Properties
     private let label: UILabel = {
         let view = UILabel()
@@ -33,6 +33,8 @@ class RegistrationViewController: UIViewController, StatusDelegate {
             }
         }
     }
+    var picker: UIPickerView?
+    var toolBar: UIToolbar?
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -93,9 +95,52 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         }
     }
     
+    func presentPicker(_ pickerView: UIPickerView) {
+        view.endEditing(true)
+        picker = pickerView
+        guard let picker = picker else { return }
+        picker.delegate = self
+        picker.dataSource = self
+        picker.backgroundColor = Colors.textFieldBackgroundResponder.getValue()
+        picker.tintColor = .white
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(picker)
+        toolBar = UIToolbar()
+        guard let toolBar = toolBar else { return }
+        view.addSubview(toolBar)
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.barStyle = .blackTranslucent
+        toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(doneButtonTapped))]
+        picker.selectRow(PickerData.days.rawValue / 2, inComponent: 0, animated: false)
+        picker.selectRow(PickerData.months.rawValue / 2, inComponent: 1, animated: false)
+        picker.selectRow(PickerData.years.rawValue / 2, inComponent: 2, animated: false)
+        NSLayoutConstraint.activate([
+            picker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            picker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            picker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            toolBar.heightAnchor.constraint(equalToConstant: 50),
+            toolBar.widthAnchor.constraint(equalTo: view.widthAnchor),
+            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            toolBar.bottomAnchor.constraint(equalTo: picker.topAnchor)
+        ])
+    }
+    
+    
+    
     //MARK: - Objc methods
+    @objc func doneButtonTapped() {
+        toolBar?.removeFromSuperview()
+        picker?.removeFromSuperview()
+    }
+    
     @objc private func buttonViewTapped() {
         if buttonView.isUserInteractionEnabled {
+            let vc = LoginViewController()
+            let backButton = UIBarButtonItem()
+            backButton.title = "Зачем?"
+            navigationItem.backBarButtonItem = backButton
+            navigationController?.pushViewController(vc, animated: true)
             
         }
     }
@@ -148,4 +193,87 @@ extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
+}
+
+//MARK: - UIPickerViewDelegate, UIPickerViewDataSource
+extension RegistrationViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 3
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch component {
+        case 0:
+            return PickerData.days.rawValue
+        case 1:
+            return PickerData.months.rawValue
+        case 2:
+            return PickerData.years.rawValue
+        default:
+            return 1
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as! RegistrationCell
+        cell.textFieldView.floatingTextField.titleColor = Colors.textFieldCorrect.getValue()
+        let day = pickerView.selectedRow(inComponent: 0)
+        let month = titleForMonthComponent(row: pickerView.selectedRow(inComponent: 1))
+        let year = 2020 - pickerView.selectedRow(inComponent: 2)
+        cell.textFieldView.floatingTextField.text = "\(day) \(month) \(year)"
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        var string = ""
+        switch component {
+        case 0:
+            string = "\(row)"
+        case 1:
+            string = titleForMonthComponent(row: row)
+        case 2:
+            string = "\(2020 - row)"
+        default:
+            string = ""
+        }
+        let attributedString = NSAttributedString(string: string, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        return attributedString
+    }
+    
+    private func titleForMonthComponent(row: Int) -> String {
+        switch row {
+        case 0:
+            return "январь"
+        case 1:
+            return "февраль"
+        case 2:
+            return "март"
+        case 3:
+            return "апрель"
+        case 4:
+            return "май"
+        case 5:
+            return "июнь"
+        case 6:
+            return "июль"
+        case 7:
+            return "август"
+        case 8:
+            return "сентябрь"
+        case 9:
+            return "октябрь"
+        case 10:
+            return "ноябрь"
+        case 11:
+            return "декабрь"
+        default:
+            return ""
+        }
+    }
+    
+}
+
+enum PickerData: Int {
+    case days = 31
+    case months = 12
+    case years = 100
 }

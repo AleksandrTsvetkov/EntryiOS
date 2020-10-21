@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let rootViewController = OnboardingViewController()
         //let rootViewController = RegistrationViewController()
+        //let rootViewController = LoginViewController()
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigationController.navigationBar.isTranslucent = false
         navigationController.navigationBar.barTintColor = .black

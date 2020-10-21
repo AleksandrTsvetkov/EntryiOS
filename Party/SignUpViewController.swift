@@ -254,7 +254,9 @@ class SignUpViewController: UIViewController {
             }
         } else {
             let vc = RegistrationViewController()
-            navigationController?.navigationItem.backBarButtonItem?.title = "Телефон"
+            let backButton = UIBarButtonItem()
+            backButton.title = "Телефон"
+            navigationItem.backBarButtonItem = backButton
             navigationController?.pushViewController(vc, animated: true)
         }
     }

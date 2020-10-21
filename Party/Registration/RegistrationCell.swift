@@ -14,6 +14,7 @@ class RegistrationCell: UITableViewCell {
     var textFieldView = TextFieldView(text: "", placeholder: "")
     var fieldType: FieldType = .name
     var statusDelegate: StatusDelegate?
+    var picker = UIPickerView()
     
     func configure(withType type: FieldType) {
         fieldType = type
@@ -27,7 +28,9 @@ class RegistrationCell: UITableViewCell {
             textFieldView.setPlaceholder(placeholder: "Имя")
         case .birthDate:
             textFieldView.setPlaceholder(placeholder: "Дата рождения")
-        //textFieldView.floatingTextField.isUserInteractionEnabled = false
+            textFieldView.floatingTextField.isUserInteractionEnabled = false
+            let tap = UITapGestureRecognizer(target: self, action: #selector(openDatePicker))
+            self.addGestureRecognizer(tap)
         case .email:
             textFieldView.setPlaceholder(placeholder: "E-mail")
             textFieldView.configure(withKeyboardType: .emailAddress, textContentType: .emailAddress)
@@ -45,6 +48,11 @@ class RegistrationCell: UITableViewCell {
             textFieldView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             textFieldView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
         ])
+        
+    }
+    
+    @objc private func openDatePicker() {
+        statusDelegate?.presentPicker(picker)
     }
     
     @objc private func textFieldChanged(_ textfield: UITextField) {
@@ -54,7 +62,8 @@ class RegistrationCell: UITableViewCell {
             else { return }
         switch fieldType {
         case .name:
-            let set = CharacterSet.letters
+            var set = CharacterSet.letters
+            set.insert(" ")
             var isValid = true
             for i in text {
                 if String(i).rangeOfCharacter(from: set) == nil {
@@ -74,8 +83,13 @@ class RegistrationCell: UITableViewCell {
         case .password:
             break
         }
-        guard let index = FieldType.allCases.firstIndex(of: fieldType) else { return }
         let noErrors = (textField.errorMessage == "" || textField.errorMessage == nil)
+        if !text.isEmpty && noErrors {
+            textField.titleColor = Colors.textFieldCorrect.getValue()
+        } else {
+            textField.titleColor = Colors.gray.getValue()
+        }
+        guard let index = FieldType.allCases.firstIndex(of: fieldType) else { return }
         if !text.isEmpty && noErrors {
             statusDelegate?.fieldsStatus[index] = true
         }
@@ -90,20 +104,20 @@ extension RegistrationCell: UITextFieldDelegate {
         return false
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard
-            let textField = textField as? FloatingField,
-            let text = textField.text
-            else { return true }
-        let noErrors = (textField.errorMessage == "" || textField.errorMessage == nil)
-        if !text.isEmpty && noErrors {
-            textField.titleColor = Colors.textFieldCorrect.getValue()
-        } else {
-            textField.titleColor = Colors.gray.getValue()
-        }
-        return true
-    }
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        guard
+//            let textField = textField as? FloatingField,
+//            let text = textField.text
+//            else { return true }
+//        let noErrors = (textField.errorMessage == "" || textField.errorMessage == nil)
+//        print(text)
+//        print(noErrors)
+//
+//        return true
+//    }
 }
+
+
 
 enum FieldType: CaseIterable {
     case name
@@ -114,4 +128,5 @@ enum FieldType: CaseIterable {
 
 protocol StatusDelegate {
     var fieldsStatus: Array<Bool> { get set }
+    func presentPicker(_ pickerView: UIPickerView)
 }

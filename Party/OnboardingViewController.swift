@@ -183,12 +183,25 @@ class OnboardingViewController: UIViewController {
 
 extension OnboardingViewController: AuthTapDelegate {
     func authTapped(tag: Int) {
-        if tag == 0 {
+        switch tag {
+        case 0:
             let vc = SignUpViewController()
             vc.delegate = self
-            navigationController?.navigationItem.backBarButtonItem?.title = "Зачем?"
+            let backButton = UIBarButtonItem()
+            backButton.title = "Зачем?"
+            navigationItem.backBarButtonItem = backButton
             navigationController?.navigationBar.isHidden = false
             navigationController?.pushViewController(vc, animated: true)
+        case 1:
+            let vc = LoginViewController()
+            vc.delegate = self
+            let backButton = UIBarButtonItem()
+            backButton.title = "Зачем?"
+            navigationItem.backBarButtonItem = backButton
+            navigationController?.navigationBar.isHidden = false
+            navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
         }
     }
 }
