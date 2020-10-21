@@ -96,6 +96,9 @@ class LoginViewController: UIViewController {
         view.addSubview(errorLabel)
         view.addSubview(buttonView)
         
+        buttonView.isUserInteractionEnabled = false
+        buttonView.setColor(color: Colors.buttonGray.getValue())
+        
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             label.heightAnchor.constraint(equalToConstant: 40),
@@ -118,11 +121,11 @@ class LoginViewController: UIViewController {
             
             noAccountLabel.topAnchor.constraint(equalTo: registerLabel.topAnchor),
             noAccountLabel.heightAnchor.constraint(equalToConstant: 22),
-            noAccountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            noAccountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
             noAccountLabel.trailingAnchor.constraint(equalTo: registerLabel.leadingAnchor, constant: -12),
             
             registerLabel.heightAnchor.constraint(equalTo: noAccountLabel.heightAnchor),
-            registerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            registerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             errorLabel.topAnchor.constraint(equalTo: noAccountLabel.bottomAnchor, constant: 60),
             errorLabel.heightAnchor.constraint(equalToConstant: 45),
@@ -178,6 +181,18 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func checkFields() {
+        let emailIsReady = emailTextFieldView.floatingTextField.text != "" && emailTextFieldView.floatingTextField.text != nil
+        let passwordIsReady = passwordTextFieldView.floatingTextField.text != "" && passwordTextFieldView.floatingTextField.text != nil
+        if emailIsReady && passwordIsReady {
+            buttonView.isUserInteractionEnabled = true
+            buttonView.setColor(color: Colors.pink.getValue())
+        } else {
+            buttonView.isUserInteractionEnabled = false
+            buttonView.setColor(color: Colors.buttonGray.getValue())
+        }
+    }
+    
     //MARK: - Objc methods
     @objc private func forgotPasswordTapped() {
         let vc = ForgotPasswordViewController()
@@ -205,12 +220,14 @@ class LoginViewController: UIViewController {
         emailTextFieldView.floatingTextField.errorMessage = ""
         passwordTextFieldView.floatingTextField.errorMessage = ""
         errorLabel.isHidden = true
+        checkFields()
     }
     
     @objc private func passwordTextFieldChanged() {
         emailTextFieldView.floatingTextField.errorMessage = ""
         passwordTextFieldView.floatingTextField.errorMessage = ""
         errorLabel.isHidden = true
+        checkFields()
     }
 }
 
