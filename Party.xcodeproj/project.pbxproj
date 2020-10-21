@@ -27,6 +27,7 @@
 		1F710B4F25388CBD008F0F7D /* UIView + Borders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B4E25388CBD008F0F7D /* UIView + Borders.swift */; };
 		1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B5025388CD8008F0F7D /* TextField + Padding.swift */; };
 		1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B5125388CD8008F0F7D /* UIViewController.swift */; };
+		1F8C096225407D9900034FB2 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8C096125407D9900034FB2 /* ForgotPasswordViewController.swift */; };
 		1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */; };
 		1FEFF10A253B8BA30051235A /* RegistrationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEFF109253B8BA30051235A /* RegistrationCell.swift */; };
 		1FF469F125388DB600926E82 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF469F025388DB600926E82 /* Colors.swift */; };
@@ -59,6 +60,7 @@
 		1F710B4E25388CBD008F0F7D /* UIView + Borders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView + Borders.swift"; sourceTree = "<group>"; };
 		1F710B5025388CD8008F0F7D /* TextField + Padding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextField + Padding.swift"; sourceTree = "<group>"; };
 		1F710B5125388CD8008F0F7D /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		1F8C096125407D9900034FB2 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		1FEFF109253B8BA30051235A /* RegistrationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationCell.swift; sourceTree = "<group>"; };
 		1FF469F025388DB600926E82 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				1F710B3F25388957008F0F7D /* OnboardingViewController.swift */,
 				1F61CED4253909CF00096D71 /* SignUpViewController.swift */,
 				1FFB0DBF253F8D1600041806 /* LoginViewController.swift */,
+				1F8C096125407D9900034FB2 /* ForgotPasswordViewController.swift */,
 				1FFB0DBE253F8CBD00041806 /* Registration */,
 				1FF469F625388EA500926E82 /* Custom Views */,
 				1F710B5425388CF2008F0F7D /* Helpers */,
@@ -325,6 +328,7 @@
 				1FFB0DC0253F8D1600041806 /* LoginViewController.swift in Sources */,
 				1F61CED5253909CF00096D71 /* SignUpViewController.swift in Sources */,
 				1F61CECB2538F0F100096D71 /* AuthTypeView.swift in Sources */,
+				1F8C096225407D9900034FB2 /* ForgotPasswordViewController.swift in Sources */,
 				1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */,
 				1F61CEC92538E71200096D71 /* AuthView.swift in Sources */,
 				1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */,

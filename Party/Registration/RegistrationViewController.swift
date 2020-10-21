@@ -219,6 +219,7 @@ extension RegistrationViewController: UIPickerViewDelegate, UIPickerViewDataSour
         let day = pickerView.selectedRow(inComponent: 0)
         let month = titleForMonthComponent(row: pickerView.selectedRow(inComponent: 1))
         let year = 2020 - pickerView.selectedRow(inComponent: 2)
+        fieldsStatus[1] = true
         cell.textFieldView.floatingTextField.text = "\(day) \(month) \(year)"
     }
     

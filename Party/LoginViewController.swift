@@ -25,6 +25,7 @@ class LoginViewController: UIViewController {
     private let forgotPasswordLabel: UILabel = {
         let view = UILabel()
         view.textAlignment = .right
+        view.isUserInteractionEnabled = true
         view.text = "ЗАБЫЛИ ПАРОЛЬ?"
         view.font = UIFont(name: "SFProText-Regular", size: 12)
         view.textColor = .white
@@ -43,6 +44,7 @@ class LoginViewController: UIViewController {
     private let registerLabel: UILabel = {
         let view = UILabel()
         view.textAlignment = .center
+        view.isUserInteractionEnabled = true
         view.text = "Зарегистрироваться"
         view.font = UIFont(name: "SFProText-Regular", size: 16)
         view.textColor = UIColor(hex: "FFFFFF", alpha: 0.65)
@@ -54,6 +56,7 @@ class LoginViewController: UIViewController {
         view.textAlignment = .left
         view.text = "Произошла ошибка!\nПопробуйте ещё раз"
         view.numberOfLines = 0
+        view.isHidden = true
         view.font = UIFont(name: "SFProText-Regular", size: 17)
         view.textColor = Colors.red.getValue()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -66,6 +69,21 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .black
         
         setupViews()
+        configureTextFields()
+        setupActions()
+    }
+    
+    private func setupActions() {
+        let tap0 = UITapGestureRecognizer(target: self, action: #selector(forgotPasswordTapped))
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(registerTapped))
+        let tap2 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        forgotPasswordLabel.addGestureRecognizer(tap0)
+        registerLabel.addGestureRecognizer(tap1)
+        buttonView.addGestureRecognizer(tap2)
+        emailTextFieldView.floatingTextField.delegate = self
+        passwordTextFieldView.floatingTextField.delegate = self
+        emailTextFieldView.floatingTextField.addTarget(self, action: #selector(emailTextFieldChanged), for: .editingChanged)
+        passwordTextFieldView.floatingTextField.addTarget(self, action: #selector(passwordTextFieldChanged), for: .editingChanged)
     }
     
     private func setupViews() {
@@ -126,11 +144,30 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func configureTextFields() {
+        emailTextFieldView.configure(withKeyboardType: .emailAddress, textContentType: .emailAddress)
+        passwordTextFieldView.floatingTextField.isSecureTextEntry = true
+        emailTextFieldView.floatingTextField.title = "E-MAIL"
+        emailTextFieldView.floatingTextField.placeholderFont = UIFont(name: "SFProText-Regular", size: 17)
+        emailTextFieldView.floatingTextField.placeholderColor = Colors.gray.getValue()
+        emailTextFieldView.floatingTextField.titleColor = Colors.pink.getValue()
+        emailTextFieldView.floatingTextField.titleFont = UIFont(name: "SFProText-Regular", size: 12) ?? UIFont.systemFont(ofSize: 12)
+        emailTextFieldView.floatingTextField.errorColor = Colors.red.getValue()
+        passwordTextFieldView.floatingTextField.title = "ПАРОЛЬ"
+        passwordTextFieldView.floatingTextField.placeholderFont = UIFont(name: "SFProText-Regular", size: 17)
+        passwordTextFieldView.floatingTextField.placeholderColor = Colors.gray.getValue()
+        passwordTextFieldView.floatingTextField.titleColor = Colors.pink.getValue()
+        passwordTextFieldView.floatingTextField.titleFont = UIFont(name: "SFProText-Regular", size: 12) ?? UIFont.systemFont(ofSize: 12)
+        passwordTextFieldView.floatingTextField.errorColor = Colors.red.getValue()
+    }
+    
     override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
         if parent == nil {
             guard let navigationVC = navigationController else { return }
             if navigationVC.viewControllers.count > 2 {
-                navigationVC.removeControllers(in: 1...2)
+                let count = navigationVC.viewControllers.count
+                navigationVC.removeControllers(in: 1...count - 2)
             }
             delegate?.blurEffectView.isHidden = true
             delegate?.authView.isHidden = true
@@ -139,5 +176,47 @@ class LoginViewController: UIViewController {
             delegate?.authViewIsHiddenConstraint.isActive = true
             navigationController?.navigationBar.isHidden = true
         }
+    }
+    
+    //MARK: - Objc methods
+    @objc private func forgotPasswordTapped() {
+        let vc = ForgotPasswordViewController()
+        let backButton = UIBarButtonItem()
+        backButton.title = "Вход"
+        navigationItem.backBarButtonItem = backButton
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func registerTapped() {
+        let vc = SignUpViewController()
+        let backButton = UIBarButtonItem()
+        backButton.title = "Вход"
+        navigationItem.backBarButtonItem = backButton
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func buttonViewTapped() {
+        errorLabel.isHidden = false
+        emailTextFieldView.floatingTextField.errorMessage = "E-MAIL"
+        passwordTextFieldView.floatingTextField.errorMessage = "ПАРОЛЬ"
+    }
+    
+    @objc private func emailTextFieldChanged() {
+        emailTextFieldView.floatingTextField.errorMessage = ""
+        passwordTextFieldView.floatingTextField.errorMessage = ""
+        errorLabel.isHidden = true
+    }
+    
+    @objc private func passwordTextFieldChanged() {
+        emailTextFieldView.floatingTextField.errorMessage = ""
+        passwordTextFieldView.floatingTextField.errorMessage = ""
+        errorLabel.isHidden = true
+    }
+}
+
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
 }

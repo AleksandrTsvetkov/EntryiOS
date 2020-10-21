@@ -11,7 +11,7 @@ import SkyFloatingLabelTextField
 
 class SignUpViewController: UIViewController {
     
-    var delegate: OnboardingViewController!
+    var delegate: OnboardingViewController?
     private let label: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -69,12 +69,16 @@ class SignUpViewController: UIViewController {
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
         if parent == nil {
-            delegate.blurEffectView.isHidden = true
-            delegate.authView.isHidden = true
-            delegate.authView.transform = .identity
-            delegate.authViewIsVisibleConstraint.isActive = false
-            delegate.authViewIsHiddenConstraint.isActive = true
-            navigationController?.navigationBar.isHidden = true
+            delegate?.blurEffectView.isHidden = true
+            delegate?.authView.isHidden = true
+            delegate?.authView.transform = .identity
+            delegate?.authViewIsVisibleConstraint.isActive = false
+            delegate?.authViewIsHiddenConstraint.isActive = true
+            if let _ = navigationController?.viewControllers[1] as? LoginViewController {
+                navigationController?.navigationBar.isHidden = false
+            } else {
+                navigationController?.navigationBar.isHidden = true
+            }
         }
     }
     
@@ -262,11 +266,11 @@ class SignUpViewController: UIViewController {
     }
     
     @objc private func backButtonTapped() {
-        delegate.blurEffectView.isHidden = true
-        delegate.authView.isHidden = true
-        delegate.authView.transform = .identity
-        delegate.authViewIsVisibleConstraint.isActive = false
-        delegate.authViewIsHiddenConstraint.isActive = true
+        delegate?.blurEffectView.isHidden = true
+        delegate?.authView.isHidden = true
+        delegate?.authView.transform = .identity
+        delegate?.authViewIsVisibleConstraint.isActive = false
+        delegate?.authViewIsHiddenConstraint.isActive = true
         navigationController?.navigationBar.isHidden = true
         navigationController?.popViewController(animated: true)
     }
