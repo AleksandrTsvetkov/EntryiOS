@@ -77,7 +77,6 @@ class RegistrationViewController: UIViewController, StatusDelegate {
             buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.heightAnchor.constraint(equalToConstant: 376)
