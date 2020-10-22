@@ -64,11 +64,9 @@ class CheckEmailView: UIView {
         addSubview(exitButton)
         
         NSLayoutConstraint.activate([
-            emailImageView.heightAnchor.constraint(equalToConstant: 275),
-            emailImageView.widthAnchor.constraint(equalToConstant: 275),
             emailImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: emailImageView.bottomAnchor, constant: 50),
+            
             titleLabel.heightAnchor.constraint(equalToConstant: 42),
             titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
@@ -76,20 +74,27 @@ class CheckEmailView: UIView {
             subtitleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             subtitleLabel.heightAnchor.constraint(equalToConstant: 48),
             subtitleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 20),
-            subtitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -200),
+            subtitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -20),
             
             exitButton.heightAnchor.constraint(equalToConstant: 50),
             exitButton.widthAnchor.constraint(equalToConstant: 50),
             exitButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            exitButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -50)
         ])
         
         if UIScreen.main.bounds.width < 600 {
             NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: emailImageView.bottomAnchor, constant: 30),
+                emailImageView.heightAnchor.constraint(equalToConstant: 222),
+                emailImageView.widthAnchor.constraint(equalToConstant: 222),
                 emailImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50),
+                exitButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
             ])
         } else {
             NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: emailImageView.bottomAnchor, constant: 50),
+                exitButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -50),
+                emailImageView.heightAnchor.constraint(equalToConstant: 275),
+                emailImageView.widthAnchor.constraint(equalToConstant: 275),
                 emailImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 150),
             ])
         }

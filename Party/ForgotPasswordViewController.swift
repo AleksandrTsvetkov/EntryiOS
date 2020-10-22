@@ -23,7 +23,9 @@ class ForgotPasswordViewController: UIViewController {
     private let emailTextFieldView = TextFieldView(text: "", placeholder: "E-mail")
     private let noAccountLabel: UILabel = {
         let view = UILabel()
-        view.textAlignment = .center
+        view.textAlignment = .left
+        view.numberOfLines = 0
+        view.lineBreakMode = .byWordWrapping
         view.text = "Еще нет аккаунта?"
         view.font = UIFont(name: "SFProText-Semibold", size: 16)
         view.textColor = .white
@@ -32,8 +34,10 @@ class ForgotPasswordViewController: UIViewController {
     }()
     private let registerLabel: UILabel = {
         let view = UILabel()
-        view.textAlignment = .center
+        view.textAlignment = .right
         view.isUserInteractionEnabled = true
+        view.numberOfLines = 0
+        view.lineBreakMode = .byWordWrapping
         view.text = "Зарегистрироваться"
         view.font = UIFont(name: "SFProText-Regular", size: 16)
         view.textColor = UIColor(hex: "FFFFFF", alpha: 0.65)
@@ -80,18 +84,18 @@ class ForgotPasswordViewController: UIViewController {
             label.heightAnchor.constraint(equalToConstant: 40),
             label.topAnchor.constraint(equalTo: view.topAnchor, constant: 14),
             
-            emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 140),
             emailTextFieldView.bottomAnchor.constraint(equalTo: noAccountLabel.topAnchor, constant: -50),
             emailTextFieldView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             emailTextFieldView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             emailTextFieldView.heightAnchor.constraint(equalToConstant: 72),
             
             noAccountLabel.topAnchor.constraint(equalTo: registerLabel.topAnchor),
-            noAccountLabel.heightAnchor.constraint(equalToConstant: 22),
+            noAccountLabel.heightAnchor.constraint(equalToConstant: 60),
+            noAccountLabel.bottomAnchor.constraint(lessThanOrEqualTo: buttonView.topAnchor, constant: -30),
             noAccountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
             noAccountLabel.trailingAnchor.constraint(equalTo: registerLabel.leadingAnchor, constant: -12),
             
-            registerLabel.heightAnchor.constraint(equalTo: noAccountLabel.heightAnchor),
+            registerLabel.heightAnchor.constraint(equalToConstant: 60),
             registerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             buttonView.heightAnchor.constraint(equalToConstant: 50),
@@ -107,17 +111,19 @@ class ForgotPasswordViewController: UIViewController {
         if UIScreen.main.bounds.height < 600 {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+                emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
             ])
         } else {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+                emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 140),
             ])
         }
     }
     
     private func checkField() {
         let emailIsReady = emailTextFieldView.floatingTextField.text != "" && emailTextFieldView.floatingTextField.text != nil
-        let noErrors = !(emailTextFieldView.floatingTextField.errorMessage == "" || emailTextFieldView.floatingTextField.errorMessage == nil)
+        let noErrors = (emailTextFieldView.floatingTextField.errorMessage == "" || emailTextFieldView.floatingTextField.errorMessage == nil)
         if emailIsReady && noErrors {
             buttonView.isUserInteractionEnabled = true
             buttonView.setColor(color: Colors.pink.getValue())
@@ -128,17 +134,20 @@ class ForgotPasswordViewController: UIViewController {
     }
     
     @objc private func buttonViewTapped() {
+        navigationController?.navigationBar.isHidden = true
         checkEmailView.isHidden = false
     }
     
     @objc private func emailTextFieldChanged(_ textfield: UITextField) {
-        checkField()
         guard
         let textField = textfield as? FloatingField,
-        let text = textField.text
+        var text = textField.text
         else { return }
+        text = text.trimmingCharacters(in: .whitespaces)
+        textField.text = text
         let isEmail = text.isEmail()
         textField.errorMessage = (isEmail  || text.isEmpty) ? "" : "Неправильный email".uppercased()
+        checkField()
         let noErrors = (textField.errorMessage == "" || textField.errorMessage == nil)
         if !text.isEmpty && noErrors {
             textField.titleColor = Colors.textFieldCorrect.getValue()
@@ -165,6 +174,7 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
 
 extension ForgotPasswordViewController: ExitDelegate {
     func exitTapped() {
+        navigationController?.navigationBar.isHidden = false
         checkEmailView.isHidden = true
     }
 }

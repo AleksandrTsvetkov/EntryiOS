@@ -34,7 +34,9 @@ class LoginViewController: UIViewController {
     }()
     private let noAccountLabel: UILabel = {
         let view = UILabel()
-        view.textAlignment = .center
+        view.textAlignment = .left
+        view.numberOfLines = 0
+        view.lineBreakMode = .byWordWrapping
         view.text = "Еще нет аккаунта?"
         view.font = UIFont(name: "SFProText-Semibold", size: 16)
         view.textColor = .white
@@ -43,8 +45,10 @@ class LoginViewController: UIViewController {
     }()
     private let registerLabel: UILabel = {
         let view = UILabel()
-        view.textAlignment = .center
+        view.textAlignment = .right
         view.isUserInteractionEnabled = true
+        view.numberOfLines = 0
+        view.lineBreakMode = .byWordWrapping
         view.text = "Зарегистрироваться"
         view.font = UIFont(name: "SFProText-Regular", size: 16)
         view.textColor = UIColor(hex: "FFFFFF", alpha: 0.65)
@@ -104,7 +108,6 @@ class LoginViewController: UIViewController {
             label.heightAnchor.constraint(equalToConstant: 40),
             label.topAnchor.constraint(equalTo: view.topAnchor, constant: 14),
             
-            emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 140),
             emailTextFieldView.bottomAnchor.constraint(equalTo: passwordTextFieldView.topAnchor, constant: -16),
             emailTextFieldView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             emailTextFieldView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -120,11 +123,12 @@ class LoginViewController: UIViewController {
             forgotPasswordLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             noAccountLabel.topAnchor.constraint(equalTo: registerLabel.topAnchor),
-            noAccountLabel.heightAnchor.constraint(equalToConstant: 22),
+            noAccountLabel.heightAnchor.constraint(equalToConstant: 60),
+            noAccountLabel.bottomAnchor.constraint(lessThanOrEqualTo: buttonView.topAnchor, constant: -30),
             noAccountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
             noAccountLabel.trailingAnchor.constraint(equalTo: registerLabel.leadingAnchor, constant: -12),
             
-            registerLabel.heightAnchor.constraint(equalTo: noAccountLabel.heightAnchor),
+            registerLabel.heightAnchor.constraint(equalToConstant: 60),
             registerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             errorLabel.topAnchor.constraint(equalTo: noAccountLabel.bottomAnchor, constant: 60),
@@ -139,10 +143,12 @@ class LoginViewController: UIViewController {
         if UIScreen.main.bounds.height < 600 {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+                emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
             ])
         } else {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+                emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 140),
             ])
         }
     }
@@ -217,6 +223,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func emailTextFieldChanged() {
+        emailTextFieldView.floatingTextField.text = emailTextFieldView.floatingTextField.text?.trimmingCharacters(in: .whitespaces)
         emailTextFieldView.floatingTextField.errorMessage = ""
         passwordTextFieldView.floatingTextField.errorMessage = ""
         errorLabel.isHidden = true
@@ -224,6 +231,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func passwordTextFieldChanged() {
+        passwordTextFieldView.floatingTextField.text = passwordTextFieldView.floatingTextField.text?.trimmingCharacters(in: .whitespaces)
         emailTextFieldView.floatingTextField.errorMessage = ""
         passwordTextFieldView.floatingTextField.errorMessage = ""
         errorLabel.isHidden = true
