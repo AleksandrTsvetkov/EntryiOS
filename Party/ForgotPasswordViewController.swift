@@ -40,6 +40,7 @@ class ForgotPasswordViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private let checkEmailView = CheckEmailView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +54,7 @@ class ForgotPasswordViewController: UIViewController {
         view.addSubview(emailTextFieldView)
         view.addSubview(noAccountLabel)
         view.addSubview(registerLabel)
+        view.addSubview(checkEmailView)
         
         buttonView.translatesAutoresizingMaskIntoConstraints = false
         emailTextFieldView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,8 +67,13 @@ class ForgotPasswordViewController: UIViewController {
         emailTextFieldView.floatingTextField.titleColor = Colors.pink.getValue()
         emailTextFieldView.floatingTextField.titleFont = UIFont(name: "SFProText-Regular", size: 12) ?? UIFont.systemFont(ofSize: 12)
         emailTextFieldView.floatingTextField.errorColor = Colors.red.getValue()
-        let tap = UITapGestureRecognizer(target: self, action: #selector(registerTapped))
-        registerLabel.addGestureRecognizer(tap)
+        let tap0 = UITapGestureRecognizer(target: self, action: #selector(registerTapped))
+        registerLabel.addGestureRecognizer(tap0)
+        emailTextFieldView.floatingTextField.addTarget(self, action: #selector(emailTextFieldChanged), for: .editingChanged)
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        buttonView.addGestureRecognizer(tap1)
+        checkEmailView.delegate = self
+        checkEmailView.isHidden = true
         
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -90,6 +97,11 @@ class ForgotPasswordViewController: UIViewController {
             buttonView.heightAnchor.constraint(equalToConstant: 50),
             buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            checkEmailView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            checkEmailView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            checkEmailView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            checkEmailView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
         
         if UIScreen.main.bounds.height < 600 {
@@ -101,7 +113,38 @@ class ForgotPasswordViewController: UIViewController {
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             ])
         }
-        
+    }
+    
+    private func checkField() {
+        let emailIsReady = emailTextFieldView.floatingTextField.text != "" && emailTextFieldView.floatingTextField.text != nil
+        let noErrors = !(emailTextFieldView.floatingTextField.errorMessage == "" || emailTextFieldView.floatingTextField.errorMessage == nil)
+        if emailIsReady && noErrors {
+            buttonView.isUserInteractionEnabled = true
+            buttonView.setColor(color: Colors.pink.getValue())
+        } else {
+            buttonView.isUserInteractionEnabled = false
+            buttonView.setColor(color: Colors.buttonGray.getValue())
+        }
+    }
+    
+    @objc private func buttonViewTapped() {
+        checkEmailView.isHidden = false
+    }
+    
+    @objc private func emailTextFieldChanged(_ textfield: UITextField) {
+        checkField()
+        guard
+        let textField = textfield as? FloatingField,
+        let text = textField.text
+        else { return }
+        let isEmail = text.isEmail()
+        textField.errorMessage = (isEmail  || text.isEmpty) ? "" : "Неправильный email".uppercased()
+        let noErrors = (textField.errorMessage == "" || textField.errorMessage == nil)
+        if !text.isEmpty && noErrors {
+            textField.titleColor = Colors.textFieldCorrect.getValue()
+        } else {
+            textField.titleColor = Colors.gray.getValue()
+        }
     }
     
     @objc private func registerTapped() {
@@ -117,5 +160,11 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
+    }
+}
+
+extension ForgotPasswordViewController: ExitDelegate {
+    func exitTapped() {
+        checkEmailView.isHidden = true
     }
 }

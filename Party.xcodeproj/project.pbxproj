@@ -28,6 +28,8 @@
 		1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B5025388CD8008F0F7D /* TextField + Padding.swift */; };
 		1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B5125388CD8008F0F7D /* UIViewController.swift */; };
 		1F8C096225407D9900034FB2 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8C096125407D9900034FB2 /* ForgotPasswordViewController.swift */; };
+		1F8C09642540C9FF00034FB2 /* CheckEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8C09632540C9FF00034FB2 /* CheckEmailView.swift */; };
+		1F8C09662540CA9D00034FB2 /* NewPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8C09652540CA9D00034FB2 /* NewPasswordViewController.swift */; };
 		1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */; };
 		1FEFF10A253B8BA30051235A /* RegistrationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEFF109253B8BA30051235A /* RegistrationCell.swift */; };
 		1FF469F125388DB600926E82 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF469F025388DB600926E82 /* Colors.swift */; };
@@ -61,6 +63,8 @@
 		1F710B5025388CD8008F0F7D /* TextField + Padding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextField + Padding.swift"; sourceTree = "<group>"; };
 		1F710B5125388CD8008F0F7D /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		1F8C096125407D9900034FB2 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		1F8C09632540C9FF00034FB2 /* CheckEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckEmailView.swift; sourceTree = "<group>"; };
+		1F8C09652540CA9D00034FB2 /* NewPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPasswordViewController.swift; sourceTree = "<group>"; };
 		1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		1FEFF109253B8BA30051235A /* RegistrationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationCell.swift; sourceTree = "<group>"; };
 		1FF469F025388DB600926E82 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -131,6 +135,7 @@
 				1F61CED4253909CF00096D71 /* SignUpViewController.swift */,
 				1FFB0DBF253F8D1600041806 /* LoginViewController.swift */,
 				1F8C096125407D9900034FB2 /* ForgotPasswordViewController.swift */,
+				1F8C09652540CA9D00034FB2 /* NewPasswordViewController.swift */,
 				1FFB0DBE253F8CBD00041806 /* Registration */,
 				1FF469F625388EA500926E82 /* Custom Views */,
 				1F710B5425388CF2008F0F7D /* Helpers */,
@@ -181,6 +186,7 @@
 				1F61CECA2538F0F100096D71 /* AuthTypeView.swift */,
 				1F6867E72539CE0A00543498 /* OneTimeCodeTextField.swift */,
 				1F6867E92539DEBE00543498 /* TextFieldView.swift */,
+				1F8C09632540C9FF00034FB2 /* CheckEmailView.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -338,9 +344,11 @@
 				1FEFF10A253B8BA30051235A /* RegistrationCell.swift in Sources */,
 				1F6867EA2539DEBE00543498 /* TextFieldView.swift in Sources */,
 				1F61CEC62538D33E00096D71 /* FeatureView.swift in Sources */,
+				1F8C09642540C9FF00034FB2 /* CheckEmailView.swift in Sources */,
 				1F710B4F25388CBD008F0F7D /* UIView + Borders.swift in Sources */,
 				1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */,
 				1F6867EC2539E83900543498 /* String + Extension.swift in Sources */,
+				1F8C09662540CA9D00034FB2 /* NewPasswordViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
