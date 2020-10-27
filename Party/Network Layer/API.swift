@@ -10,7 +10,6 @@ import Foundation
 
 struct API {
     static let scheme = "http"
-    static let host = ""
-    static let port = ""
+    static let host = "130.193.36.168"
     static let auth = "auth"
 }

@@ -56,6 +56,7 @@ class SignUpViewController: UIViewController {
     private var timer: Timer?
     private var timerCount: Int = 60
     private lazy var buttonView = ButtonView(color: Colors.pink.getValue(), title: "Дальше", left: 16, right: 16)
+    private var phoneNumber: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -99,30 +100,52 @@ class SignUpViewController: UIViewController {
         textFieldView.floatingTextField.becomeFirstResponder()
         codeTextField.didEnterDigit = { [weak self] code in
             guard let self = self else { return }
-            switch code {
-            case "7777":
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                    guard self.codeTextField.amountOfDigitsNow == 4 && code == "7777" else { return }
-                    self.buttonView.setColor(color: Colors.pink.getValue())
-                    self.buttonView.state = .next
-                    self.codeTextField.resignFirstResponder()
-                    self.timeLabel.isHidden = true
-                    self.timerLabel.isHidden = true
-                }
-            case "6666":
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                    guard self.codeTextField.amountOfDigitsNow == 4 && code == "6666" else { return }
-                    self.buttonView.setColor(color: Colors.red.getValue())
-                    self.buttonView.state = .error
-                    self.errorLabel.isHidden = false
-                    self.timeLabel.isHidden = true
-                    self.timerLabel.isHidden = true
-                    self.codeTextField.text = ""
-                    self.codeTextField.textDidChange()
-                    self.codeTextField.resignFirstResponder()
-                }
-            default:
-                break
+            guard self.codeTextField.amountOfDigitsNow == 4 else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                guard self.codeTextField.amountOfDigitsNow == 4 else { return }
+                NetworkService.shared.checkCode(phoneNumber: self.phoneNumber, code: code) { result in
+                    switch result {
+                    case .success(let data):
+                        do {
+                            guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                            print("\(dict) code")
+                            if let warning = dict["warning"] as? String {
+                                self.receiveCodeError()
+                                //TODO: - Create alert
+                                print(warning)
+                            }
+                            if let error = dict["error"] as? String {
+                                self.receiveCodeError()
+                                //TODO: - Create alert
+                                print(error)
+                            }
+                            if let verified = dict["verified"] as? Int {
+                                print("verified is \(verified) when checking code")
+                                if verified == 0 {
+                                    self.receiveCodeError()
+                                    //TODO: - Create alert
+                                    print("wrong code")
+                                } else if verified == 1 {
+                                    self.buttonView.setColor(color: Colors.pink.getValue())
+                                    self.buttonView.state = .next
+                                    self.codeTextField.resignFirstResponder()
+                                    self.timeLabel.isHidden = true
+                                    self.timerLabel.isHidden = true
+                                }
+                            }
+                        } catch {
+                            print(error)
+                        }
+
+                    case .failure(let error):
+                        print(error)
+                    }
+                } // Check code
+                self.buttonView.setColor(color: Colors.pink.getValue())
+                self.buttonView.state = .next
+                self.codeTextField.resignFirstResponder()
+                self.timeLabel.isHidden = true
+                self.timerLabel.isHidden = true
             }
         }
         
@@ -178,13 +201,23 @@ class SignUpViewController: UIViewController {
         if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
             floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
             guard let currentText = floatingLabelTextField.text else { return }
-            if !String(currentText.dropFirst()).isNumeric {
+            if !currentText.isNumeric {
                 floatingLabelTextField.errorMessage = "НЕПРАВИЛЬНЫЙ НОМЕР".uppercased()
             } else {
                 floatingLabelTextField.errorMessage = ""
-                if textFieldView.floatingTextField.text?.count == 12 {
+                if textFieldView.floatingTextField.text?.count == 11 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                        guard self.textFieldView.floatingTextField.text?.count == 12 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
+                        guard self.textFieldView.floatingTextField.text?.count == 11 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
+                        self.phoneNumber = currentText
+                        NetworkService.shared.sendCode(phoneNumber: currentText) { result in
+                            switch result {
+                            case .success(let data):
+                                guard let dataString = String(data: data, encoding: .utf8) else { return }
+                                print(dataString)
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
                         self.timer?.invalidate()
                         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
                             switch self.timerCount {
@@ -219,6 +252,17 @@ class SignUpViewController: UIViewController {
             }
         }
     } // textFieldChanged
+    
+    private func receiveCodeError() {
+        self.buttonView.setColor(color: Colors.red.getValue())
+        self.buttonView.state = .error
+        self.errorLabel.isHidden = false
+        self.timeLabel.isHidden = true
+        self.timerLabel.isHidden = true
+        self.codeTextField.text = ""
+        self.codeTextField.textDidChange()
+        self.codeTextField.resignFirstResponder()
+    }
     
     @objc private func buttonViewTapped() {
         if buttonView.state == .error {
@@ -258,6 +302,7 @@ class SignUpViewController: UIViewController {
             }
         } else {
             let vc = RegistrationViewController()
+            vc.phoneNumber = phoneNumber
             let backButton = UIBarButtonItem()
             backButton.title = "Телефон"
             navigationItem.backBarButtonItem = backButton
@@ -282,7 +327,7 @@ extension SignUpViewController: UITextFieldDelegate {
         guard let floatingTextField = textField as? SkyFloatingLabelTextField else { return false }
         if floatingTextField.text == "+" && string.isEmpty {
             return false
-        } else if floatingTextField.text?.count == 12 && !string.isEmpty{
+        } else if floatingTextField.text?.count == 11 && !string.isEmpty{
             return false
         } else {
             return true

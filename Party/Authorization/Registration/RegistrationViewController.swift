@@ -35,6 +35,7 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     }
     var picker: UIPickerView?
     var toolBar: UIToolbar?
+    var phoneNumber: String = ""
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -125,7 +126,41 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         ])
     }
     
+    private func receiveServerError() {
+        for row in 0...(tableView.numberOfRows(inSection: 0) - 1) {
+            let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0)) as! RegistrationCell
+            cell.textFieldView.floatingTextField.text = ""
+        }
+        guard let picker = picker else { return }
+        picker.selectRow(PickerData.days.rawValue / 2, inComponent: 0, animated: false)
+        picker.selectRow(PickerData.months.rawValue / 2, inComponent: 1, animated: false)
+        picker.selectRow(PickerData.years.rawValue / 2, inComponent: 2, animated: false)
+    }
     
+    private func getUser() -> User {
+        var user = User(phoneNumber: phoneNumber, firstName: "", secondName: "", birthYear: "", birthMonth: "", birthDay: "", locationId: "1", password: "", email: "")
+        let nameCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! RegistrationCell
+        let fullName = nameCell.textFieldView.floatingTextField.text ?? ""
+        if let spacingIndex = fullName.firstIndex(of: " ") {
+            let firstName = fullName[..<spacingIndex]
+            let secondName = fullName[spacingIndex...]
+            user.firstName = String(firstName)
+            user.secondName = String(secondName)
+        } else {
+            user.firstName = fullName
+        }
+        guard let picker = picker else { return user }
+        user.birthDay = "\(picker.selectedRow(inComponent: 0))"
+        user.birthMonth = "\(picker.selectedRow(inComponent: 1))"
+        user.birthYear = "\(2020 - picker.selectedRow(inComponent: 2))"
+        let emailCell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as! RegistrationCell
+        let email = emailCell.textFieldView.floatingTextField.text ?? ""
+        user.email = email
+        let passwordCell = tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! RegistrationCell
+        let password = passwordCell.textFieldView.floatingTextField.text ?? ""
+        user.password = password
+        return user
+    }
     
     //MARK: - Objc methods
     @objc func doneButtonTapped() {
@@ -135,12 +170,40 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     
     @objc private func buttonViewTapped() {
         if buttonView.isUserInteractionEnabled {
-            let vc = LoginViewController()
-            let backButton = UIBarButtonItem()
-            backButton.title = "Зачем?"
-            navigationItem.backBarButtonItem = backButton
-            navigationController?.pushViewController(vc, animated: true)
-            
+            NetworkService.shared.createUser(user: getUser()) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                        print(dict)
+                        if let warning = dict["warning"] as? String {
+                            //TODO: - Create alert
+                            self.receiveServerError()
+                            print(warning)
+                            return
+                        }
+                        if let error = dict["error"] as? String {
+                            //TODO: - Create alert
+                            self.receiveServerError()
+                            print(error)
+                            return
+                        }
+                        if let success = dict["success"] as? Int {
+                            if success == 1 {
+                                let vc = LoginViewController()
+                                let backButton = UIBarButtonItem()
+                                backButton.title = "Зачем?"
+                                self.navigationItem.backBarButtonItem = backButton
+                                self.navigationController?.pushViewController(vc, animated: true)
+                            }
+                        }
+                    } catch {
+                        print(error)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
     }
     
@@ -162,7 +225,6 @@ class RegistrationViewController: UIViewController, StatusDelegate {
                 self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
                 self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
             }
-            
         }
     }
     

@@ -9,7 +9,7 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-
+    
     var delegate: OnboardingViewController?
     private let label: UILabel = {
         let view = UILabel()
@@ -199,6 +199,30 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func verify() {
+        NetworkService.shared.verify { result in
+            switch result {
+            case .success(let data):
+                do {
+                    guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                    print("-----Verify-----")
+                    print(dict)
+                    print("-----Verify-----")
+                    if let valid = dict["valid"] as? Int {
+                        if valid == 1 {
+                            //TODO: - Make alert
+                            print("Auth is valid")
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     //MARK: - Objc methods
     @objc private func forgotPasswordTapped() {
         let vc = ForgotPasswordViewController()
@@ -217,9 +241,40 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func buttonViewTapped() {
-        errorLabel.isHidden = false
-        emailTextFieldView.floatingTextField.errorMessage = "E-MAIL"
-        passwordTextFieldView.floatingTextField.errorMessage = "ПАРОЛЬ"
+        guard
+            let email = emailTextFieldView.floatingTextField.text,
+            let password = passwordTextFieldView.floatingTextField.text
+            else { return}
+        NetworkService.shared.login(phoneNumber: email, password: password) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                    print("-----Login-----")
+                    print(dict)
+                    print("-----Login-----")
+                    let defaults = UserDefaults.standard
+                    if let accessToken = dict["access_token"] as? String {
+                        defaults.set(accessToken, forKey: "access_token")
+                    }
+                    if let refreshToken = dict["refresh_token"] as? String {
+                        defaults.set(refreshToken, forKey: "refresh_token")
+                    }
+                    
+                } catch {
+                    self.errorLabel.isHidden = false
+                    self.emailTextFieldView.floatingTextField.errorMessage = "E-MAIL"
+                    self.passwordTextFieldView.floatingTextField.errorMessage = "ПАРОЛЬ"
+                    print(error)
+                }
+                self.verify()
+            case .failure(let error):
+                self.errorLabel.isHidden = false
+                self.emailTextFieldView.floatingTextField.errorMessage = "E-MAIL"
+                self.passwordTextFieldView.floatingTextField.errorMessage = "ПАРОЛЬ"
+                print(error)
+            }
+        }
     }
     
     @objc private func emailTextFieldChanged() {

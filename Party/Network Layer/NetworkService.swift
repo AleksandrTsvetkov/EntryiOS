@@ -22,7 +22,6 @@ class NetworkService {
         ]
         var parameters = ""
         parameters.makeFields(rows: parametersArray)
-        print(parameters)
         let parametersData = parameters.data(using: .utf8)
         makeRequest(ofType: .login, parametersData: parametersData, completion: completion)
     }
@@ -89,7 +88,6 @@ class NetworkService {
         ]
         var parameters = ""
         parameters.makeFields(rows: parametersArray)
-        print(parameters)
         let parametersData = parameters.data(using: .utf8)
         makeRequest(ofType: .createEvent, parametersData: parametersData, completion: completion)
     }
@@ -216,6 +214,7 @@ class NetworkService {
         ]
         var parameters = ""
         parameters.makeFields(rows: parametersArray)
+        print(parameters)
         let parametersData = parameters.data(using: .utf8)
         makeRequest(ofType: .createUser, parametersData: parametersData, completion: completion)
     }
@@ -228,7 +227,7 @@ class NetworkService {
     //MARK: - Supporting methods
     private func makeRequest(ofType type: RequestType, parametersData: Data?, completion: @escaping SessionResult) {
         let queryPart = type == .imageDownload ? "?file_id=" : ""
-        let urlString = API.scheme + "://" + API.host + ":" + API.port + "/" + type.getPath() + queryPart
+        let urlString = API.scheme + "://" + API.host + "/" + type.getPath() + queryPart
         guard let url = URL(string: urlString) else { return }
         var request = URLRequest(url: url, timeoutInterval: Double.infinity)
         if type == .imageUpload { request.addValue("text/plain", forHTTPHeaderField: "Content-Type") }
@@ -266,7 +265,7 @@ class NetworkService {
             }
             completion(.success(data))
             guard let dataString = String(data: data, encoding: .utf8) else { return }
-            print(dataString)
+            print("Data string \(dataString) in \(#function) of type \(type)")
         }
     }
 }
