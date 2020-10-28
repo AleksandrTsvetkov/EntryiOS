@@ -235,6 +235,16 @@ class NetworkService {
         if let parametersData = parametersData {
             request.httpBody = parametersData
         }
+        switch type {
+        case .verify, .refresh, .logout, .createEvent, .updateEvent, .getEvent, .deleteEvent, .getUserDetails, .updateUserDetails, .changePassword:
+            let defaults = UserDefaults.standard
+            if let token = defaults.string(forKey: "access_token") {
+                request.addValue(token, forHTTPHeaderField: "Authorization")
+            }
+        default:
+            break
+        }
+        
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             self.handleSession(ofType: type, data: data, response: response, error: error, completion: completion)
         }

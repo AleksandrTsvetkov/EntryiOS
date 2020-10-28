@@ -104,17 +104,20 @@ extension RegistrationCell: UITextFieldDelegate {
         return false
     }
     
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard
-//            let textField = textField as? FloatingField,
-//            let text = textField.text
-//            else { return true }
-//        let noErrors = (textField.errorMessage == "" || textField.errorMessage == nil)
-//        print(text)
-//        print(noErrors)
-//
-//        return true
-//    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard
+            let textField = textField as? FloatingField,
+            let text = textField.text
+            else { return true }
+        if string == " " && text.count == 0 {
+            return false
+        }
+        if text.contains(" ") && string == " " {
+            return false
+        } else {
+            return true
+        }
+    }
 }
 
 

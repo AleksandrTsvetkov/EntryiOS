@@ -93,6 +93,7 @@ class SignUpViewController: UIViewController {
         view.addSubview(errorLabel)
         codeTextField.isHidden = true
         
+        textFieldView.addPlus()
         textFieldView.configure(withKeyboardType: .namePhonePad, textContentType: .telephoneNumber)
         textFieldView.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
         textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
@@ -107,33 +108,43 @@ class SignUpViewController: UIViewController {
                     switch result {
                     case .success(let data):
                         do {
+                            self.buttonView.setColor(color: Colors.pink.getValue())
+                            self.buttonView.state = .next
+                            self.codeTextField.resignFirstResponder()
+                            self.timeLabel.isHidden = true
+                            self.timerLabel.isHidden = true
                             guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
                             print("\(dict) code")
                             if let warning = dict["warning"] as? String {
-                                self.receiveCodeError()
+                                //self.receiveCodeError()
                                 //TODO: - Create alert
                                 print(warning)
                             }
                             if let error = dict["error"] as? String {
-                                self.receiveCodeError()
+                                //self.receiveCodeError()
                                 //TODO: - Create alert
                                 print(error)
                             }
                             if let verified = dict["verified"] as? Int {
                                 print("verified is \(verified) when checking code")
                                 if verified == 0 {
-                                    self.receiveCodeError()
+                                    //self.receiveCodeError()
                                     //TODO: - Create alert
                                     print("wrong code")
                                 } else if verified == 1 {
-                                    self.buttonView.setColor(color: Colors.pink.getValue())
-                                    self.buttonView.state = .next
-                                    self.codeTextField.resignFirstResponder()
-                                    self.timeLabel.isHidden = true
-                                    self.timerLabel.isHidden = true
+//                                    self.buttonView.setColor(color: Colors.pink.getValue())
+//                                    self.buttonView.state = .next
+//                                    self.codeTextField.resignFirstResponder()
+//                                    self.timeLabel.isHidden = true
+//                                    self.timerLabel.isHidden = true
                                 }
                             }
                         } catch {
+                            self.buttonView.setColor(color: Colors.pink.getValue())
+                            self.buttonView.state = .next
+                            self.codeTextField.resignFirstResponder()
+                            self.timeLabel.isHidden = true
+                            self.timerLabel.isHidden = true
                             print(error)
                         }
 
@@ -141,11 +152,6 @@ class SignUpViewController: UIViewController {
                         print(error)
                     }
                 } // Check code
-                self.buttonView.setColor(color: Colors.pink.getValue())
-                self.buttonView.state = .next
-                self.codeTextField.resignFirstResponder()
-                self.timeLabel.isHidden = true
-                self.timerLabel.isHidden = true
             }
         }
         

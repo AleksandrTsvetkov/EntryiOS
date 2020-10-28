@@ -27,7 +27,7 @@ class TextFieldView: UIView, ColorDelegate {
         view.lineHeight = 0
         view.selectedLineHeight = 0
         view.placeholderFont = UIFont(name: "SFProText-Regular", size: 12)
-        view.titleFont = UIFont(name: "SFProText-Regular", size: 12) ?? UIFont.systemFont(ofSize: 52)
+        view.titleFont = UIFont(name: "SFProText-Regular", size: 12) ?? UIFont.systemFont(ofSize: 12)
         view.titleFormatter = { $0 }
         view.tintColor = UIColor(hex: "FFFFFF", alpha: 0.65)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -43,6 +43,7 @@ class TextFieldView: UIView, ColorDelegate {
     convenience init(text: String, placeholder: String) {
         self.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        floatingTextField.leftViewMode = .always
         floatingTextField.colorDelegate = self
         floatingTextField.text = text
         floatingTextField.placeholder = placeholder
@@ -79,6 +80,19 @@ class TextFieldView: UIView, ColorDelegate {
     func configure(withKeyboardType keyboardType: UIKeyboardType, textContentType: UITextContentType) {
         floatingTextField.keyboardType = keyboardType
         floatingTextField.textContentType = textContentType
+    }
+    
+    func addPlus() {
+        floatingTextField.leftViewMode = .always
+        let plusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 22, height: 12))
+        plusLabel.font = UIFont(name: "SFProText-Regular", size: 17)
+        plusLabel.textAlignment = .right
+        plusLabel.textColor = UIColor(hex: "FFFFFF", alpha: 0.65)
+        let view = UIView()
+        view.backgroundColor = .red
+        
+        floatingTextField.leftView = plusLabel
+        plusLabel.text = "+"
     }
     
     required init?(coder: NSCoder) {

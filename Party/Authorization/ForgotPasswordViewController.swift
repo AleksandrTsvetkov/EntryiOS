@@ -136,6 +136,14 @@ class ForgotPasswordViewController: UIViewController {
     @objc private func buttonViewTapped() {
         navigationController?.navigationBar.isHidden = true
         checkEmailView.isHidden = false
+        NetworkService.shared.forgot(phoneNumber: "") { result in
+            switch result {
+            case .success(_):
+                break
+            case .failure(_):
+                break
+            }
+        }
     }
     
     @objc private func emailTextFieldChanged(_ textfield: UITextField) {
