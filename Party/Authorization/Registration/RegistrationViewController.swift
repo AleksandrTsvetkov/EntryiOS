@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import CoreLocation
 
 class RegistrationViewController: UIViewController, StatusDelegate {
     
     //MARK: - Properties
+    private var locationManager: CLLocationManager = CLLocationManager()
+    private var geoCoder: CLGeocoder = CLGeocoder()
     private let label: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -36,6 +39,8 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     var picker: UIPickerView?
     var toolBar: UIToolbar?
     var phoneNumber: String = ""
+    private var location: Location?
+    private var locationId: Int = 0
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -51,6 +56,7 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         tableView.register(RegistrationCell.self, forCellReuseIdentifier: RegistrationCell.reuseId)
         setupViews()
         addObserversAndRecognizers()
+        initLocation()
     }
     
     //MARK: - Setup
@@ -59,6 +65,16 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         buttonView.addGestureRecognizer(tap)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func initLocation() {
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
     }
     
     private func setupViews() {
@@ -138,20 +154,21 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     }
     
     private func getUser() -> User {
-        var user = User(phoneNumber: phoneNumber, firstName: "", secondName: "", birthYear: "", birthMonth: "", birthDay: "", locationId: "1", password: "", email: "")
+        var user = User(phoneNumber: phoneNumber, firstName: "", secondName: "", birthYear: "", birthMonth: "", birthDay: "", locationId: "\(locationId)", password: "", email: "")
         let nameCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! RegistrationCell
         let fullName = nameCell.textFieldView.floatingTextField.text ?? ""
         if let spacingIndex = fullName.firstIndex(of: " ") {
             let firstName = fullName[..<spacingIndex]
-            let secondName = fullName[spacingIndex...]
+            let secondNameIndex = fullName.index(spacingIndex, offsetBy: 1)
+            let secondName = fullName[secondNameIndex...]
             user.firstName = String(firstName)
             user.secondName = String(secondName)
         } else {
             user.firstName = fullName
         }
         guard let picker = picker else { return user }
-        user.birthDay = "\(picker.selectedRow(inComponent: 0))"
-        user.birthMonth = "\(picker.selectedRow(inComponent: 1))"
+        user.birthDay = "\(picker.selectedRow(inComponent: 0) + 1)"
+        user.birthMonth = "\(picker.selectedRow(inComponent: 1) + 1)"
         user.birthYear = "\(2020 - picker.selectedRow(inComponent: 2))"
         let emailCell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as! RegistrationCell
         let email = emailCell.textFieldView.floatingTextField.text ?? ""
@@ -162,6 +179,29 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         return user
     }
     
+    private func sendLocation() {
+        let semaphore = DispatchSemaphore(value: 0)
+        guard let location = self.location else { return }
+        NetworkService.shared.createLocation(locationModel: location) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                    print(dict)
+                    if let id = dict["location_id"] as? Int {
+                        self.locationId = id
+                    }
+                } catch {
+                    print(error)
+                }
+            case .failure(let error):
+                print(error)
+            }
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+    
     //MARK: - Objc methods
     @objc func doneButtonTapped() {
         toolBar?.removeFromSuperview()
@@ -170,39 +210,50 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     
     @objc private func buttonViewTapped() {
         if buttonView.isUserInteractionEnabled {
-            NetworkService.shared.createUser(user: getUser()) { result in
-                switch result {
-                case .success(let data):
-                    do {
-                        guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
-                        print(dict)
-                        if let warning = dict["warning"] as? String {
-                            //TODO: - Create alert
-                            self.receiveServerError()
-                            print(warning)
-                            return
-                        }
-                        if let error = dict["error"] as? String {
-                            //TODO: - Create alert
-                            self.receiveServerError()
-                            print(error)
-                            return
-                        }
-                        if let success = dict["success"] as? Int {
-                            if success == 1 {
-                                let vc = LoginViewController()
-                                let backButton = UIBarButtonItem()
-                                backButton.title = "Зачем?"
-                                self.navigationItem.backBarButtonItem = backButton
-                                self.navigationController?.pushViewController(vc, animated: true)
+            if self.location != nil {
+                let ac = UIAlertController(title: "Введите название для вашей текущей геолокации", message: nil, preferredStyle: .alert)
+                ac.addTextField()
+                let done = UIAlertAction(title: "Готово", style: .default) { [weak ac] _ in
+                    let textField = ac!.textFields![0]
+                    self.location?.title = textField.text ?? ""
+                    self.sendLocation()
+                    NetworkService.shared.createUser(user: self.getUser()) { result in
+                        switch result {
+                        case .success(let data):
+                            do {
+                                guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                                print(dict)
+                                if let warning = dict["warning"] as? String {
+                                    //TODO: - Create alert
+                                    self.receiveServerError()
+                                    print(warning)
+                                    return
+                                }
+                                if let error = dict["error"] as? String {
+                                    //TODO: - Create alert
+                                    self.receiveServerError()
+                                    print(error)
+                                    return
+                                }
+                                if let success = dict["success"] as? Int {
+                                    if success == 1 {
+                                        let vc = LoginViewController()
+                                        let backButton = UIBarButtonItem()
+                                        backButton.title = "Зачем?"
+                                        self.navigationItem.backBarButtonItem = backButton
+                                        self.navigationController?.pushViewController(vc, animated: true)
+                                    }
+                                }
+                            } catch {
+                                print(error)
                             }
+                        case .failure(let error):
+                            print(error)
                         }
-                    } catch {
-                        print(error)
                     }
-                case .failure(let error):
-                    print(error)
                 }
+                ac.addAction(done)
+                present(ac, animated: true)
             }
         }
     }
@@ -253,7 +304,19 @@ extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource
         cell.statusDelegate = self
         return cell
     }
-    
+}
+
+//MARK: - CLLocationManagerDelegate
+extension RegistrationViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocation = manager.location else { return }
+        geoCoder.reverseGeocodeLocation(locValue) { (placemarks, error) in
+            if let locality = placemarks?.first?.locality, self.location == nil {
+                self.location = Location(title: "", city: locality, latitude: "\(locValue.coordinate.latitude)", longitude: "\(locValue.coordinate.longitude)")
+            }
+        }
+        manager.stopUpdatingLocation()
+    }
 }
 
 //MARK: - UIPickerViewDelegate, UIPickerViewDataSource

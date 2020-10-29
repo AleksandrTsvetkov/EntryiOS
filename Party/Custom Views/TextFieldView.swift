@@ -82,19 +82,6 @@ class TextFieldView: UIView, ColorDelegate {
         floatingTextField.textContentType = textContentType
     }
     
-    func addPlus() {
-        floatingTextField.leftViewMode = .always
-        let plusLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 22, height: 12))
-        plusLabel.font = UIFont(name: "SFProText-Regular", size: 17)
-        plusLabel.textAlignment = .right
-        plusLabel.textColor = UIColor(hex: "FFFFFF", alpha: 0.65)
-        let view = UIView()
-        view.backgroundColor = .red
-        
-        floatingTextField.leftView = plusLabel
-        plusLabel.text = "+"
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

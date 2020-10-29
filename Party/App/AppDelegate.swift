@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //let rootViewController = RegistrationViewController()
         //let rootViewController = LoginViewController()
         //let rootViewController = NewPasswordViewController()
+        
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigationController.navigationBar.isTranslucent = false
         navigationController.navigationBar.barTintColor = .black
@@ -28,6 +29,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.backgroundColor = .black
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        if let token = UserDefaults.standard.string(forKey: "refresh_token") {
+            NetworkService.shared.refresh(refreshToken: token) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                        if let _ = dict["access_token"] as? String {
+                            rootViewController.showAlert(title: "Успешо авторизованы", text: nil)
+                        }
+                    } catch {
+                        print(error)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
         return true
     }
 

@@ -13,7 +13,7 @@ class NetworkService {
     typealias SessionResult = (Result<Data, Error>) -> Void
     static let shared = NetworkService()
     fileprivate init() {}
-
+    
     //MARK: - Auth
     func login(phoneNumber: String, password: String, completion: @escaping SessionResult) {
         let parametersArray = [
@@ -169,7 +169,6 @@ class NetworkService {
         ]
         var parameters = ""
         parameters.makeFields(rows: parametersArray)
-        print(parameters)
         let parametersData = parameters.data(using: .utf8)
         makeRequest(ofType: .createLocation, parametersData: parametersData, completion: completion)
     }
@@ -246,7 +245,11 @@ class NetworkService {
         }
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            self.handleSession(ofType: type, data: data, response: response, error: error, completion: completion)
+            if type == .createLocation {
+                self.handleSessionWithoutAsync(ofType: type, data: data, response: response, error: error, completion: completion)
+            } else {
+                self.handleSession(ofType: type, data: data, response: response, error: error, completion: completion)
+            }
         }
         task.resume()
     }
@@ -277,5 +280,31 @@ class NetworkService {
             guard let dataString = String(data: data, encoding: .utf8) else { return }
             print("Data string \(dataString) in \(#function) of type \(type)")
         }
+    }
+    
+    private func handleSessionWithoutAsync(ofType type: RequestType, data: Data?, response: URLResponse?, error: Error?, completion: @escaping SessionResult) {
+        if let error = error {
+            print("\(error.localizedDescription) in \(#function) of type \(type)")
+            completion(.failure(error))
+            return
+        }
+        guard let response = response as? HTTPURLResponse else {
+            print("Error with unwrapping response in \(#function) of type \(type)")
+            completion(.failure(NetworkError.responseIsNil))
+            return
+        }
+        guard (200...299).contains(response.statusCode) else {
+            print("Status code is wrong: \(response.statusCode) in \(#function) of type \(type)")
+            completion(.failure(NetworkError.wrongStatusCode))
+            return
+        }
+        guard let data = data else {
+            print("Failed to unwrap data in \(#function) of type \(type)")
+            completion(.failure(NetworkError.dataIsNil))
+            return
+        }
+        completion(.success(data))
+        guard let dataString = String(data: data, encoding: .utf8) else { return }
+        print("Data string \(dataString) in \(#function) of type \(type)")
     }
 }

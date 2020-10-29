@@ -93,7 +93,6 @@ class SignUpViewController: UIViewController {
         view.addSubview(errorLabel)
         codeTextField.isHidden = true
         
-        textFieldView.addPlus()
         textFieldView.configure(withKeyboardType: .namePhonePad, textContentType: .telephoneNumber)
         textFieldView.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
         textFieldView.floatingTextField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
@@ -207,15 +206,15 @@ class SignUpViewController: UIViewController {
         if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
             floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
             guard let currentText = floatingLabelTextField.text else { return }
-            if !currentText.isNumeric {
+            if !String(currentText.dropFirst()).isNumeric {
                 floatingLabelTextField.errorMessage = "НЕПРАВИЛЬНЫЙ НОМЕР".uppercased()
             } else {
                 floatingLabelTextField.errorMessage = ""
-                if textFieldView.floatingTextField.text?.count == 11 {
+                if textFieldView.floatingTextField.text?.count == 12 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                        guard self.textFieldView.floatingTextField.text?.count == 11 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
+                        guard self.textFieldView.floatingTextField.text?.count == 12 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
                         self.phoneNumber = currentText
-                        NetworkService.shared.sendCode(phoneNumber: currentText) { result in
+                        NetworkService.shared.sendCode(phoneNumber: String(currentText.dropFirst())) { result in
                             switch result {
                             case .success(let data):
                                 guard let dataString = String(data: data, encoding: .utf8) else { return }
@@ -331,9 +330,21 @@ class SignUpViewController: UIViewController {
 extension SignUpViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let floatingTextField = textField as? SkyFloatingLabelTextField else { return false }
+        if floatingTextField.text == "" && string == " " {
+            //floatingTextField.text = "+7"
+            return true
+        }
+        if string.count == 13 {
+            floatingTextField.text = ""
+            return true
+        }
+        if floatingTextField.text == "" && !string.isEmpty {
+            floatingTextField.text = "+7"
+            return true
+        }
         if floatingTextField.text == "+" && string.isEmpty {
             return false
-        } else if floatingTextField.text?.count == 11 && !string.isEmpty{
+        } else if floatingTextField.text?.count == 12 && !string.isEmpty{
             return false
         } else {
             return true
