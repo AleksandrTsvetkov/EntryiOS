@@ -202,6 +202,61 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         semaphore.wait()
     }
     
+    private func hasLocation() {
+        let ac = UIAlertController(title: "Введите название для вашей текущей геолокации", message: nil, preferredStyle: .alert)
+        ac.addTextField()
+        let done = UIAlertAction(title: "Готово", style: .default) { [weak ac] _ in
+            let textField = ac!.textFields![0]
+            self.location?.title = textField.text ?? ""
+            self.sendLocation()
+            NetworkService.shared.createUser(user: self.getUser()) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                        print(dict)
+                        if let warning = dict["warning"] as? String {
+                            self.receiveServerError()
+                            print(warning)
+                            return
+                        }
+                        if let error = dict["error"] as? String {
+                            self.receiveServerError()
+                            print(error)
+                            return
+                        }
+                        if let success = dict["success"] as? Int {
+                            if success == 1 {
+                                let vc = LoginViewController()
+                                let backButton = UIBarButtonItem()
+                                backButton.title = "Зачем?"
+                                self.navigationItem.backBarButtonItem = backButton
+                                self.navigationController?.pushViewController(vc, animated: true)
+                            }
+                        }
+                    } catch {
+                        print(error)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+        ac.addAction(done)
+        present(ac, animated: true)
+    }
+    
+    private func noLocation() {
+        let ac = UIAlertController(title: "Не удалось получить вашу геопозицию", message: "Пожалуйста, выберите город из списка", preferredStyle: .alert)
+        let ok = UIAlertAction(title: "Ок", style: .default) { _ in
+            let vc = CitiesViewController()
+            vc.delegate = self
+            self.present(vc, animated: true)
+        }
+        ac.addAction(ok)
+        present(ac, animated: true)
+    }
+    
     //MARK: - Objc methods
     @objc func doneButtonTapped() {
         toolBar?.removeFromSuperview()
@@ -211,49 +266,9 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     @objc private func buttonViewTapped() {
         if buttonView.isUserInteractionEnabled {
             if self.location != nil {
-                let ac = UIAlertController(title: "Введите название для вашей текущей геолокации", message: nil, preferredStyle: .alert)
-                ac.addTextField()
-                let done = UIAlertAction(title: "Готово", style: .default) { [weak ac] _ in
-                    let textField = ac!.textFields![0]
-                    self.location?.title = textField.text ?? ""
-                    self.sendLocation()
-                    NetworkService.shared.createUser(user: self.getUser()) { result in
-                        switch result {
-                        case .success(let data):
-                            do {
-                                guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
-                                print(dict)
-                                if let warning = dict["warning"] as? String {
-                                    //TODO: - Create alert
-                                    self.receiveServerError()
-                                    print(warning)
-                                    return
-                                }
-                                if let error = dict["error"] as? String {
-                                    //TODO: - Create alert
-                                    self.receiveServerError()
-                                    print(error)
-                                    return
-                                }
-                                if let success = dict["success"] as? Int {
-                                    if success == 1 {
-                                        let vc = LoginViewController()
-                                        let backButton = UIBarButtonItem()
-                                        backButton.title = "Зачем?"
-                                        self.navigationItem.backBarButtonItem = backButton
-                                        self.navigationController?.pushViewController(vc, animated: true)
-                                    }
-                                }
-                            } catch {
-                                print(error)
-                            }
-                        case .failure(let error):
-                            print(error)
-                        }
-                    }
-                }
-                ac.addAction(done)
-                present(ac, animated: true)
+                hasLocation()
+            } else {
+                noLocation()
             }
         }
     }
@@ -316,6 +331,56 @@ extension RegistrationViewController: CLLocationManagerDelegate {
             }
         }
         manager.stopUpdatingLocation()
+    }
+}
+
+//MARK: - CityPickerDelegate
+extension RegistrationViewController: CityPickerDelegate {
+    func pickCity(city: String) {
+        getCoordinateFrom(address: city) { coordinate, error in
+            guard let coordinate = coordinate, error == nil else {
+                print("\(String(describing: error)) when trying to geocode city name to coordinate")
+                return
+            }
+            self.location = Location(title: city, city: city, latitude: "\(coordinate.latitude)", longitude: "\(coordinate.longitude)")
+            self.sendLocation()
+            NetworkService.shared.createUser(user: self.getUser()) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                        print(dict)
+                        if let warning = dict["warning"] as? String {
+                            self.receiveServerError()
+                            print(warning)
+                            return
+                        }
+                        if let error = dict["error"] as? String {
+                            self.receiveServerError()
+                            print(error)
+                            return
+                        }
+                        if let success = dict["success"] as? Int {
+                            if success == 1 {
+                                let vc = LoginViewController()
+                                let backButton = UIBarButtonItem()
+                                backButton.title = "Зачем?"
+                                self.navigationItem.backBarButtonItem = backButton
+                                self.navigationController?.pushViewController(vc, animated: true)
+                            }
+                        }
+                    } catch {
+                        print(error)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    func getCoordinateFrom(address: String, completion: @escaping(_ coordinate: CLLocationCoordinate2D?, _ error: Error?) -> () ) {
+        geoCoder.geocodeAddressString(address) { completion($0?.first?.location?.coordinate, $1) }
     }
 }
 

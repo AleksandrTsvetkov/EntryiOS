@@ -16,9 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let rootViewController = OnboardingViewController()
-        //let rootViewController = RegistrationViewController()
-        //let rootViewController = LoginViewController()
-        //let rootViewController = NewPasswordViewController()
+        //let rootViewController = CitiesViewController()
         
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigationController.navigationBar.isTranslucent = false

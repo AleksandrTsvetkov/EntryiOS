@@ -23,6 +23,8 @@
 		1F6867EA2539DEBE00543498 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6867E92539DEBE00543498 /* TextFieldView.swift */; };
 		1F6867EC2539E83900543498 /* String + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6867EB2539E83900543498 /* String + Extension.swift */; };
 		1F6B0A6B254AA4BC004EBD1D /* UIViewController + Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6B0A6A254AA4BC004EBD1D /* UIViewController + Alert.swift */; };
+		1F6B0A6D254B2978004EBD1D /* CitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6B0A6C254B2978004EBD1D /* CitiesViewController.swift */; };
+		1F6B0A6F254B3DCC004EBD1D /* Cities.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F6B0A6E254B3DCC004EBD1D /* Cities.json */; };
 		1F710B3E25388957008F0F7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B3D25388957008F0F7D /* AppDelegate.swift */; };
 		1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F710B3F25388957008F0F7D /* OnboardingViewController.swift */; };
 		1F710B422538895A008F0F7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F710B412538895A008F0F7D /* Assets.xcassets */; };
@@ -65,6 +67,8 @@
 		1F6867E92539DEBE00543498 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		1F6867EB2539E83900543498 /* String + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Extension.swift"; sourceTree = "<group>"; };
 		1F6B0A6A254AA4BC004EBD1D /* UIViewController + Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController + Alert.swift"; sourceTree = "<group>"; };
+		1F6B0A6C254B2978004EBD1D /* CitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesViewController.swift; sourceTree = "<group>"; };
+		1F6B0A6E254B3DCC004EBD1D /* Cities.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = Cities.json; sourceTree = "<group>"; };
 		1F710B3A25388957008F0F7D /* Party.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Party.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F710B3D25388957008F0F7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F710B3F25388957008F0F7D /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
@@ -216,6 +220,7 @@
 				1F710B412538895A008F0F7D /* Assets.xcassets */,
 				1F710B432538895A008F0F7D /* LaunchScreen.storyboard */,
 				1F710B462538895A008F0F7D /* Info.plist */,
+				1F6B0A6E254B3DCC004EBD1D /* Cities.json */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -230,6 +235,7 @@
 				1F6867E72539CE0A00543498 /* OneTimeCodeTextField.swift */,
 				1F6867E92539DEBE00543498 /* TextFieldView.swift */,
 				1F8C09632540C9FF00034FB2 /* CheckEmailView.swift */,
+				1F6B0A6C254B2978004EBD1D /* CitiesViewController.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -316,6 +322,7 @@
 				1F710B422538895A008F0F7D /* Assets.xcassets in Resources */,
 				1F61CED22539002700096D71 /* SFProText-Regular.ttf in Resources */,
 				1F710B452538895A008F0F7D /* LaunchScreen.storyboard in Resources */,
+				1F6B0A6F254B3DCC004EBD1D /* Cities.json in Resources */,
 				1F61CED32539002900096D71 /* SFProText-Semibold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -375,6 +382,7 @@
 				1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */,
 				1FF469F525388E9900926E82 /* ButtonView.swift in Sources */,
 				1FFB0DC0253F8D1600041806 /* LoginViewController.swift in Sources */,
+				1F6B0A6D254B2978004EBD1D /* CitiesViewController.swift in Sources */,
 				1F61CED5253909CF00096D71 /* SignUpViewController.swift in Sources */,
 				1F61CECB2538F0F100096D71 /* AuthTypeView.swift in Sources */,
 				1F10FCC32544339600EBB307 /* RequestType.swift in Sources */,
