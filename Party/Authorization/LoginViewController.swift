@@ -106,9 +106,9 @@ class LoginViewController: UIViewController {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             label.heightAnchor.constraint(equalToConstant: 40),
-            label.topAnchor.constraint(equalTo: view.topAnchor, constant: 14),
+            label.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
             
-            emailTextFieldView.bottomAnchor.constraint(equalTo: passwordTextFieldView.topAnchor, constant: -16),
+            emailTextFieldView.bottomAnchor.constraint(equalTo: passwordTextFieldView.topAnchor, constant: -15),
             emailTextFieldView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             emailTextFieldView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             emailTextFieldView.heightAnchor.constraint(equalToConstant: 72),
@@ -119,7 +119,6 @@ class LoginViewController: UIViewController {
             passwordTextFieldView.heightAnchor.constraint(equalToConstant: 72),
             
             forgotPasswordLabel.heightAnchor.constraint(equalToConstant: 16),
-            forgotPasswordLabel.bottomAnchor.constraint(equalTo: registerLabel.topAnchor, constant: -48),
             forgotPasswordLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             noAccountLabel.topAnchor.constraint(equalTo: registerLabel.topAnchor),
@@ -131,7 +130,6 @@ class LoginViewController: UIViewController {
             registerLabel.heightAnchor.constraint(equalToConstant: 60),
             registerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            errorLabel.topAnchor.constraint(equalTo: noAccountLabel.bottomAnchor, constant: 60),
             errorLabel.heightAnchor.constraint(equalToConstant: 45),
             errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             
@@ -142,13 +140,24 @@ class LoginViewController: UIViewController {
         
         if UIScreen.main.bounds.height < 600 {
             NSLayoutConstraint.activate([
+                errorLabel.topAnchor.constraint(equalTo: noAccountLabel.bottomAnchor, constant: 18),
+                forgotPasswordLabel.bottomAnchor.constraint(equalTo: registerLabel.topAnchor, constant: -18),
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
                 emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
             ])
+        } else if UIScreen.main.bounds.height < 740 {
+            NSLayoutConstraint.activate([
+                errorLabel.topAnchor.constraint(equalTo: noAccountLabel.bottomAnchor, constant: 30),
+                forgotPasswordLabel.bottomAnchor.constraint(equalTo: registerLabel.topAnchor, constant: -30),
+                buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -34),
+                emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 90),
+            ])
         } else {
             NSLayoutConstraint.activate([
+                errorLabel.topAnchor.constraint(equalTo: noAccountLabel.bottomAnchor, constant: 60),
+                forgotPasswordLabel.bottomAnchor.constraint(equalTo: registerLabel.topAnchor, constant: -48),
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-                emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 140),
+                emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 142),
             ])
         }
     }
@@ -178,7 +187,8 @@ class LoginViewController: UIViewController {
                 let count = navigationVC.viewControllers.count
                 navigationVC.removeControllers(in: 1...count - 2)
             }
-            delegate?.blurEffectView.isHidden = true
+            delegate?.blurEffectView1.isHidden = true
+            delegate?.blurEffectView2.isHidden = true
             delegate?.authView.isHidden = true
             delegate?.authView.transform = .identity
             delegate?.authViewIsVisibleConstraint.isActive = false

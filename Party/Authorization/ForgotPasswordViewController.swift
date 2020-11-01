@@ -108,7 +108,7 @@ class ForgotPasswordViewController: UIViewController {
             checkEmailView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
         
-        if UIScreen.main.bounds.height < 600 {
+        if UIScreen.main.bounds.height < 740 {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
                 emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),

@@ -66,7 +66,7 @@ class NewPasswordViewController: UIViewController {
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
-        if UIScreen.main.bounds.height < 600 {
+        if UIScreen.main.bounds.height < 740 {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             ])

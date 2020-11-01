@@ -81,7 +81,7 @@ class CheckEmailView: UIView {
             exitButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
         ])
         
-        if UIScreen.main.bounds.width < 600 {
+        if UIScreen.main.bounds.width < 740 {
             NSLayoutConstraint.activate([
                 titleLabel.topAnchor.constraint(equalTo: emailImageView.bottomAnchor, constant: 30),
                 emailImageView.heightAnchor.constraint(equalToConstant: 222),

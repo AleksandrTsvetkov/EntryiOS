@@ -35,7 +35,14 @@ class OnboardingViewController: UIViewController {
         return stackView
     }()
     let authView = AuthView()
-    let blurEffectView: UIVisualEffectView = {
+    let blurEffectView1: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    let blurEffectView2: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let view = UIVisualEffectView(effect: blurEffect)
         view.isHidden = true
@@ -63,7 +70,8 @@ class OnboardingViewController: UIViewController {
         view.addSubview(whyImageView)
         view.addSubview(exitButton)
         view.addSubview(buttonView)
-        view.addSubview(blurEffectView)
+        view.addSubview(blurEffectView1)
+        view.addSubview(blurEffectView2)
         view.addSubview(authView)
         authView.isHidden = true
         authView.delegate = self
@@ -92,13 +100,13 @@ class OnboardingViewController: UIViewController {
             authView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             authViewIsHiddenConstraint,
             
-            blurEffectView.topAnchor.constraint(equalTo: view.topAnchor),
-            blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            blurEffectView1.topAnchor.constraint(equalTo: view.topAnchor),
+            blurEffectView1.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            blurEffectView1.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            blurEffectView1.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        if UIScreen.main.bounds.height < 600 {
+        if UIScreen.main.bounds.height < 740 {
             NSLayoutConstraint.activate([
                 exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 34),
                 whyImageView.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 20),
@@ -124,7 +132,8 @@ class OnboardingViewController: UIViewController {
     }
     
     @objc private func buttonViewTapped() {
-        blurEffectView.isHidden = false
+        blurEffectView1.isHidden = false
+        blurEffectView2.isHidden = false
         authView.isHidden = false
         self.authViewIsHiddenConstraint.isActive = false
         self.authViewIsVisibleConstraint.isActive = true
@@ -134,7 +143,8 @@ class OnboardingViewController: UIViewController {
     }
     
     @objc private func exitButtonTapped() {
-        blurEffectView.isHidden = true
+        blurEffectView1.isHidden = true
+        blurEffectView2.isHidden = true
         authView.isHidden = true
     }
     
@@ -157,7 +167,8 @@ class OnboardingViewController: UIViewController {
         if translation.y > 0 {
             self.authView.transform = CGAffineTransform(translationX: 0, y: translation.y)
             let newAlpha = 1 + translation.y / -120
-            self.blurEffectView.alpha = newAlpha < 0 ? 0 : newAlpha
+            self.blurEffectView1.alpha = newAlpha < 0 ? 0 : newAlpha
+            self.blurEffectView2.alpha = newAlpha < 0 ? 0 : newAlpha
         }
     }
     
@@ -173,8 +184,10 @@ class OnboardingViewController: UIViewController {
                 self.authView.transform = .identity
             }, completion: { _ in
                 self.authView.isHidden = true
-                self.blurEffectView.isHidden = true
-                self.blurEffectView.alpha = 1
+                self.blurEffectView1.isHidden = true
+                self.blurEffectView2.isHidden = true
+                self.blurEffectView1.alpha = 1
+                self.blurEffectView2.alpha = 1
             })
         }
         self.authView.transform = .identity

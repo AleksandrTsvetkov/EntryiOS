@@ -70,7 +70,8 @@ class SignUpViewController: UIViewController {
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
         if parent == nil {
-            delegate?.blurEffectView.isHidden = true
+            delegate?.blurEffectView1.isHidden = true
+            delegate?.blurEffectView2.isHidden = true
             delegate?.authView.isHidden = true
             delegate?.authView.transform = .identity
             delegate?.authViewIsVisibleConstraint.isActive = false
@@ -169,7 +170,7 @@ class SignUpViewController: UIViewController {
             timerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             timerLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            timeLabel.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 13),
+            timeLabel.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 8),
             timeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             timeLabel.heightAnchor.constraint(equalToConstant: 34),
             
@@ -183,7 +184,7 @@ class SignUpViewController: UIViewController {
             errorLabel.heightAnchor.constraint(equalToConstant: 28),
         ])
         
-        if UIScreen.main.bounds.height < 600 {
+        if UIScreen.main.bounds.height < 740 {
             NSLayoutConstraint.activate([
                 textFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
                 timerLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 66),
@@ -316,7 +317,8 @@ class SignUpViewController: UIViewController {
     }
     
     @objc private func backButtonTapped() {
-        delegate?.blurEffectView.isHidden = true
+        delegate?.blurEffectView1.isHidden = true
+        delegate?.blurEffectView2.isHidden = true
         delegate?.authView.isHidden = true
         delegate?.authView.transform = .identity
         delegate?.authViewIsVisibleConstraint.isActive = false

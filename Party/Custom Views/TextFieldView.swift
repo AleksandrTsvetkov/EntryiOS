@@ -10,12 +10,12 @@ import UIKit
 import SkyFloatingLabelTextField
 
 class TextFieldView: UIView, ColorDelegate {
-
+    
     private let textFieldBackgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.borderWidth = 0.5
-        view.layer.borderColor = Colors.textFieldBorder.getValue().cgColor
+//        view.layer.borderWidth = 0.5
+//        view.layer.borderColor = Colors.textFieldBorder.getValue().cgColor
         view.layer.cornerRadius = 10
         view.backgroundColor = Colors.textFieldBackgroundNotResponder.getValue()
         return view
@@ -80,6 +80,10 @@ class TextFieldView: UIView, ColorDelegate {
     func configure(withKeyboardType keyboardType: UIKeyboardType, textContentType: UITextContentType) {
         floatingTextField.keyboardType = keyboardType
         floatingTextField.textContentType = textContentType
+    }
+    
+    func sendDone() {
+        
     }
     
     required init?(coder: NSCoder) {

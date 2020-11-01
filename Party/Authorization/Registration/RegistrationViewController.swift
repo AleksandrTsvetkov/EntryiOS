@@ -48,6 +48,7 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         view.backgroundColor = .black
         
         tableView.showsVerticalScrollIndicator = false
+        tableView.isScrollEnabled = false
         tableView.isUserInteractionEnabled = true
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
@@ -57,6 +58,8 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         setupViews()
         addObserversAndRecognizers()
         initLocation()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(doneButtonTapped))
+        view.addGestureRecognizer(tap)
     }
     
     //MARK: - Setup
@@ -98,14 +101,14 @@ class RegistrationViewController: UIViewController, StatusDelegate {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.heightAnchor.constraint(equalToConstant: 376)
         ])
-        if UIScreen.main.bounds.height < 600 {
+        if UIScreen.main.bounds.height < 740 {
             NSLayoutConstraint.activate([
                 tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             ])
         } else {
             NSLayoutConstraint.activate([
-                tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 60),
+                tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 42),
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             ])
         }
@@ -274,6 +277,7 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        doneButtonTapped()
         guard let userInfo = notification.userInfo else { return }
         guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         let keyboardFrame = keyboardSize.cgRectValue
@@ -301,6 +305,14 @@ class RegistrationViewController: UIViewController, StatusDelegate {
 
 //MARK: - UITableViewDelegate, UITableViewDataSource
 extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 88

@@ -15,18 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let rootViewController = OnboardingViewController()
-        //let rootViewController = CitiesViewController()
-        
-        let navigationController = UINavigationController(rootViewController: rootViewController)
-        navigationController.navigationBar.isTranslucent = false
-        navigationController.navigationBar.barTintColor = .black
-        navigationController.navigationBar.isHidden = true
-        navigationController.navigationBar.shadowImage = UIImage()
-        navigationController.navigationBar.tintColor = Colors.pink.getValue()
-        window?.backgroundColor = .black
-        window?.rootViewController = navigationController
-        window?.makeKeyAndVisible()
         if let token = UserDefaults.standard.string(forKey: "refresh_token") {
             NetworkService.shared.refresh(refreshToken: token) { result in
                 switch result {
@@ -34,16 +22,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     do {
                         guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
                         if let _ = dict["access_token"] as? String {
-                            rootViewController.showAlert(title: "Успешо авторизованы", text: nil)
+                            self.showProfile()
                         }
                     } catch {
                         print(error)
+                        self.showOnboarding()
                     }
                 case .failure(let error):
                     print(error)
+                    self.showOnboarding()
                 }
             }
+        } else {
+            showOnboarding()
+            //showProfile()
         }
+        window?.backgroundColor = .black
+        window?.makeKeyAndVisible()
+        
         return true
     }
 
@@ -59,6 +55,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
     }
 
-
+    private func showOnboarding() {
+        let rootViewController = OnboardingViewController()
+        //let rootViewController = CitiesViewController()
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        navigationController.navigationBar.isTranslucent = false
+        navigationController.navigationBar.barTintColor = .black
+        navigationController.navigationBar.isHidden = true
+        navigationController.navigationBar.shadowImage = UIImage()
+        navigationController.navigationBar.tintColor = Colors.pink.getValue()
+        window?.rootViewController = navigationController
+    }
+    
+    private func showProfile() {
+        window?.rootViewController = TabBarViewController()
+    }
 }
 
