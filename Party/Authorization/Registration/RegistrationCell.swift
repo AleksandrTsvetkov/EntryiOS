@@ -32,8 +32,9 @@ class RegistrationCell: UITableViewCell {
             let tap = UITapGestureRecognizer(target: self, action: #selector(openDatePicker))
             self.addGestureRecognizer(tap)
         case .email:
-            textFieldView.setPlaceholder(placeholder: "E-mail")
-            textFieldView.configure(withKeyboardType: .emailAddress, textContentType: .emailAddress)
+            //textFieldView.setPlaceholder(placeholder: "E-mail")
+            textFieldView.configure(withKeyboardType: .asciiCapable, textContentType: nil)
+            textFieldView.floatingTextField.autocorrectionType = .no
         case .password:
             textFieldView.setPlaceholder(placeholder: "Пароль")
             textFieldView.floatingTextField.isSecureTextEntry = true
@@ -102,6 +103,12 @@ extension RegistrationCell: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let item = textField.inputAssistantItem
+        item.leadingBarButtonGroups = []
+        item.trailingBarButtonGroups = []
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

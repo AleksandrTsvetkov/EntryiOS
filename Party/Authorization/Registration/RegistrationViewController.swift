@@ -56,10 +56,21 @@ class RegistrationViewController: UIViewController, StatusDelegate {
         tableView.dataSource = self
         tableView.register(RegistrationCell.self, forCellReuseIdentifier: RegistrationCell.reuseId)
         setupViews()
-        addObserversAndRecognizers()
+        
         initLocation()
         let tap = UITapGestureRecognizer(target: self, action: #selector(doneButtonTapped))
         view.addGestureRecognizer(tap)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addObserversAndRecognizers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     //MARK: - Setup
@@ -277,25 +288,44 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
+        let cell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as! RegistrationCell
+        print(cell.textFieldView.floatingTextField.textContentType)
+        print(cell.textFieldView.floatingTextField.keyboardType)
         doneButtonTapped()
-        guard let userInfo = notification.userInfo else { return }
+        tableView.isScrollEnabled = true
+        guard let userInfo = notification.userInfo else {
+            tableView.isScrollEnabled = false
+            return
+        }
+        
         guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         let keyboardFrame = keyboardSize.cgRectValue
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.1) {
-                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
-            }
-            
-        }
+        print(keyboardFrame, "called once")
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+        tableView.isScrollEnabled = true
+//        DispatchQueue.main.async {
+//            UIView.animate(withDuration: 0.1, animations: {
+//                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+//                //self.tableView.scrollToRow(at: IndexPath(row: 2, section: 0), at: .top, animated: true)
+//            }) { _ in
+//                self.tableView.isScrollEnabled = false
+//            }
+//        }
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.1) {
-                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-            }
-        }
+        self.tableView.isScrollEnabled = true
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        self.tableView.isScrollEnabled = false
+//        DispatchQueue.main.async {
+//            UIView.animate(withDuration: 0.1, animations: {
+//                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//                //self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+//            }) { _ in
+//                self.tableView.isScrollEnabled = false
+//            }
+//        }
     }
     
     @objc private func backButtonTapped() {

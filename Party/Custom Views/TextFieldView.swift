@@ -43,7 +43,7 @@ class TextFieldView: UIView, ColorDelegate {
     convenience init(text: String, placeholder: String) {
         self.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        floatingTextField.leftViewMode = .always
+        //floatingTextField.leftViewMode = .always
         floatingTextField.colorDelegate = self
         floatingTextField.text = text
         floatingTextField.placeholder = placeholder
@@ -77,13 +77,11 @@ class TextFieldView: UIView, ColorDelegate {
         textFieldBackgroundView.backgroundColor = color
     }
     
-    func configure(withKeyboardType keyboardType: UIKeyboardType, textContentType: UITextContentType) {
+    func configure(withKeyboardType keyboardType: UIKeyboardType, textContentType: UITextContentType?) {
         floatingTextField.keyboardType = keyboardType
-        floatingTextField.textContentType = textContentType
-    }
-    
-    func sendDone() {
-        
+        if let type = textContentType {
+            floatingTextField.textContentType = type
+        }
     }
     
     required init?(coder: NSCoder) {
