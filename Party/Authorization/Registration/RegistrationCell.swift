@@ -32,8 +32,8 @@ class RegistrationCell: UITableViewCell {
             let tap = UITapGestureRecognizer(target: self, action: #selector(openDatePicker))
             self.addGestureRecognizer(tap)
         case .email:
-            //textFieldView.setPlaceholder(placeholder: "E-mail")
-            textFieldView.configure(withKeyboardType: .asciiCapable, textContentType: nil)
+            textFieldView.setPlaceholder(placeholder: "E-mail")
+            textFieldView.configure(withKeyboardType: .emailAddress, textContentType: nil)
             textFieldView.floatingTextField.autocorrectionType = .no
         case .password:
             textFieldView.setPlaceholder(placeholder: "Пароль")

@@ -76,8 +76,8 @@ class OnboardingViewController: UIViewController {
         authView.isHidden = true
         authView.delegate = self
         
-        authViewIsHiddenConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 500)
-        authViewIsVisibleConstraint = authView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        authViewIsHiddenConstraint = authView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 500)
+        authViewIsVisibleConstraint = authView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         NSLayoutConstraint.activate([
             
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
@@ -95,7 +95,7 @@ class OnboardingViewController: UIViewController {
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             
-            authView.heightAnchor.constraint(equalToConstant: 440),
+            authView.heightAnchor.constraint(equalToConstant: 500),
             authView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             authView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             authViewIsHiddenConstraint,

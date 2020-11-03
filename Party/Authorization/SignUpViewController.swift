@@ -57,6 +57,14 @@ class SignUpViewController: UIViewController {
     private var timerCount: Int = 60
     private lazy var buttonView = ButtonView(color: Colors.pink.getValue(), title: "Дальше", left: 16, right: 16)
     private var phoneNumber: String = ""
+    private var phoneMaskService = PhoneMaskService()
+    private var plainNumber = "" {
+        willSet {
+            if newValue.count == 11 {
+                sendCode(code: newValue)
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -206,58 +214,71 @@ class SignUpViewController: UIViewController {
         guard let text = textfield.text else { return }
         if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
             floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
-            guard let currentText = floatingLabelTextField.text else { return }
-            if !String(currentText.dropFirst()).isNumeric {
+            guard var currentText = floatingLabelTextField.text else { return }
+            currentText = currentText.filter{ "0123456789".contains($0)}
+            if !currentText.isNumeric {
                 floatingLabelTextField.errorMessage = "НЕПРАВИЛЬНЫЙ НОМЕР".uppercased()
             } else {
                 floatingLabelTextField.errorMessage = ""
-                if textFieldView.floatingTextField.text?.count == 12 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                        guard self.textFieldView.floatingTextField.text?.count == 12 && String(self.textFieldView.floatingTextField.text?.dropFirst() ?? "").isNumeric else { return }
-                        self.phoneNumber = currentText
-                        NetworkService.shared.sendCode(phoneNumber: String(currentText.dropFirst())) { result in
-                            switch result {
-                            case .success(let data):
-                                guard let dataString = String(data: data, encoding: .utf8) else { return }
-                                print(dataString)
-                            case .failure(let error):
-                                print(error.localizedDescription)
-                            }
-                        }
-                        self.timer?.invalidate()
-                        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
-                            switch self.timerCount {
-                            case 60:
-                                self.timeLabel.text = "01:00"
-                            case 0...9:
-                                self.timeLabel.text = "00:0\(self.timerCount)"
-                            default:
-                                self.timeLabel.text = "00:\(self.timerCount)"
-                            }
-                            self.timerCount -= 1
-                            if self.timerCount == 0 {
-                                self.timer?.invalidate()
-                                self.timerCount = 60
-                                self.codeTextField.resignFirstResponder()
-                                self.buttonView.setColor(color: Colors.red.getValue())
-                                self.buttonView.state = .error
-                                self.codeTextField.text = ""
-                                self.codeTextField.textDidChange()
-                                self.errorLabel.isHidden = false
-                                self.timerLabel.isHidden = true
-                                self.timeLabel.isHidden = true
-                            }
-                        })
-                        self.codeTextField.isHidden = false
-                        self.textFieldView.isHidden = true
-                        self.timerLabel.isHidden = false
-                        self.timeLabel.isHidden = false
-                        self.codeTextField.becomeFirstResponder()
-                    } // Dispatch
+                plainNumber = currentText
+                if plainNumber.first == "7" {
+                    phoneMaskService.originalNumber = plainNumber
+                    floatingLabelTextField.text = phoneMaskService.visibleNumber
+                    let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
+                    let position = floatingLabelTextField.position(from: floatingLabelTextField.beginningOfDocument, offset: index) ?? floatingLabelTextField.beginningOfDocument
+                    floatingLabelTextField.selectedTextRange = floatingLabelTextField.textRange(from: position, to: position)
+                }
+                if plainNumber.count > 11 {
+                    plainNumber.removeLast(plainNumber.count - 11)
                 }
             }
         }
     } // textFieldChanged
+    
+    private func sendCode(code: String) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            guard self.plainNumber.count >= 11 else { return }
+            self.phoneNumber = code
+            NetworkService.shared.sendCode(phoneNumber: code) { result in
+                switch result {
+                case .success(let data):
+                    guard let dataString = String(data: data, encoding: .utf8) else { return }
+                    print(dataString)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+            self.timer?.invalidate()
+            self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+                switch self.timerCount {
+                case 60:
+                    self.timeLabel.text = "01:00"
+                case 0...9:
+                    self.timeLabel.text = "00:0\(self.timerCount)"
+                default:
+                    self.timeLabel.text = "00:\(self.timerCount)"
+                }
+                self.timerCount -= 1
+                if self.timerCount == 0 {
+                    self.timer?.invalidate()
+                    self.timerCount = 60
+                    self.codeTextField.resignFirstResponder()
+                    self.buttonView.setColor(color: Colors.red.getValue())
+                    self.buttonView.state = .error
+                    self.codeTextField.text = ""
+                    self.codeTextField.textDidChange()
+                    self.errorLabel.isHidden = false
+                    self.timerLabel.isHidden = true
+                    self.timeLabel.isHidden = true
+                }
+            })
+            self.codeTextField.isHidden = false
+            self.textFieldView.isHidden = true
+            self.timerLabel.isHidden = false
+            self.timeLabel.isHidden = false
+            self.codeTextField.becomeFirstResponder()
+        } // Dispatch
+    }
     
     private func receiveCodeError() {
         self.buttonView.setColor(color: Colors.red.getValue())
@@ -326,25 +347,69 @@ class SignUpViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
         navigationController?.popViewController(animated: true)
     }
-    
 }
 
 extension SignUpViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let floatingTextField = textField as? SkyFloatingLabelTextField else { return false }
-        if floatingTextField.text == "" && string == " " {
-            //floatingTextField.text = "+7"
+        let text = floatingTextField.text ?? ""
+        let noInsert0 = range.length > 1
+        let noInsert1 = range.location > 1 && string.count > 1
+        let noInsert2 = range.location == 0 && string.count > 1 && text.starts(with: "+")
+        let noInsert3 = range.location == 1 && string.count > 1 && !text.starts(with: "+")
+        if noInsert0 || noInsert1 || noInsert2 || noInsert3 {
+                if text.starts(with: "+7") {
+                    let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
+                    let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: index) ?? floatingTextField.beginningOfDocument
+                    floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
+                } else {
+                    floatingTextField.selectedTextRange = floatingTextField.textRange(from: floatingTextField.endOfDocument, to: floatingTextField.endOfDocument)
+                }
+            return false
+        }
+        if range.location < 2 && string.count > 1 {
+            plainNumber.append(string.filter{ "0123456789".contains($0)})
+            if plainNumber.count > 11 {
+                plainNumber.removeLast(plainNumber.count - 11)
+            }
+            if text.contains("(") || string.starts(with: "+7") {
+                phoneMaskService.originalNumber = plainNumber
+                floatingTextField.text = phoneMaskService.visibleNumber
+                let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
+                let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: index) ?? floatingTextField.beginningOfDocument
+                    floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
+            } else {
+                floatingTextField.text = "+" + plainNumber
+                    floatingTextField.selectedTextRange = floatingTextField.textRange(from: floatingTextField.endOfDocument, to: floatingTextField.endOfDocument)
+            }
+            return false
+        }
+        if text.starts(with: "+_") && string.isEmpty {
+            defer {
+                let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: 1) ?? floatingTextField.beginningOfDocument
+                floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
+            }
+            return false
+        }
+        if text == "" && !string.isEmpty {
+            floatingTextField.text = "+"
             return true
         }
-        if string.count == 13 {
-            floatingTextField.text = ""
-            return true
-        }
-        if floatingTextField.text == "" && !string.isEmpty {
-            floatingTextField.text = "+7"
-            return true
-        }
-        if floatingTextField.text == "+" && string.isEmpty {
+        if string.isEmpty {
+            if plainNumber.first == "7" {
+                plainNumber = String(plainNumber.dropLast())
+                phoneMaskService.originalNumber = plainNumber
+                floatingTextField.text = phoneMaskService.visibleNumber
+                let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
+                defer {
+                    let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: index) ?? floatingTextField.beginningOfDocument
+                    floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
+                }
+                if plainNumber.isEmpty { floatingTextField.text = "+" + plainNumber }
+                return false
+            }
+            plainNumber = String(plainNumber.dropLast())
+            floatingTextField.text = "+" + plainNumber
             return false
         } else if floatingTextField.text?.count == 12 && !string.isEmpty{
             return false

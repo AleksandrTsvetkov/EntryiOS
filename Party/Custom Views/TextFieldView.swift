@@ -96,11 +96,13 @@ class TextFieldView: UIView, ColorDelegate {
 class FloatingField: SkyFloatingLabelTextField {
     
     var colorDelegate: ColorDelegate?
+    var topInset: CGFloat = -4
+    var bottomInset: CGFloat = 4
     
     override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: UIEdgeInsets(top: -10, left: 0, bottom: 28, right: 0))
+        return bounds.inset(by: UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0))
     }
-    
+
     override func titleLabelRectForBounds(_ bounds: CGRect, editing: Bool) -> CGRect {
         return bounds.inset(by: UIEdgeInsets(top: -10, left: 0, bottom: 28, right: 0))
     }
@@ -108,11 +110,15 @@ class FloatingField: SkyFloatingLabelTextField {
     @discardableResult
     override func becomeFirstResponder() -> Bool {
         colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
+        topInset = -10
+        bottomInset = 28
         return super.becomeFirstResponder()
     }
     
     override func resignFirstResponder() -> Bool {
         colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundNotResponder.getValue())
+        topInset = -4
+        bottomInset = 4
         return super.resignFirstResponder()
     }
 }

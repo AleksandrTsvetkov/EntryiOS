@@ -41,6 +41,7 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     var phoneNumber: String = ""
     private var location: Location?
     private var locationId: Int = 0
+    private var isKeyboardShown = false
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -217,11 +218,7 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     }
     
     private func hasLocation() {
-        let ac = UIAlertController(title: "Введите название для вашей текущей геолокации", message: nil, preferredStyle: .alert)
-        ac.addTextField()
-        let done = UIAlertAction(title: "Готово", style: .default) { [weak ac] _ in
-            let textField = ac!.textFields![0]
-            self.location?.title = textField.text ?? ""
+            self.location?.title = ""
             self.sendLocation()
             NetworkService.shared.createUser(user: self.getUser()) { result in
                 switch result {
@@ -255,9 +252,6 @@ class RegistrationViewController: UIViewController, StatusDelegate {
                     print(error)
                 }
             }
-        }
-        ac.addAction(done)
-        present(ac, animated: true)
     }
     
     private func noLocation() {
@@ -288,21 +282,21 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        let cell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as! RegistrationCell
-        print(cell.textFieldView.floatingTextField.textContentType)
-        print(cell.textFieldView.floatingTextField.keyboardType)
         doneButtonTapped()
+        guard !isKeyboardShown else { return }
         tableView.isScrollEnabled = true
         guard let userInfo = notification.userInfo else {
             tableView.isScrollEnabled = false
             return
         }
-        
         guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         let keyboardFrame = keyboardSize.cgRectValue
         print(keyboardFrame, "called once")
-        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
-        tableView.isScrollEnabled = true
+        DispatchQueue.main.async {
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+            self.tableView.isScrollEnabled = true
+            self.isKeyboardShown = true
+        }
 //        DispatchQueue.main.async {
 //            UIView.animate(withDuration: 0.1, animations: {
 //                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
@@ -314,10 +308,13 @@ class RegistrationViewController: UIViewController, StatusDelegate {
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
-        self.tableView.isScrollEnabled = true
-        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-        self.tableView.isScrollEnabled = false
+        DispatchQueue.main.async {
+            self.tableView.isScrollEnabled = true
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            self.tableView.isScrollEnabled = false
+            self.isKeyboardShown = false
+        }
 //        DispatchQueue.main.async {
 //            UIView.animate(withDuration: 0.1, animations: {
 //                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -368,8 +365,8 @@ extension RegistrationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocation = manager.location else { return }
         geoCoder.reverseGeocodeLocation(locValue) { (placemarks, error) in
-            if let locality = placemarks?.first?.locality, self.location == nil {
-                self.location = Location(title: "", city: locality, latitude: "\(locValue.coordinate.latitude)", longitude: "\(locValue.coordinate.longitude)")
+            if let locality = placemarks?.first?.locality, let thoroughfare = placemarks?.first?.thoroughfare, let subThoroughfare = placemarks?.first?.subThoroughfare, self.location == nil {
+                self.location = Location(title: "\(thoroughfare) \(subThoroughfare)", city: locality, latitude: "\(locValue.coordinate.latitude)", longitude: "\(locValue.coordinate.longitude)")
             }
         }
         manager.stopUpdatingLocation()

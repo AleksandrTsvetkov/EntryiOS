@@ -10,6 +10,8 @@
 		1F10FCC1254432EC00EBB307 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10FCC0254432EC00EBB307 /* NetworkError.swift */; };
 		1F10FCC32544339600EBB307 /* RequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10FCC22544339600EBB307 /* RequestType.swift */; };
 		1F10FCC5254492CB00EBB307 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10FCC4254492CB00EBB307 /* EventModel.swift */; };
+		1F5D512E25505F5400CE1502 /* PhoneMaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D512D25505F5400CE1502 /* PhoneMaskService.swift */; };
+		1F5D5130255073A400CE1502 /* String + Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D512F255073A400CE1502 /* String + Replace.swift */; };
 		1F61CEC62538D33E00096D71 /* FeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC52538D33E00096D71 /* FeatureView.swift */; };
 		1F61CEC92538E71200096D71 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC82538E71200096D71 /* AuthView.swift */; };
 		1F61CECB2538F0F100096D71 /* AuthTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CECA2538F0F100096D71 /* AuthTypeView.swift */; };
@@ -48,6 +50,7 @@
 		1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */; };
 		1FE1288C2542F5A700C7FABF /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE1288B2542F5A700C7FABF /* NetworkService.swift */; };
 		1FE1288E2542F9AD00C7FABF /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE1288D2542F9AD00C7FABF /* API.swift */; };
+		1FEDFB442550BB9D00808A34 /* Distance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEDFB432550BB9D00808A34 /* Distance.swift */; };
 		1FEFF10A253B8BA30051235A /* RegistrationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEFF109253B8BA30051235A /* RegistrationCell.swift */; };
 		1FF469F125388DB600926E82 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF469F025388DB600926E82 /* Colors.swift */; };
 		1FF469F525388E9900926E82 /* ButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF469F425388E9900926E82 /* ButtonView.swift */; };
@@ -60,6 +63,8 @@
 		1F10FCC0254432EC00EBB307 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		1F10FCC22544339600EBB307 /* RequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestType.swift; sourceTree = "<group>"; };
 		1F10FCC4254492CB00EBB307 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
+		1F5D512D25505F5400CE1502 /* PhoneMaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneMaskService.swift; sourceTree = "<group>"; };
+		1F5D512F255073A400CE1502 /* String + Replace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Replace.swift"; sourceTree = "<group>"; };
 		1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
 		1F61CEC52538D33E00096D71 /* FeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureView.swift; sourceTree = "<group>"; };
 		1F61CEC72538D4E900096D71 /* SFProText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Regular.ttf"; sourceTree = "<group>"; };
@@ -100,6 +105,7 @@
 		1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		1FE1288B2542F5A700C7FABF /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		1FE1288D2542F9AD00C7FABF /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		1FEDFB432550BB9D00808A34 /* Distance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Distance.swift; sourceTree = "<group>"; };
 		1FEFF109253B8BA30051235A /* RegistrationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationCell.swift; sourceTree = "<group>"; };
 		1FF469F025388DB600926E82 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		1FF469F425388E9900926E82 /* ButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonView.swift; sourceTree = "<group>"; };
@@ -181,7 +187,10 @@
 			isa = PBXGroup;
 			children = (
 				1FF469F025388DB600926E82 /* Colors.swift */,
+				1FEDFB432550BB9D00808A34 /* Distance.swift */,
 				1F86BDEB25456D3400468955 /* String + InsertRow.swift */,
+				1F5D512F255073A400CE1502 /* String + Replace.swift */,
+				1F5D512D25505F5400CE1502 /* PhoneMaskService.swift */,
 				1F61CECE2538F7D500096D71 /* UIView + Corners.swift */,
 				1F6B0A6A254AA4BC004EBD1D /* UIViewController + Alert.swift */,
 				1F710B4C25388C98008F0F7D /* UIColor + HexValue.swift */,
@@ -408,6 +417,7 @@
 				1FFB0DC2253F9CA400041806 /* UINavigationController + Extension.swift in Sources */,
 				1F61CECF2538F7D500096D71 /* UIView + Corners.swift in Sources */,
 				1F710B5225388CD8008F0F7D /* TextField + Padding.swift in Sources */,
+				1FEDFB442550BB9D00808A34 /* Distance.swift in Sources */,
 				1FF469F525388E9900926E82 /* ButtonView.swift in Sources */,
 				1FFB0DC0253F8D1600041806 /* LoginViewController.swift in Sources */,
 				1F6B0A6D254B2978004EBD1D /* CitiesViewController.swift in Sources */,
@@ -420,6 +430,7 @@
 				1F710B5325388CD8008F0F7D /* UIViewController.swift in Sources */,
 				1F96F64C254D62FB0018C302 /* MapViewController.swift in Sources */,
 				1FE1288C2542F5A700C7FABF /* NetworkService.swift in Sources */,
+				1F5D5130255073A400CE1502 /* String + Replace.swift in Sources */,
 				1F96F64E254D630E0018C302 /* HistoryViewController.swift in Sources */,
 				1F61CEC92538E71200096D71 /* AuthView.swift in Sources */,
 				1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */,
@@ -436,6 +447,7 @@
 				1F8C09642540C9FF00034FB2 /* CheckEmailView.swift in Sources */,
 				1F6B0A6B254AA4BC004EBD1D /* UIViewController + Alert.swift in Sources */,
 				1F710B4F25388CBD008F0F7D /* UIView + Borders.swift in Sources */,
+				1F5D512E25505F5400CE1502 /* PhoneMaskService.swift in Sources */,
 				1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */,
 				1F10FCC1254432EC00EBB307 /* NetworkError.swift in Sources */,
 				1F6867EC2539E83900543498 /* String + Extension.swift in Sources */,

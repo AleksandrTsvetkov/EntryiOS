@@ -1,0 +1,22 @@
+//
+//  Distance.swift
+//  Party
+//
+//  Created by Александр Цветков on 03.11.2020.
+//  Copyright © 2020 Александр Цветков. All rights reserved.
+//
+
+import Foundation
+
+extension StringProtocol {
+    func distance(of element: Element) -> Int? { firstIndex(of: element)?.distance(in: self) }
+    func distance<S: StringProtocol>(of string: S) -> Int? { range(of: string)?.lowerBound.distance(in: self) }
+}
+
+extension Collection {
+    func distance(to index: Index) -> Int { distance(from: startIndex, to: index) }
+}
+
+extension String.Index {
+    func distance<S: StringProtocol>(in string: S) -> Int { string.distance(to: self) }
+}
