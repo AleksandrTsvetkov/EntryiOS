@@ -58,13 +58,7 @@ class SignUpViewController: UIViewController {
     private lazy var buttonView = ButtonView(color: Colors.pink.getValue(), title: "Дальше", left: 16, right: 16)
     private var phoneNumber: String = ""
     private var phoneMaskService = PhoneMaskService()
-    private var plainNumber = "" {
-        willSet {
-            if newValue.count == 11 {
-                sendCode(code: newValue)
-            }
-        }
-    }
+    private var plainNumber = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -231,15 +225,18 @@ class SignUpViewController: UIViewController {
                 if plainNumber.count > 11 {
                     plainNumber.removeLast(plainNumber.count - 11)
                 }
+                if plainNumber.count == 11 && plainNumber.first == "7" {
+                    sendCode()
+                }
             }
         }
     } // textFieldChanged
     
-    private func sendCode(code: String) {
+    private func sendCode() {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-            guard self.plainNumber.count >= 11 else { return }
-            self.phoneNumber = code
-            NetworkService.shared.sendCode(phoneNumber: code) { result in
+            guard self.plainNumber.count >= 11 || !(self.plainNumber.first == "7") else { return }
+            self.phoneNumber = self.plainNumber
+            NetworkService.shared.sendCode(phoneNumber: self.plainNumber) { result in
                 switch result {
                 case .success(let data):
                     guard let dataString = String(data: data, encoding: .utf8) else { return }
@@ -382,6 +379,9 @@ extension SignUpViewController: UITextFieldDelegate {
                 floatingTextField.text = "+" + plainNumber
                     floatingTextField.selectedTextRange = floatingTextField.textRange(from: floatingTextField.endOfDocument, to: floatingTextField.endOfDocument)
             }
+            if plainNumber.count == 11 && plainNumber.first == "7" {
+                sendCode()
+            }
             return false
         }
         if text.starts(with: "+_") && string.isEmpty {
@@ -416,5 +416,12 @@ extension SignUpViewController: UITextFieldDelegate {
         } else {
             return true
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if plainNumber.count > 5 && plainNumber.first != "7" {
+            sendCode()
+        }
+        return false
     }
 }
