@@ -9,7 +9,7 @@
 import UIKit
 import SkyFloatingLabelTextField
 
-class SignUpViewController: UIViewController {
+class SignUpViewController: ViewController {
     
     var delegate: OnboardingViewController?
     private let label: UILabel = {

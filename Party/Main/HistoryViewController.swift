@@ -8,12 +8,12 @@
 
 import UIKit
 
-class HistoryViewController: UIViewController {
+class HistoryViewController: ViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .green
+        view.backgroundColor = Colors.backgroundBlack.getValue()
     }
     
 }

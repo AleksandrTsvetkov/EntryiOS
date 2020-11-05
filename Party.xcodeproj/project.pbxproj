@@ -10,6 +10,8 @@
 		1F10FCC1254432EC00EBB307 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10FCC0254432EC00EBB307 /* NetworkError.swift */; };
 		1F10FCC32544339600EBB307 /* RequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10FCC22544339600EBB307 /* RequestType.swift */; };
 		1F10FCC5254492CB00EBB307 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F10FCC4254492CB00EBB307 /* EventModel.swift */; };
+		1F2A653F2553F655008A17EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2A653E2553F655008A17EB /* ViewController.swift */; };
+		1F2A65412553FA99008A17EB /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2A65402553FA99008A17EB /* NavigationController.swift */; };
 		1F5D512E25505F5400CE1502 /* PhoneMaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D512D25505F5400CE1502 /* PhoneMaskService.swift */; };
 		1F5D5130255073A400CE1502 /* String + Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5D512F255073A400CE1502 /* String + Replace.swift */; };
 		1F61CEC62538D33E00096D71 /* FeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61CEC52538D33E00096D71 /* FeatureView.swift */; };
@@ -63,6 +65,8 @@
 		1F10FCC0254432EC00EBB307 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		1F10FCC22544339600EBB307 /* RequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestType.swift; sourceTree = "<group>"; };
 		1F10FCC4254492CB00EBB307 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
+		1F2A653E2553F655008A17EB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1F2A65402553FA99008A17EB /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		1F5D512D25505F5400CE1502 /* PhoneMaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneMaskService.swift; sourceTree = "<group>"; };
 		1F5D512F255073A400CE1502 /* String + Replace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Replace.swift"; sourceTree = "<group>"; };
 		1F61CEC32538923D00096D71 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
@@ -196,6 +200,8 @@
 				1F710B4C25388C98008F0F7D /* UIColor + HexValue.swift */,
 				1F710B4E25388CBD008F0F7D /* UIView + Borders.swift */,
 				1F710B5125388CD8008F0F7D /* UIViewController.swift */,
+				1F2A653E2553F655008A17EB /* ViewController.swift */,
+				1F2A65402553FA99008A17EB /* NavigationController.swift */,
 				1FFB0DC1253F9CA400041806 /* UINavigationController + Extension.swift */,
 				1F710B5025388CD8008F0F7D /* TextField + Padding.swift */,
 				1F6867EB2539E83900543498 /* String + Extension.swift */,
@@ -421,6 +427,7 @@
 				1FF469F525388E9900926E82 /* ButtonView.swift in Sources */,
 				1FFB0DC0253F8D1600041806 /* LoginViewController.swift in Sources */,
 				1F6B0A6D254B2978004EBD1D /* CitiesViewController.swift in Sources */,
+				1F2A653F2553F655008A17EB /* ViewController.swift in Sources */,
 				1F61CED5253909CF00096D71 /* SignUpViewController.swift in Sources */,
 				1F61CECB2538F0F100096D71 /* AuthTypeView.swift in Sources */,
 				1F10FCC32544339600EBB307 /* RequestType.swift in Sources */,
@@ -431,6 +438,7 @@
 				1F96F64C254D62FB0018C302 /* MapViewController.swift in Sources */,
 				1FE1288C2542F5A700C7FABF /* NetworkService.swift in Sources */,
 				1F5D5130255073A400CE1502 /* String + Replace.swift in Sources */,
+				1F2A65412553FA99008A17EB /* NavigationController.swift in Sources */,
 				1F96F64E254D630E0018C302 /* HistoryViewController.swift in Sources */,
 				1F61CEC92538E71200096D71 /* AuthView.swift in Sources */,
 				1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */,

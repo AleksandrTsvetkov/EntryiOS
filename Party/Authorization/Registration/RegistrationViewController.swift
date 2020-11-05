@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class RegistrationViewController: UIViewController, StatusDelegate {
+class RegistrationViewController: ViewController, StatusDelegate {
     
     //MARK: - Properties
     private var locationManager: CLLocationManager = CLLocationManager()

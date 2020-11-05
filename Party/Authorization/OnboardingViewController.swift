@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OnboardingViewController: UIViewController {
+class OnboardingViewController: ViewController {
     
     private let whyImageView: UIImageView = {
         let view = UIImageView()

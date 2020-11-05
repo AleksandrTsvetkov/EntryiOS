@@ -8,12 +8,12 @@
 
 import UIKit
 
-class MapViewController: UIViewController {
+class MapViewController: ViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .red
+        view.backgroundColor = Colors.backgroundBlack.getValue()
     }
 
 }

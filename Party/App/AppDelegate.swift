@@ -58,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func showOnboarding() {
         let rootViewController = OnboardingViewController()
         //let rootViewController = CitiesViewController()
-        let navigationController = UINavigationController(rootViewController: rootViewController)
+        let navigationController = NavigationController(rootViewController: rootViewController)
         navigationController.navigationBar.isTranslucent = false
         navigationController.navigationBar.barTintColor = .black
         navigationController.navigationBar.isHidden = true

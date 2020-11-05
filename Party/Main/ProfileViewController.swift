@@ -8,12 +8,20 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: ViewController {
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+    }
+    
+    private func setupViews() {
+        view.backgroundColor = Colors.backgroundBlack.getValue()
         
-        view.backgroundColor = .blue
+        NSLayoutConstraint.activate([
+            
+        ])
     }
 
 }

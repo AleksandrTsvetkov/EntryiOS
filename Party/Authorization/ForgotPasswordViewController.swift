@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ForgotPasswordViewController: UIViewController {
+class ForgotPasswordViewController: ViewController {
     
     private let label: UILabel = {
         let view = UILabel()

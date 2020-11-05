@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewPasswordViewController: UIViewController {
+class NewPasswordViewController: ViewController {
     
     private let label: UILabel = {
         let view = UILabel()

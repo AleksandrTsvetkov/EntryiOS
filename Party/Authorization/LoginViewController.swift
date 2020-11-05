@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: ViewController {
     
     var delegate: OnboardingViewController?
     private let label: UILabel = {

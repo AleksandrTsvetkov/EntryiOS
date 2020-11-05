@@ -12,13 +12,14 @@ class TabBarViewController: UITabBarController {
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        let mapVC = generateViewController(vcType: MapViewController.self, title: "Обзор", imageName: "")
-        let historyVC = generateViewController(vcType: HistoryViewController.self, title: "Мои вечеринки", imageName: "")
-        let profileVC = generateViewController(vcType: ProfileViewController.self, title: "Профиль", imageName: "")
+        let mapVC = generateViewController(vcType: MapViewController.self, title: "Обзор", imageName: "overview")
+        let historyVC = generateViewController(vcType: HistoryViewController.self, title: "Мои вечеринки", imageName: "history")
+        let profileVC = generateViewController(vcType: ProfileViewController.self, title: "Профиль", imageName: "profile")
         setViewControllers([mapVC, historyVC, profileVC], animated: false)
         selectedViewController = profileVC
         tabBar.tintColor = Colors.pink.getValue()
         tabBar.unselectedItemTintColor = Colors.buttonGray.getValue()
+        tabBar.barTintColor = Colors.tabBarBlack.getValue()
     }
     
     required init?(coder: NSCoder) {
