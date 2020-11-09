@@ -23,9 +23,10 @@ class CitiesViewController: UIViewController {
     }
     
     private func setup() {
-        view.backgroundColor = .black
-        tableView.backgroundColor = .black
-        searchBar.barTintColor = .black
+        let color = Colors.backgroundBlack.getValue().withAlphaComponent(1)
+        view.backgroundColor = color
+        tableView.backgroundColor = color
+        searchBar.barTintColor = color
         searchBar.keyboardAppearance = .dark
         tableView.keyboardDismissMode = .onDrag
         tableView.delegate = self
@@ -92,7 +93,8 @@ extension CitiesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.selectionStyle = .none
-        cell.backgroundColor = .black
+        let color = Colors.backgroundBlack.getValue().withAlphaComponent(1)
+        cell.backgroundColor = color
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.font = UIFont(name: "SFProText-Regular", size: 14)
         let place: Place

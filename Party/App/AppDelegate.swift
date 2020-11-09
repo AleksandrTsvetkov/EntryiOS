@@ -34,12 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         } else {
-            showOnboarding()
-            //showProfile()
+            //showOnboarding()
+            showProfile()
         }
         window?.backgroundColor = .black
         window?.makeKeyAndVisible()
-        
         return true
     }
 

@@ -66,8 +66,12 @@ class ButtonView: UIView {
         label.text = title
     }
     
-    func checkTitle(_ title: String) -> Bool {
-        return label.text == title
+    func changeTitle(newTitle: String) {
+        label.text = newTitle
+    }
+    
+    func changeIcon(newImageName: String) {
+        imageView.image = UIImage(named: newImageName)
     }
     
     private func setupViews(color: UIColor, left: CGFloat, right: CGFloat) {

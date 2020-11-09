@@ -21,6 +21,11 @@ enum Colors {
     case textFieldCorrect
     case tabBarBlack
     case backgroundBlack
+    case backgroundGray
+    case separator
+    case selectedSegment
+    case unselectedSegment
+    case labelGray
     
     func getValue() -> UIColor {
         switch self {
@@ -46,6 +51,16 @@ enum Colors {
             return UIColor(hex: "161616", alpha: 0.94)
         case .backgroundBlack:
             return UIColor(hex: "1D1D1D", alpha: 0.94)
+        case .separator:
+            return UIColor(hex: "38383A")
+        case .backgroundGray:
+            return UIColor(hex: "747480", alpha: 0.18)
+        case .selectedSegment:
+            return UIColor(hex: "636366")
+        case .unselectedSegment:
+            return UIColor(hex: "767680", alpha: 0.24)
+        case .labelGray:
+            return UIColor(hex: "99999F")
         }
     }
 }

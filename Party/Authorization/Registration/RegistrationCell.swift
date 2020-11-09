@@ -95,8 +95,6 @@ class RegistrationCell: UITableViewCell {
             statusDelegate?.fieldsStatus[index] = true
         }
     } // textFieldChanged
-    
-    
 }
 
 extension RegistrationCell: UITextFieldDelegate {

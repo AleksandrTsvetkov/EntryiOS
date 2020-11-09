@@ -151,7 +151,7 @@ class ForgotPasswordViewController: ViewController {
         let textField = textfield as? FloatingField,
         var text = textField.text
         else { return }
-        text = text.trimmingCharacters(in: .whitespaces)
+        text = text.replacingOccurrences(of: " ", with: "")
         textField.text = text
         let isEmail = text.isEmail()
         textField.errorMessage = (isEmail  || text.isEmpty) ? "" : "Неправильный email".uppercased()

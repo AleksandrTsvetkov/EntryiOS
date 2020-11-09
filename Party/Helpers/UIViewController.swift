@@ -9,6 +9,10 @@ import UIKit
 
 extension UIViewController {
     
+    var smallScreen: Bool {
+        return UIScreen.main.bounds.height < 740
+    }
+    
     func addDismissKeyboardByTap() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)

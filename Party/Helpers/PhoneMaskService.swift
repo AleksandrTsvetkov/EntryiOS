@@ -18,7 +18,7 @@ class PhoneMaskService {
         }
     }
     var visibleNumber: String = ""
-    private let mask: String = "+_ (___) __-__-___"
+    private let mask: String = "+_ (___) ___-__-__"
     
     func convert() {
         var newVisibleNumber = mask

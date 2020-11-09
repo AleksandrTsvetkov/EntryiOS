@@ -288,7 +288,7 @@ class LoginViewController: ViewController {
     }
     
     @objc private func emailTextFieldChanged() {
-        emailTextFieldView.floatingTextField.text = emailTextFieldView.floatingTextField.text?.trimmingCharacters(in: .whitespaces)
+        emailTextFieldView.floatingTextField.text = emailTextFieldView.floatingTextField.text?.replacingOccurrences(of: " ", with: "")
         emailTextFieldView.floatingTextField.errorMessage = ""
         passwordTextFieldView.floatingTextField.errorMessage = ""
         errorLabel.isHidden = true
@@ -296,7 +296,7 @@ class LoginViewController: ViewController {
     }
     
     @objc private func passwordTextFieldChanged() {
-        passwordTextFieldView.floatingTextField.text = passwordTextFieldView.floatingTextField.text?.trimmingCharacters(in: .whitespaces)
+        passwordTextFieldView.floatingTextField.text = passwordTextFieldView.floatingTextField.text?.replacingOccurrences(of: " ", with: "")
         emailTextFieldView.floatingTextField.errorMessage = ""
         passwordTextFieldView.floatingTextField.errorMessage = ""
         errorLabel.isHidden = true

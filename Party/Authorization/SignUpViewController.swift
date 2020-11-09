@@ -207,7 +207,7 @@ class SignUpViewController: ViewController {
     @objc private func textFieldChanged(_ textfield: UITextField) {
         guard let text = textfield.text else { return }
         if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
-            floatingLabelTextField.text = text.trimmingCharacters(in: .whitespaces)
+            floatingLabelTextField.text = text.replacingOccurrences(of: " ", with: "")
             guard var currentText = floatingLabelTextField.text else { return }
             currentText = currentText.filter{ "0123456789".contains($0)}
             if !currentText.isNumeric {
@@ -221,6 +221,8 @@ class SignUpViewController: ViewController {
                     let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
                     let position = floatingLabelTextField.position(from: floatingLabelTextField.beginningOfDocument, offset: index) ?? floatingLabelTextField.beginningOfDocument
                     floatingLabelTextField.selectedTextRange = floatingLabelTextField.textRange(from: position, to: position)
+                } else {
+                    floatingLabelTextField.text = "+" + plainNumber
                 }
                 if plainNumber.count > 11 {
                     plainNumber.removeLast(plainNumber.count - 11)

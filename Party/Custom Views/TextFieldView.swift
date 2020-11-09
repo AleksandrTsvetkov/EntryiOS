@@ -64,7 +64,7 @@ class TextFieldView: UIView, ColorDelegate {
             floatingTextField.topAnchor.constraint(equalTo: textFieldBackgroundView.topAnchor, constant: 18),
             floatingTextField.bottomAnchor.constraint(equalTo: textFieldBackgroundView.bottomAnchor, constant: -4),
             floatingTextField.leadingAnchor.constraint(equalTo: textFieldBackgroundView.leadingAnchor, constant: 14),
-            floatingTextField.trailingAnchor.constraint(equalTo: textFieldBackgroundView.trailingAnchor, constant: -14),
+            floatingTextField.trailingAnchor.constraint(equalTo: textFieldBackgroundView.trailingAnchor, constant: -38),
         ])
     }
     
@@ -95,9 +95,11 @@ class TextFieldView: UIView, ColorDelegate {
 
 class FloatingField: SkyFloatingLabelTextField {
     
+    var onProfileScreen = false
     var colorDelegate: ColorDelegate?
     var topInset: CGFloat = -4
     var bottomInset: CGFloat = 4
+    
     
     override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0))
@@ -109,14 +111,14 @@ class FloatingField: SkyFloatingLabelTextField {
     
     @discardableResult
     override func becomeFirstResponder() -> Bool {
-        colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
+        if !onProfileScreen { colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue()) }
         topInset = -10
         bottomInset = 28
         return super.becomeFirstResponder()
     }
     
     override func resignFirstResponder() -> Bool {
-        colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundNotResponder.getValue())
+        if !onProfileScreen { colorDelegate?.setBackgroundColor(color: Colors.textFieldBackgroundNotResponder.getValue()) }
         topInset = -4
         bottomInset = 4
         return super.resignFirstResponder()

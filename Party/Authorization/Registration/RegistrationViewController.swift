@@ -218,40 +218,40 @@ class RegistrationViewController: ViewController, StatusDelegate {
     }
     
     private func hasLocation() {
-            self.location?.title = ""
-            self.sendLocation()
-            NetworkService.shared.createUser(user: self.getUser()) { result in
-                switch result {
-                case .success(let data):
-                    do {
-                        guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
-                        print(dict)
-                        if let warning = dict["warning"] as? String {
-                            self.receiveServerError()
-                            print(warning)
-                            return
-                        }
-                        if let error = dict["error"] as? String {
-                            self.receiveServerError()
-                            print(error)
-                            return
-                        }
-                        if let success = dict["success"] as? Int {
-                            if success == 1 {
-                                let vc = LoginViewController()
-                                let backButton = UIBarButtonItem()
-                                backButton.title = "Зачем?"
-                                self.navigationItem.backBarButtonItem = backButton
-                                self.navigationController?.pushViewController(vc, animated: true)
-                            }
-                        }
-                    } catch {
-                        print(error)
+        self.location?.title = ""
+        self.sendLocation()
+        NetworkService.shared.createUser(user: self.getUser()) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                    print(dict)
+                    if let warning = dict["warning"] as? String {
+                        self.receiveServerError()
+                        print(warning)
+                        return
                     }
-                case .failure(let error):
+                    if let error = dict["error"] as? String {
+                        self.receiveServerError()
+                        print(error)
+                        return
+                    }
+                    if let success = dict["success"] as? Int {
+                        if success == 1 {
+                            let vc = LoginViewController()
+                            let backButton = UIBarButtonItem()
+                            backButton.title = "Зачем?"
+                            self.navigationItem.backBarButtonItem = backButton
+                            self.navigationController?.pushViewController(vc, animated: true)
+                        }
+                    }
+                } catch {
                     print(error)
                 }
+            case .failure(let error):
+                print(error)
             }
+        }
     }
     
     private func noLocation() {
@@ -291,20 +291,20 @@ class RegistrationViewController: ViewController, StatusDelegate {
         }
         guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         let keyboardFrame = keyboardSize.cgRectValue
-        print(keyboardFrame, "called once")
+        //print(keyboardFrame, "called once")
         DispatchQueue.main.async {
             self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
-            self.tableView.isScrollEnabled = true
+            self.tableView.isScrollEnabled = false
             self.isKeyboardShown = true
         }
-//        DispatchQueue.main.async {
-//            UIView.animate(withDuration: 0.1, animations: {
-//                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
-//                //self.tableView.scrollToRow(at: IndexPath(row: 2, section: 0), at: .top, animated: true)
-//            }) { _ in
-//                self.tableView.isScrollEnabled = false
-//            }
-//        }
+        //        DispatchQueue.main.async {
+        //            UIView.animate(withDuration: 0.1, animations: {
+        //                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+        //                //self.tableView.scrollToRow(at: IndexPath(row: 2, section: 0), at: .top, animated: true)
+        //            }) { _ in
+        //                self.tableView.isScrollEnabled = false
+        //            }
+        //        }
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
@@ -315,14 +315,14 @@ class RegistrationViewController: ViewController, StatusDelegate {
             self.tableView.isScrollEnabled = false
             self.isKeyboardShown = false
         }
-//        DispatchQueue.main.async {
-//            UIView.animate(withDuration: 0.1, animations: {
-//                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//                //self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-//            }) { _ in
-//                self.tableView.isScrollEnabled = false
-//            }
-//        }
+        //        DispatchQueue.main.async {
+        //            UIView.animate(withDuration: 0.1, animations: {
+        //                self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        //                //self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        //            }) { _ in
+        //                self.tableView.isScrollEnabled = false
+        //            }
+        //        }
     }
     
     @objc private func backButtonTapped() {
@@ -505,4 +505,35 @@ enum PickerData: Int {
     case days = 31
     case months = 12
     case years = 100
+    
+    static func monthStringToNumber(number: Int) -> String {
+        switch number {
+        case 0:
+            return "январь"
+        case 1:
+            return "февраль"
+        case 2:
+            return "март"
+        case 3:
+            return "апрель"
+        case 4:
+            return "май"
+        case 5:
+            return "июнь"
+        case 6:
+            return "июль"
+        case 7:
+            return "август"
+        case 8:
+            return "сентябрь"
+        case 9:
+            return "октябрь"
+        case 10:
+            return "ноябрь"
+        case 11:
+            return "декабрь"
+        default:
+            return ""
+        }
+    }
 }
