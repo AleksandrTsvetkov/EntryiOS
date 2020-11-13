@@ -26,6 +26,7 @@ enum Colors {
     case selectedSegment
     case unselectedSegment
     case labelGray
+    case cellBackground
     
     func getValue() -> UIColor {
         switch self {
@@ -61,6 +62,8 @@ enum Colors {
             return UIColor(hex: "767680", alpha: 0.24)
         case .labelGray:
             return UIColor(hex: "99999F")
+        case .cellBackground:
+            return UIColor(hex: "2D2D2F")
         }
     }
 }
