@@ -60,7 +60,7 @@ class HistoryViewController: ViewController {
         return view
     }()
     private let tableView: UITableView = {
-        let view = UITableView()
+        let view = UITableView(frame: .zero, style: .grouped)
         view.backgroundColor = .clear
         view.separatorStyle = .none
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -84,7 +84,7 @@ class HistoryViewController: ViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(HistoryCell.self, forCellReuseIdentifier: HistoryCell.reuseId)
-        tableView.isScrollEnabled = false
+        tableView.isScrollEnabled = true
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
         organizeButtonView.addGestureRecognizer(tap)
@@ -137,7 +137,7 @@ class HistoryViewController: ViewController {
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return EventsHeaderView(ofType: .underConsideration)
+        return EventsHeaderView(ofType: EventType.allCases[section])
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -145,15 +145,22 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 134
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HistoryCell.reuseId, for: indexPath) as? HistoryCell else { return UITableViewCell() }
+        let event = Event(title: "Drug", beginning: "2020-12-13 20:00", description: "description", location_id: "", price: "", ending: "", shisha: "", age_bottom_limit: "", age_top_limit: "", count_bottom_limit: "", count_top_limit: "")
+        cell.configure(withModel: event, forType: EventType.allCases[indexPath.section])
+        return cell
     }
     
     

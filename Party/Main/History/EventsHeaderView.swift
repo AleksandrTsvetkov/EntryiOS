@@ -25,9 +25,8 @@ class EventsHeaderView: UIView {
     }()
     private var iconWidth: CGFloat = 15.5
     
-    convenience init(ofType type: EventHeaderType) {
+    convenience init(ofType type: EventType) {
         self.init(frame: .zero)
-        initialSetup()
         
         switch type {
         case .underConsideration:
@@ -47,6 +46,7 @@ class EventsHeaderView: UIView {
             iconView.image = UIImage(named: "historyIcon")
             iconWidth = 18
         }
+        initialSetup()
     }
     
     private func initialSetup() {
@@ -64,12 +64,11 @@ class EventsHeaderView: UIView {
             iconView.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -8),
         ])
     }
-    
-    enum EventHeaderType {
-        case underConsideration
-        case coming
-        case liked
-        case history
-    }
-    
+}
+
+enum EventType: CaseIterable {
+    case underConsideration
+    case coming
+    case liked
+    case history
 }
