@@ -27,7 +27,7 @@ class ProfileCell: UITableViewCell {
     private var cellRow = 0
     private let phoneMaskService = PhoneMaskService()
     
-    func configure(forUser user: User, forType type: ProfileFieldType, row: Int) {
+    func configure(forUser user: UserRequest, forType type: ProfileFieldType, row: Int) {
         cellRow = row
         cellType = type
         isUserInteractionEnabled = true
@@ -59,7 +59,7 @@ class ProfileCell: UITableViewCell {
                 textFieldView.addGestureRecognizer(tap)
                 textFieldView.floatingTextField.tag = 2
                 guard let birthMonth = Int(user.birthMonth) else { return }
-                text = "\(user.birthDay) \(PickerData.monthStringToNumber(number: birthMonth)) \(user.birthYear)"
+                text = "\(user.birthDay) \(PickerData.monthNumberToString(number: birthMonth)) \(user.birthYear)"
             default:
                 break
             }
@@ -183,12 +183,4 @@ class ProfileCell: UITableViewCell {
     @objc private func editImageTapped() {
         print("asdasd")
     }
-}
-
-protocol ProfileCellDelegate: UITextFieldDelegate {
-    func textFieldChanged()
-    func keyboardWillShow(row: Int)
-    func keyboardWillHide(row: Int)
-    func openPicker()
-    func openCities()
 }

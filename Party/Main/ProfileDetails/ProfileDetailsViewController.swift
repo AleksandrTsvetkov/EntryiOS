@@ -45,21 +45,23 @@ class ProfileDetailsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private let tableView: UITableView = {
+    let tableView: UITableView = {
         let view = UITableView()
         view.backgroundColor = .clear
         view.separatorStyle = .none
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private let buttonView = ButtonView(color: Colors.pink.getValue(), title: "Сохранить", left: 16, right: 16)
-    private var isKeyboardShown = false
-    private var phoneMaskService = PhoneMaskService()
-    private var plainNumber = ""
+    let buttonView = ButtonView(color: Colors.pink.getValue(), title: "Сохранить", left: 16, right: 16)
+    var isKeyboardShown = false
+    var phoneMaskService = PhoneMaskService()
+    var plainNumber = ""
     private lazy var picker = UIPickerView()
     private lazy var toolBar = UIToolbar()
-    private var user: User = User(phoneNumber: "79210000000", firstName: "Иван", secondName: "Иванов", birthYear: "2000", birthMonth: "9", birthDay: "6", locationId: "1", password: "123456", email: "ivanov@gmail.com")
-    private var cityOfUser: String = "Санкт-Петербург"
+    var updatedFields: Array<(String, String, Bool)> = []
+    var cityOfUser: String = ""
+    var user: UserRequest!
+    var passwordsForRequest: (String, String, String) = ("", "", "")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,7 +115,7 @@ class ProfileDetailsViewController: UIViewController {
         ])
     }
     
-    private func presentPicker() {
+    func presentPicker() {
         view.endEditing(true)
         picker.delegate = self
         picker.dataSource = self
@@ -194,10 +196,40 @@ class ProfileDetailsViewController: UIViewController {
     }
     
     @objc private func buttonViewTapped() {
-        
-    }
+        if !updatedFields.isEmpty {
+            NetworkService.shared.updateUserDetails(updatedFields: updatedFields) { result in
+                switch result {
+                case .success(_):
+                    print("Success in \(#function)")
+                case .failure(let error):
+                    self.showAlert(title: "Не удалось обновить информацию", text: error.localizedDescription)
+                    print(error)
+                }
+            }
+        } else if profileFieldType == .changePassword {
+            NetworkService.shared.changePassword(password: passwordsForRequest.0, newPassword1: passwordsForRequest.1, newPassword2: passwordsForRequest.2) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return }
+                        if dict["success"] != nil {
+                            print("Success in \(#function)")
+                        } else {
+                            self.showAlert(title: "Не удалось сменить пароль", text: "Что-то пошло не так")
+                        }
+                    } catch {
+                        self.showAlert(title: "Не удалось сменить пароль", text: error.localizedDescription)
+                        print(error)
+                    }
+                case .failure(let error):
+                    self.showAlert(title: "Не удалось сменить пароль", text: error.localizedDescription)
+                    print(error)
+                }
+            }
+        }
+    } // buttonViewTapped
     
-    @objc private func doneButtonTapped() {
+    @objc func doneButtonTapped() {
         toolBar.removeFromSuperview()
         picker.removeFromSuperview()
     }
@@ -239,262 +271,6 @@ extension ProfileDetailsViewController: UITableViewDelegate, UITableViewDataSour
         cell.profileCellDelegate = self
         cell.configure(forUser: user, forType: profileFieldType, row: indexPath.row)
         return cell
-    }
-}
-
-extension ProfileDetailsViewController: ProfileCellDelegate {
-    func textFieldChanged() {
-        var noChanges = true
-        var notEmpty = true
-        var noErrors = true
-        switch profileFieldType {
-        case .personalData:
-            guard
-                let nameCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ProfileCell,
-                let cityCell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ProfileCell,
-                let birthDateCell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? ProfileCell,
-                let birthMonth = Int(user.birthMonth),
-                let name = nameCell.getTextField().text,
-                let city = cityCell.getTextField().text,
-                let birthDate = birthDateCell.getTextField().text
-                else { return }
-            let userName = "\(user.firstName) \(user.secondName)"
-            let userBirthDate = "\(user.birthDay) \(PickerData.monthStringToNumber(number: birthMonth)) \(user.birthYear)"
-            checkName(nameCell.getTextField())
-            noChanges = (name == userName) && (city == cityOfUser) && (birthDate == userBirthDate)
-            notEmpty = !name.isEmpty && !city.isEmpty && !birthDate.isEmpty
-            noErrors = (nameCell.getTextField().errorMessage == nil || nameCell.getTextField().errorMessage == "") &&
-                (cityCell.getTextField().errorMessage == nil || cityCell.getTextField().errorMessage == "") &&
-                (birthDateCell.getTextField().errorMessage == nil || birthDateCell.getTextField().errorMessage == "")
-        case .contacts:
-            guard
-                let phoneCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ProfileCell,
-                let emailCell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ProfileCell,
-                let phone = phoneCell.getTextField().text,
-                let email = emailCell.getTextField().text
-                else { return }
-            let userPhone = user.phoneNumber
-            let userEmail = user.email
-            let isEmail = email.isEmail()
-            checkPhone(phoneCell.getTextField())
-            emailCell.getTextField().errorMessage = (isEmail  || email.isEmpty) ? "" : "Неправильные символы".uppercased()
-            noChanges = (userPhone == phone) && (userEmail == email)
-            notEmpty = !phone.isEmpty && !email.isEmpty
-            let noErrorMessages = (phoneCell.getTextField().errorMessage == nil || phoneCell.getTextField().errorMessage == "") &&
-                (emailCell.getTextField().errorMessage == nil || emailCell.getTextField().errorMessage == "")
-            let phoneIsCorrect = (plainNumber.starts(with: "7") && plainNumber.count == 11) || (!plainNumber.starts(with: "7") && plainNumber.count > 5)
-            noErrors = noErrorMessages && phoneIsCorrect
-        case .changePassword:
-            guard
-            let oldPasswordCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ProfileCell,
-            let firstPasswordCell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ProfileCell,
-            let secondPasswordCell = tableView.cellForRow(at: IndexPath(row: 2, section: 0)) as? ProfileCell,
-            let oldPassword = oldPasswordCell.getTextField().text,
-            let firstPassword = firstPasswordCell.getTextField().text,
-            let secondPassword = secondPasswordCell.getTextField().text
-            else { return }
-            if firstPassword != secondPassword && !firstPassword.isEmpty && !secondPassword.isEmpty {
-                firstPasswordCell.getTextField().errorMessage = "Пароли не совпадают"
-                secondPasswordCell.getTextField().errorMessage = "Пароли не совпадают"
-            } else {
-                firstPasswordCell.getTextField().errorMessage = ""
-                secondPasswordCell.getTextField().errorMessage = ""
-            }
-            notEmpty = !oldPassword.isEmpty && !firstPassword.isEmpty && !secondPassword.isEmpty
-            noErrors = (oldPasswordCell.getTextField().errorMessage == nil || oldPasswordCell.getTextField().errorMessage == "") &&
-                       (firstPasswordCell.getTextField().errorMessage == nil || firstPasswordCell.getTextField().errorMessage == "") &&
-                       (secondPasswordCell.getTextField().errorMessage == nil || secondPasswordCell.getTextField().errorMessage == "")
-        default:
-            break
-        }
-        if noChanges || !noErrors || !notEmpty {
-            hideButton()
-        } else {
-            showButton()
-        }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return false
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let text = textField.text ?? ""
-        if string == " " && text.count == 0 {
-            return false
-        }
-        if text.contains(" ") && string == " " {
-            return false
-        }
-        if profileFieldType == .contacts && textField.tag == 4 {
-            return charReplacementForNumber(textField, shouldChangeCharactersIn: range, replacementString: string)
-        }
-        return true
-    }
-    
-    private func checkName(_ textField: FloatingField) {
-        let text = textField.text ?? ""
-        var set = CharacterSet.letters
-        set.insert(" ")
-        var isValid = true
-        for i in text {
-            if String(i).rangeOfCharacter(from: set) == nil {
-                isValid = false
-            }
-        }
-        if !isValid && !text.isEmpty {
-            textField.errorMessage = "Неправильные символы".uppercased()
-        } else {
-            textField.errorMessage = ""
-        }
-    }
-    
-    private func checkPhone(_ textField: FloatingField) {
-        guard let text = textField.text else { return }
-        textField.text = text.replacingOccurrences(of: " ", with: "")
-        guard var currentText = textField.text else { return }
-        currentText = currentText.filter{ "0123456789".contains($0)}
-        if !currentText.isNumeric {
-            textField.errorMessage = "НЕПРАВИЛЬНЫЙ НОМЕР".uppercased()
-        } else {
-            textField.errorMessage = ""
-            plainNumber = currentText
-            if plainNumber.first == "7" {
-                phoneMaskService.originalNumber = plainNumber
-                textField.text = phoneMaskService.visibleNumber
-                let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
-                let position = textField.position(from: textField.beginningOfDocument, offset: index) ?? textField.beginningOfDocument
-                textField.selectedTextRange = textField.textRange(from: position, to: position)
-            } else {
-                textField.text = "+" + plainNumber
-            }
-            if plainNumber.count > 11 {
-                plainNumber.removeLast(plainNumber.count - 11)
-            }
-        }
-    }
-    
-    private func charReplacementForNumber(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let floatingTextField = textField as? SkyFloatingLabelTextField else { return false }
-        let text = floatingTextField.text ?? ""
-        let noInsert0 = range.length > 1
-        let noInsert1 = range.location > 1 && string.count > 1
-        let noInsert2 = range.location == 0 && string.count > 1 && text.starts(with: "+")
-        let noInsert3 = range.location == 1 && string.count > 1 && !text.starts(with: "+")
-        if noInsert0 || noInsert1 || noInsert2 || noInsert3 {
-            if text.starts(with: "+7") {
-                let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
-                let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: index) ?? floatingTextField.beginningOfDocument
-                floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
-            } else {
-                floatingTextField.selectedTextRange = floatingTextField.textRange(from: floatingTextField.endOfDocument, to: floatingTextField.endOfDocument)
-            }
-            return false
-        }
-        if range.location < 2 && string.count > 1 {
-            plainNumber.append(string.filter{ "0123456789".contains($0)})
-            if plainNumber.count > 11 {
-                plainNumber.removeLast(plainNumber.count - 11)
-            }
-            if text.contains("(") || string.starts(with: "+7") {
-                phoneMaskService.originalNumber = plainNumber
-                floatingTextField.text = phoneMaskService.visibleNumber
-                let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
-                let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: index) ?? floatingTextField.beginningOfDocument
-                floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
-            } else {
-                floatingTextField.text = "+" + plainNumber
-                floatingTextField.selectedTextRange = floatingTextField.textRange(from: floatingTextField.endOfDocument, to: floatingTextField.endOfDocument)
-            }
-            return false
-        }
-        if text.starts(with: "+_") && string.isEmpty {
-            defer {
-                let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: 1) ?? floatingTextField.beginningOfDocument
-                floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
-            }
-            return false
-        }
-        if text == "" && !string.isEmpty {
-            floatingTextField.text = "+"
-            return true
-        }
-        if string.isEmpty {
-            if plainNumber.first == "7" {
-                plainNumber = String(plainNumber.dropLast())
-                phoneMaskService.originalNumber = plainNumber
-                floatingTextField.text = phoneMaskService.visibleNumber
-                let index = phoneMaskService.visibleNumber.distance(of: "_") ?? phoneMaskService.visibleNumber.count
-                defer {
-                    let position = floatingTextField.position(from: floatingTextField.beginningOfDocument, offset: index) ?? floatingTextField.beginningOfDocument
-                    floatingTextField.selectedTextRange = floatingTextField.textRange(from: position, to: position)
-                }
-                if plainNumber.isEmpty { floatingTextField.text = "+" + plainNumber }
-                return false
-            }
-            plainNumber = String(plainNumber.dropLast())
-            floatingTextField.text = "+" + plainNumber
-            return false
-        } else if floatingTextField.text?.count == 12 && !string.isEmpty{
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func openPicker() {
-        guard profileFieldType == .personalData else { return }
-        presentPicker()
-    }
-    
-    func openCities() {
-        guard profileFieldType == .personalData else { return }
-        let vc = CitiesViewController()
-        vc.delegate = self
-        present(vc, animated: true)
-    }
-    
-    func keyboardWillShow(row: Int) {
-        doneButtonTapped()
-        guard !isKeyboardShown else { return }
-        var offsetY: CGFloat = 0
-        switch row {
-        case 0:
-            return
-        case 1:
-            offsetY = smallScreen ? 50 : 50
-        case 2:
-            offsetY = smallScreen ? 130 : 90
-        default:
-            return
-        }
-        tableView.isScrollEnabled = true
-        DispatchQueue.main.async {
-            //self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 130, right: 0)
-            self.tableView.contentOffset.y = offsetY
-            self.tableView.isScrollEnabled = false
-            self.isKeyboardShown = true
-        }
-    }
-    
-    func keyboardWillHide(row: Int) {
-        DispatchQueue.main.async {
-            self.tableView.isScrollEnabled = true
-            //self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            self.tableView.contentOffset.y = 0
-            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-            self.tableView.isScrollEnabled = false
-            self.isKeyboardShown = false
-        }
-    }
-    
-    func showButton() {
-        buttonView.isHidden = false
-    }
-    
-    func hideButton() {
-        buttonView.isHidden = true
     }
 }
 

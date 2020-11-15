@@ -124,21 +124,19 @@ class SignUpViewController: ViewController {
                             }
                             if let error = dict["error"] as? String {
                                 //self.receiveCodeError()
-                                //TODO: - Create alert
                                 print(error)
                             }
                             if let verified = dict["verified"] as? Int {
                                 print("verified is \(verified) when checking code")
                                 if verified == 0 {
                                     //self.receiveCodeError()
-                                    //TODO: - Create alert
                                     print("wrong code")
                                 } else if verified == 1 {
-//                                    self.buttonView.setColor(color: Colors.pink.getValue())
-//                                    self.buttonView.state = .next
-//                                    self.codeTextField.resignFirstResponder()
-//                                    self.timeLabel.isHidden = true
-//                                    self.timerLabel.isHidden = true
+                                    self.buttonView.setColor(color: Colors.pink.getValue())
+                                    self.buttonView.state = .next
+                                    self.codeTextField.resignFirstResponder()
+                                    self.timeLabel.isHidden = true
+                                    self.timerLabel.isHidden = true
                                 }
                             }
                         } catch {
@@ -151,6 +149,7 @@ class SignUpViewController: ViewController {
                         }
 
                     case .failure(let error):
+                        //self.receiveCodeError()
                         print(error)
                     }
                 } // Check code

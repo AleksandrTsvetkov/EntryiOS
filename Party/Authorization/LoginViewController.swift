@@ -220,17 +220,48 @@ class LoginViewController: ViewController {
                     print("-----Verify-----")
                     if let valid = dict["valid"] as? Int {
                         if valid == 1 {
-                            //TODO: - Make alert
                             print("Auth is valid")
                         }
                     }
                 } catch {
+                    self.showErrorState()
                     print(error)
                 }
+                self.getUser()
             case .failure(let error):
+                self.showErrorState()
                 print(error)
             }
         }
+    }
+    
+    private func getUser() {
+        NetworkService.shared.getUserDetails { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let user = try decoder.decode(UserResponse.self, from: data)
+                    let tabBarController = TabBarViewController()
+                    guard let vc = tabBarController.viewControllers?[1] as? ProfileViewController else { return }
+                    vc.user = UserRequest(fromUser: user)
+                    self.present(tabBarController, animated: true)
+                } catch {
+                    self.showErrorState()
+                    print(error)
+                }
+            case .failure(let error):
+                self.showErrorState()
+                print(error)
+            }
+        }
+    }
+    
+    private func showErrorState() {
+        self.errorLabel.isHidden = false
+        self.emailTextFieldView.floatingTextField.errorMessage = "E-MAIL"
+        self.passwordTextFieldView.floatingTextField.errorMessage = "ПАРОЛЬ"
     }
     
     //MARK: - Objc methods
@@ -272,16 +303,12 @@ class LoginViewController: ViewController {
                     }
                     
                 } catch {
-                    self.errorLabel.isHidden = false
-                    self.emailTextFieldView.floatingTextField.errorMessage = "E-MAIL"
-                    self.passwordTextFieldView.floatingTextField.errorMessage = "ПАРОЛЬ"
+                    self.showErrorState()
                     print(error)
                 }
                 self.verify()
             case .failure(let error):
-                self.errorLabel.isHidden = false
-                self.emailTextFieldView.floatingTextField.errorMessage = "E-MAIL"
-                self.passwordTextFieldView.floatingTextField.errorMessage = "ПАРОЛЬ"
+                self.showErrorState()
                 print(error)
             }
         }

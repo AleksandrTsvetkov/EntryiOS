@@ -168,8 +168,8 @@ class RegistrationViewController: ViewController, StatusDelegate {
         picker.selectRow(PickerData.years.rawValue / 2, inComponent: 2, animated: false)
     }
     
-    private func getUser() -> User {
-        var user = User(phoneNumber: phoneNumber, firstName: "", secondName: "", birthYear: "", birthMonth: "", birthDay: "", locationId: "\(locationId)", password: "", email: "")
+    private func getUser() -> UserRequest {
+        let user = UserRequest(phoneNumber: phoneNumber, firstName: "", secondName: "", birthYear: "", birthMonth: "", birthDay: "", locationId: "\(locationId)", password: "", email: "")
         let nameCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! RegistrationCell
         let fullName = nameCell.textFieldView.floatingTextField.text ?? ""
         if let spacingIndex = fullName.firstIndex(of: " ") {
@@ -241,14 +241,17 @@ class RegistrationViewController: ViewController, StatusDelegate {
                             let vc = LoginViewController()
                             let backButton = UIBarButtonItem()
                             backButton.title = "Зачем?"
+                            UserDefaults.standard.set(self.location?.city, forKey: "city")
                             self.navigationItem.backBarButtonItem = backButton
                             self.navigationController?.pushViewController(vc, animated: true)
                         }
                     }
                 } catch {
+                    self.receiveServerError()
                     print(error)
                 }
             case .failure(let error):
+                self.receiveServerError()
                 print(error)
             }
         }
@@ -401,6 +404,7 @@ extension RegistrationViewController: CityPickerDelegate {
                         }
                         if let success = dict["success"] as? Int {
                             if success == 1 {
+                                UserDefaults.standard.set(self.location?.city, forKey: "city")
                                 let vc = LoginViewController()
                                 let backButton = UIBarButtonItem()
                                 backButton.title = "Зачем?"
@@ -409,9 +413,11 @@ extension RegistrationViewController: CityPickerDelegate {
                             }
                         }
                     } catch {
+                        self.receiveServerError()
                         print(error)
                     }
                 case .failure(let error):
+                    self.receiveServerError()
                     print(error)
                 }
             }
@@ -506,7 +512,7 @@ enum PickerData: Int {
     case months = 12
     case years = 100
     
-    static func monthStringToNumber(number: Int) -> String {
+    static func monthNumberToString(number: Int) -> String {
         switch number {
         case 0:
             return "январь"
@@ -534,6 +540,37 @@ enum PickerData: Int {
             return "декабрь"
         default:
             return ""
+        }
+    }
+    
+    static func monthStringToNumber(string: String) -> Int {
+        switch string {
+        case "январь":
+            return 1
+        case "февраль":
+            return 2
+        case "март":
+            return 3
+        case "апрель":
+            return 4
+        case "май":
+            return 5
+        case "июнь":
+            return 6
+        case "июль":
+            return 7
+        case "август":
+            return 8
+        case "сентябрь":
+            return 9
+        case "октябрь":
+            return 10
+        case "ноябрь":
+            return 11
+        case "декабрь":
+            return 12
+        default:
+            return 0
         }
     }
 }

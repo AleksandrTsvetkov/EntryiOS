@@ -53,6 +53,7 @@
 		1F96F650254D6D100018C302 /* SFProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F96F64F254D6D100018C302 /* SFProText-Medium.ttf */; };
 		1F96F652254D6D670018C302 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F96F651254D6D670018C302 /* TabBarViewController.swift */; };
 		1F96F654254F2E600018C302 /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F96F653254F2E600018C302 /* SFProDisplay-Regular.ttf */; };
+		1FA47C3525613D7A00F87D10 /* ProfileCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA47C3425613D7A00F87D10 /* ProfileCellDelegate.swift */; };
 		1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */; };
 		1FBA1F4D25570DD500CCF0B0 /* UIAlertController + Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA1F4C25570DD500CCF0B0 /* UIAlertController + Fix.swift */; };
 		1FE1288C2542F5A700C7FABF /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE1288B2542F5A700C7FABF /* NetworkService.swift */; };
@@ -118,6 +119,7 @@
 		1F96F64F254D6D100018C302 /* SFProText-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Medium.ttf"; sourceTree = "<group>"; };
 		1F96F651254D6D670018C302 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		1F96F653254F2E600018C302 /* SFProDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Regular.ttf"; sourceTree = "<group>"; };
+		1FA47C3425613D7A00F87D10 /* ProfileCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellDelegate.swift; sourceTree = "<group>"; };
 		1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		1FBA1F4C25570DD500CCF0B0 /* UIAlertController + Fix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController + Fix.swift"; sourceTree = "<group>"; };
 		1FE1288B2542F5A700C7FABF /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				1FFD2002255483AE00A1AFA7 /* ProfileDetailsViewController.swift */,
+				1FA47C3425613D7A00F87D10 /* ProfileCellDelegate.swift */,
 				1FFF8E9725548CAB00A5EF52 /* ProfileCell.swift */,
 			);
 			path = ProfileDetails;
@@ -504,6 +507,7 @@
 				1F710B4F25388CBD008F0F7D /* UIView + Borders.swift in Sources */,
 				1F5D512E25505F5400CE1502 /* PhoneMaskService.swift in Sources */,
 				1F710B4025388957008F0F7D /* OnboardingViewController.swift in Sources */,
+				1FA47C3525613D7A00F87D10 /* ProfileCellDelegate.swift in Sources */,
 				1F05CAA9255D629000F95226 /* EventsHeaderView.swift in Sources */,
 				1F10FCC1254432EC00EBB307 /* NetworkError.swift in Sources */,
 				1F6867EC2539E83900543498 /* String + Extension.swift in Sources */,

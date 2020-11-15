@@ -38,12 +38,35 @@ class ProfileViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
+    var cityOfUser = ""
+    var user: UserRequest = UserRequest(phoneNumber: "", firstName: "", secondName: "", birthYear: "", birthMonth: "", birthDay: "", locationId: "", password: "", email: "")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         configureStackView()
         if userState == .unauthorized { unauthorizedSetup() } else { authorizedSetup() }
+        cityOfUser = UserDefaults.standard.string(forKey: "city") ?? ""
+        NetworkService.shared.getLocation(locationId: user.locationId) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    guard let dict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                        self.showCityPicker()
+                        return
+                    }
+                    if let city = dict["city"] as? String {
+                        UserDefaults.standard.set(city, forKey: "city")
+                    }
+                } catch {
+                    self.showCityPicker()
+                    print(error)
+                }
+            case .failure(let error):
+                self.showCityPicker()
+                print(error)
+            }
+        }
     }
     
     private func setupViews() {
@@ -170,18 +193,38 @@ class ProfileViewController: ViewController {
         addPhotoAlertController.removeNegativeWidthConstraints()
         self.present(addPhotoAlertController, animated: true)
     }
-
+    
     enum UserState {
         case authorized
         case unauthorized
     }
+    
+    private func showCityPicker() {
+        let ac = UIAlertController(title: "Не удалось получить вашу геопозицию", message: "Пожалуйста, выберите город из списка", preferredStyle: .alert)
+        let ok = UIAlertAction(title: "Ок", style: .default) { _ in
+            let vc = CitiesViewController()
+            vc.delegate = self
+            self.present(vc, animated: true)
+        }
+        ac.addAction(ok)
+        present(ac, animated: true)
+    }
 }
 
+//MARK: - CityPickerDelegate
+extension ProfileViewController: CityPickerDelegate {
+    func pickCity(city: String) {
+        UserDefaults.standard.set(city, forKey: "city")
+    }
+}
+
+//MARK: - TextViewDelegate
 extension ProfileViewController: TextViewDelegate {
     func tapOnTextView(ofType type: ProfileFieldType) {
         let vc = ProfileDetailsViewController()
         //vc.modalPresentationStyle = .fullScreen
         vc.profileFieldType = type
+        vc.user = user
         present(vc, animated: true)
     }
 }

@@ -13,6 +13,7 @@ class NetworkService {
     typealias SessionResult = (Result<Data, Error>) -> Void
     static let shared = NetworkService()
     fileprivate init() {}
+    private var queryPart = ""
     
     //MARK: - Auth
     func login(phoneNumber: String, password: String, completion: @escaping SessionResult) {
@@ -56,6 +57,7 @@ class NetworkService {
     
     //MARK: - Image methods
     func getImage(id: String, completion: @escaping SessionResult) {
+        queryPart = "?file_id="
         makeRequest(ofType: .imageDownload, parametersData: nil, completion: completion)
     }
     
@@ -173,7 +175,8 @@ class NetworkService {
         makeRequest(ofType: .createLocation, parametersData: parametersData, completion: completion)
     }
     
-    func getLocation(completion: @escaping SessionResult) {
+    func getLocation(locationId: String, completion: @escaping SessionResult) {
+        queryPart = "?location_id=\(locationId)"
         makeRequest(ofType: .getLocation, parametersData: nil, completion: completion)
     }
     
@@ -199,7 +202,7 @@ class NetworkService {
         makeRequest(ofType: .checkCode, parametersData: parametersData, completion: completion)
     }
     
-    func createUser(user: User, completion: @escaping SessionResult) {
+    func createUser(user: UserRequest, completion: @escaping SessionResult) {
         let parametersArray = [
             ("phone_number", user.phoneNumber, false),
             ("first_name", user.firstName, false),
@@ -225,7 +228,6 @@ class NetworkService {
     
     //MARK: - Supporting methods
     private func makeRequest(ofType type: RequestType, parametersData: Data?, completion: @escaping SessionResult) {
-        let queryPart = type == .imageDownload ? "?file_id=" : ""
         let urlString = API.scheme + "://" + API.host + "/" + type.getPath() + queryPart
         guard let url = URL(string: urlString) else { return }
         var request = URLRequest(url: url, timeoutInterval: Double.infinity)
