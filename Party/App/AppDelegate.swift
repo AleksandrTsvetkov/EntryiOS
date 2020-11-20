@@ -69,25 +69,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func showProfile() {
         let tabBarController = TabBarViewController()
-        NetworkService.shared.getUserDetails { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let user = try decoder.decode(UserResponse.self, from: data)
-                    guard let vc = tabBarController.viewControllers?[1] as? ProfileViewController else { return }
-                    vc.user = UserRequest(fromUser: user)
-                } catch {
-                    self.showProfile()
-                    print(error)
-                }
-                self.window?.rootViewController = tabBarController
-            case .failure(let error):
-                self.showProfile()
-                print(error)
-            }
-        }
+//        NetworkService.shared.getUserDetails { result in
+//            switch result {
+//            case .success(let data):
+//                do {
+//                    let decoder = JSONDecoder()
+//                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+//                    let user = try decoder.decode(UserResponse.self, from: data)
+//                    guard let vc = tabBarController.viewControllers?[1] as? ProfileViewController else { return }
+//                    vc.user = UserRequest(fromUser: user)
+//                } catch {
+//                    self.showOnboarding()
+//                    print(error)
+//                }
+//                self.window?.rootViewController = tabBarController
+//            case .failure(let error):
+//                self.showOnboarding()
+//                print(error)
+//            }
+//        }
+        self.window?.rootViewController = tabBarController
     }
 }
 

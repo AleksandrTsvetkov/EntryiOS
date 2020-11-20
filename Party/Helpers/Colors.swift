@@ -27,6 +27,8 @@ enum Colors {
     case unselectedSegment
     case labelGray
     case cellBackground
+    case overViewCellBack
+    case searchBarBackground
     
     func getValue() -> UIColor {
         switch self {
@@ -64,6 +66,10 @@ enum Colors {
             return UIColor(hex: "99999F")
         case .cellBackground:
             return UIColor(hex: "2D2D2F")
+        case .overViewCellBack:
+            return UIColor(hex: "252525", alpha: 0.78)
+        case .searchBarBackground:
+            return UIColor(hex: "464646", alpha: 0.5)
         }
     }
 }
