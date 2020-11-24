@@ -19,7 +19,17 @@ class MapViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private lazy var searchBarView = SearchBarView(ofType: .withFilter, delegate: self)
+    private lazy var tableView: UITableView = {
+        let view = UITableView()
+        view.backgroundColor = .clear
+        view.separatorStyle = .none
+        view.showsVerticalScrollIndicator = false
+        view.showsHorizontalScrollIndicator = false
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private lazy var searchBarView = SearchBarView(ofType: .withFilter, withDelegate: self)
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -34,6 +44,9 @@ class MapViewController: ViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(OverviewCell.self, forCellWithReuseIdentifier: OverviewCell.reuseId)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(SearchCell.self, forCellReuseIdentifier: SearchCell.reuseId)
         
         setupViews()
     }
@@ -41,6 +54,7 @@ class MapViewController: ViewController {
     private func setupViews() {
         view.addSubview(collectionView)
         view.addSubview(searchBarView)
+        view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
             collectionView.heightAnchor.constraint(equalToConstant: 249),
@@ -52,10 +66,28 @@ class MapViewController: ViewController {
             searchBarView.heightAnchor.constraint(equalToConstant: 40),
             searchBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             searchBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            tableView.topAnchor.constraint(equalTo: searchBarView.bottomAnchor, constant: 32),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])
+    }
+    
+    private func switchStateToResults() {
+        tableView.isHidden = false
+        collectionView.isHidden = true
+        searchBarView.switchState(to: .withResults)
+    }
+    
+    private func switchStateToFilter() {
+        tableView.isHidden = true
+        collectionView.isHidden = false
+        searchBarView.switchState(to: .withFilter)
     }
 }
 
+//MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -85,10 +117,36 @@ extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSourc
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
+extension MapViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 116
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 7
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchCell.reuseId, for: indexPath) as? SearchCell else { return UITableViewCell() }
+        cell.configure()
+        return cell
+    }
+}
+
+//MARK: - SearchBarViewDelegate
 extension MapViewController: SearchBarViewDelegate {
     
-    func textFieldChanged(text: String) {
-        
+    func textFieldChanged(textField: UITextField) {
+        guard let text = textField.text else {
+            switchStateToFilter()
+            return
+        }
+        if text != "" {
+            switchStateToResults()
+        } else {
+            switchStateToFilter()
+        }
     }
     
     func buttonTapped(ofType type: SearchBarType) {

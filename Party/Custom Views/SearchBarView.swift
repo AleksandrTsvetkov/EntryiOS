@@ -17,8 +17,10 @@ class SearchBarView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private let textField: UITextField = {
+    private lazy var textField: UITextField = {
         let view = UITextField()
+        view.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        view.autocorrectionType = .no
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = UIFont(name: "SFProText-Regular", size: 17)
         view.textColor = Colors.gray.getValue().withAlphaComponent(1)
@@ -33,7 +35,7 @@ class SearchBarView: UIView {
     private let button: UIButton = {
         let view = UIButton(type: .custom)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        view.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
         return view
     }()
     private let buttonBackView: UIView = {
@@ -45,24 +47,32 @@ class SearchBarView: UIView {
     }()
     var delegate: SearchBarViewDelegate?
     private var searchBarType: SearchBarType = .withFilter
+    private lazy var textFieldLeftSpaceConstraint = textField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 35)
+    private let attributes: Dictionary<NSAttributedString.Key, NSObject> = {
+        let font = UIFont(name: "SFProText-Regular", size: 17) ?? UIFont.systemFont(ofSize: 17)
+        let color = Colors.gray.getValue()
+        return [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color]
+    }()
+    
 
-    convenience init(ofType type: SearchBarType, delegate: SearchBarViewDelegate) {
+    convenience init(ofType type: SearchBarType, withDelegate delegateVC: SearchBarViewDelegate) {
         self.init(frame: .zero)
         
         translatesAutoresizingMaskIntoConstraints = false
+        delegate = delegateVC
         searchBarType = type
-        let font = UIFont(name: "SFProText-Regular", size: 17) ?? UIFont.systemFont(ofSize: 17)
-        let color = Colors.gray.getValue()
-        let attributes = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color]
         
         switch type {
         case .withFilter:
             button.setImage(UIImage(named: "filterIcon"), for: .normal)
             textField.attributedPlaceholder = NSAttributedString(string: "Поиск", attributes: attributes)
-            addIcon()
+            textFieldLeftSpaceConstraint.constant = 35
+            searchIcon.isHidden = false
         case .withResults:
             button.setImage(UIImage(named: "closeIcon"), for: .normal)
             textField.attributedPlaceholder = NSAttributedString(string: "Введите запрос", attributes: attributes)
+            textFieldLeftSpaceConstraint.constant = 15
+            searchIcon.isHidden = true
         }
         setupViews()
     }
@@ -73,11 +83,10 @@ class SearchBarView: UIView {
         addSubview(buttonBackView)
         addSubview(button)
         
-        let textFieldLeftSpace: CGFloat = searchBarType == .withFilter ? 35 : 15
         NSLayoutConstraint.activate([
             textField.topAnchor.constraint(equalTo: self.topAnchor),
             textField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            textField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: textFieldLeftSpace),
+            textFieldLeftSpaceConstraint,
             textField.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -18),
             
             backView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -95,6 +104,7 @@ class SearchBarView: UIView {
             buttonBackView.widthAnchor.constraint(equalToConstant: 40),
             buttonBackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         ])
+        addIcon()
     }
     
     private func addIcon() {
@@ -108,14 +118,35 @@ class SearchBarView: UIView {
         ])
     }
     
-    @objc private func buttonTapped() {
+    func switchState(to type: SearchBarType) {
+        
+        if type == .withResults {
+            button.setImage(UIImage(named: "closeIcon"), for: .normal)
+            textField.attributedPlaceholder = NSAttributedString(string: "Введите запрос", attributes: attributes)
+            textFieldLeftSpaceConstraint.constant = 15
+            searchIcon.isHidden = true
+            return
+        }
+        if type == .withFilter {
+            button.setImage(UIImage(named: "filterIcon"), for: .normal)
+            textField.attributedPlaceholder = NSAttributedString(string: "Поиск", attributes: attributes)
+            textFieldLeftSpaceConstraint.constant = 35
+            searchIcon.isHidden = false
+            return
+        }
+    }
+    
+    @objc private func filterButtonTapped() {
         delegate?.buttonTapped(ofType: searchBarType)
     }
 
+    @objc private func textFieldChanged() {
+        delegate?.textFieldChanged(textField: textField)
+    }
 }
 
 protocol SearchBarViewDelegate: UITextFieldDelegate {
-    func textFieldChanged(text: String)
+    func textFieldChanged(textField: UITextField)
     func buttonTapped(ofType type: SearchBarType)
 }
 

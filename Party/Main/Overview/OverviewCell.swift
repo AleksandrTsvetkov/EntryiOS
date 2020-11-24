@@ -86,17 +86,17 @@ class OverviewCell: UICollectionViewCell {
             titleLabel.bottomAnchor.constraint(equalTo: partyImage.bottomAnchor, constant: -11),
             titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             
-            timeIcon.topAnchor.constraint(equalTo: partyImage.bottomAnchor, constant: 12),
-            timeIcon.heightAnchor.constraint(equalToConstant: 12),
+            timeIcon.topAnchor.constraint(equalTo: partyImage.bottomAnchor, constant: 10),
+            timeIcon.heightAnchor.constraint(equalToConstant: 14),
             timeIcon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 11.5),
-            timeIcon.widthAnchor.constraint(equalToConstant: 12),
+            timeIcon.widthAnchor.constraint(equalToConstant: 14),
             
             djLabel.topAnchor.constraint(equalTo: timeIcon.bottomAnchor, constant: 8),
             djLabel.heightAnchor.constraint(equalToConstant: 14),
             djLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 11.5),
             djLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16),
             
-            timeLabel.topAnchor.constraint(equalTo: partyImage.bottomAnchor, constant: 11),
+            timeLabel.topAnchor.constraint(equalTo: partyImage.bottomAnchor, constant: 10),
             timeLabel.bottomAnchor.constraint(equalTo: djNameLabel.topAnchor, constant: -8),
             timeLabel.leadingAnchor.constraint(equalTo: timeIcon.trailingAnchor, constant: 7.5),
             timeLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -20),
