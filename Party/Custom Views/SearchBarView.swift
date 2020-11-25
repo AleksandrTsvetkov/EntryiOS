@@ -19,6 +19,7 @@ class SearchBarView: UIView {
     }()
     private lazy var textField: UITextField = {
         let view = UITextField()
+        view.keyboardAppearance = .dark
         view.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
         view.autocorrectionType = .no
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +36,7 @@ class SearchBarView: UIView {
     private let button: UIButton = {
         let view = UIButton(type: .custom)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+        view.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return view
     }()
     private let buttonBackView: UIView = {
@@ -60,6 +61,7 @@ class SearchBarView: UIView {
         
         translatesAutoresizingMaskIntoConstraints = false
         delegate = delegateVC
+        textField.delegate = delegateVC
         searchBarType = type
         
         switch type {
@@ -118,6 +120,11 @@ class SearchBarView: UIView {
         ])
     }
     
+    func clearSearch() {
+        textField.text = ""
+        textField.resignFirstResponder()
+    }
+    
     func switchState(to type: SearchBarType) {
         
         if type == .withResults {
@@ -125,6 +132,7 @@ class SearchBarView: UIView {
             textField.attributedPlaceholder = NSAttributedString(string: "Введите запрос", attributes: attributes)
             textFieldLeftSpaceConstraint.constant = 15
             searchIcon.isHidden = true
+            searchBarType = .withResults
             return
         }
         if type == .withFilter {
@@ -132,11 +140,12 @@ class SearchBarView: UIView {
             textField.attributedPlaceholder = NSAttributedString(string: "Поиск", attributes: attributes)
             textFieldLeftSpaceConstraint.constant = 35
             searchIcon.isHidden = false
+            searchBarType = .withFilter
             return
         }
     }
     
-    @objc private func filterButtonTapped() {
+    @objc private func buttonTapped() {
         delegate?.buttonTapped(ofType: searchBarType)
     }
 

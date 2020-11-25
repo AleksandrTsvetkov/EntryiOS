@@ -150,6 +150,18 @@ extension MapViewController: SearchBarViewDelegate {
     }
     
     func buttonTapped(ofType type: SearchBarType) {
-        
+        switch type {
+        case .withFilter:
+            let vc = FilterViewController()
+            present(vc, animated: true)
+        case .withResults:
+            switchStateToFilter()
+            searchBarView.clearSearch()
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
 }
