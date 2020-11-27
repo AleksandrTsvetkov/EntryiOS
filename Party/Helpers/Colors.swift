@@ -29,6 +29,7 @@ enum Colors {
     case cellBackground
     case overViewCellBack
     case searchBarBackground
+    case sliderGray
     
     func getValue() -> UIColor {
         switch self {
@@ -70,6 +71,8 @@ enum Colors {
             return UIColor(hex: "252525", alpha: 0.78)
         case .searchBarBackground:
             return UIColor(hex: "464646", alpha: 0.5)
+        case .sliderGray:
+            return UIColor(hex: "787880", alpha: 0.36)
         }
     }
 }
