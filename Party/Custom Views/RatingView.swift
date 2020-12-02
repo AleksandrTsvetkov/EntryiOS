@@ -12,6 +12,7 @@ class RatingView: UIStackView {
     
     var eventRating: Double = 0.0
     private var stars: Array<UIImageView> = []
+    var delegate: RatingDelegate?
     
     convenience init(withRating rating: Double) {
         self.init(frame: .zero)
@@ -20,9 +21,14 @@ class RatingView: UIStackView {
     }
     
     private func initialSetup() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(starTapped))
+        self.addGestureRecognizer(tap)
         for _ in 0...4 {
             let image = UIImage(named: "emptyStar")
-            let view = UIImageView(image: image)
+            let view = UIImageView()
+            view.isUserInteractionEnabled = true
+            view.image = image
+            view.contentMode = .scaleAspectFit
             addArrangedSubview(view)
             stars.append(view)
         }
@@ -58,4 +64,35 @@ class RatingView: UIStackView {
         }
     }
     
+    @objc private func starTapped(_ sender: UITapGestureRecognizer) {
+        switch sender.location(in: self).x {
+        case 0...9:
+            setRating(0.5)
+        case 9...21:
+            setRating(1.0)
+        case 21...33:
+            setRating(1.5)
+        case 33...45:
+            setRating(2.0)
+        case 45...57:
+            setRating(2.5)
+        case 57...69:
+            setRating(3.0)
+        case 69...81:
+            setRating(3.5)
+        case 81...93:
+            setRating(4.0)
+        case 93...105:
+            setRating(4.5)
+        case 105...114:
+            setRating(5.0)
+        default:
+            break
+        }
+    }
+    
+}
+
+protocol RatingDelegate {
+    func ratingChanged(newRating: Double)
 }

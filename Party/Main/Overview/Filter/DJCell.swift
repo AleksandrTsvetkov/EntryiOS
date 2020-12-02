@@ -26,11 +26,17 @@ class DJCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private let djTextView: UITextView = {
+    private lazy var djTextView: UITextView = {
         let view = UITextView()
         view.font = UIFont(name: "SFProText-Regular", size: 17)
         view.textAlignment = .left
+        view.keyboardAppearance = .dark
+        view.backgroundColor = Colors.textFieldBackgroundResponder.getValue()
         view.text = "Введите имя диджея..."
+        view.layer.cornerRadius = 8
+        view.delegate = self
+        view.isScrollEnabled = false
+        view.textContainerInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
         view.textColor = UIColor.white.withAlphaComponent(0.65)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -66,5 +72,26 @@ class DJCell: UITableViewCell {
 
         ])
     }
+}
 
+//MARK: - UITextViewDelegate
+extension DJCell: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        textView.sizeToFit()
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.white.withAlphaComponent(0.65) {
+            textView.text = nil
+            textView.textColor = UIColor.white
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "Введите имя диджея"
+            textView.textColor = UIColor.white.withAlphaComponent(0.65)
+        }
+    }
 }

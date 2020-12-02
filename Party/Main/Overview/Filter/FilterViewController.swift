@@ -8,10 +8,11 @@
 
 import UIKit
 
-class FilterViewController: UIViewController {
+class FilterViewController: ViewController {
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
+        view.isScrollEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -36,6 +37,7 @@ class FilterViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private var isKeyboardShown = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +49,7 @@ class FilterViewController: UIViewController {
     private func initialSetup() {
         let backColor = Colors.overViewCellBack.getValue().withAlphaComponent(0.94)
         view.backgroundColor = backColor
+        addDismissKeyboardByTap()
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.delegate = self
@@ -56,6 +59,8 @@ class FilterViewController: UIViewController {
         tableView.register(DJCell.self, forCellReuseIdentifier: DJCell.reuseId)
         tableView.register(DateCell.self, forCellReuseIdentifier: DateCell.reuseId)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func setupViews() {
@@ -90,11 +95,38 @@ class FilterViewController: UIViewController {
         ])
     }
     
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard !isKeyboardShown else { return }
+        //tableView.isScrollEnabled = true
+        guard let userInfo = notification.userInfo else {
+            //tableView.isScrollEnabled = false
+            return
+        }
+        guard let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardFrame = keyboardSize.cgRectValue
+        DispatchQueue.main.async {
+            self.tableView.contentOffset = CGPoint(x: 0, y: keyboardFrame.height / 2)
+            //self.tableView.isScrollEnabled = false
+            self.isKeyboardShown = true
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        DispatchQueue.main.async {
+            //self.tableView.isScrollEnabled = true
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            //self.tableView.isScrollEnabled = false
+            self.isKeyboardShown = false
+        }
+    }
+    
     @objc private func closeButtonTapped() {
         dismiss(animated: true)
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
@@ -132,7 +164,7 @@ extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
         case 2:
             return 153.5
         case 3:
-            return 70
+            return 160
         default:
             return 0
         }

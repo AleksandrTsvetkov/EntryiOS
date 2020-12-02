@@ -29,6 +29,7 @@ class MapViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private lazy var declineView = DeclineView()
     private lazy var searchBarView = SearchBarView(ofType: .withFilter, withDelegate: self)
     
     //MARK: - View lifecycle
@@ -55,8 +56,15 @@ class MapViewController: ViewController {
         view.addSubview(collectionView)
         view.addSubview(searchBarView)
         view.addSubview(tableView)
+        view.addSubview(declineView)
         
         NSLayoutConstraint.activate([
+            declineView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            declineView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            declineView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7),
+            declineView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            declineView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
             collectionView.heightAnchor.constraint(equalToConstant: 249),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

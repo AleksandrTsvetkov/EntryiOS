@@ -10,18 +10,25 @@ import UIKit
 
 class CommentView: UIView {
     
+    private let blurEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     private let backView: UIView = {
         let view = UIView()
-        view.backgroundColor = Colors.backgroundBlack.getValue()
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        view.layer.cornerRadius = 10
+        view.backgroundColor = Colors.backgroundBlack.getValue().withAlphaComponent(1)
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.layer.cornerRadius = 25
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     private let partyImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "eventImage")
-        view.layer.cornerRadius = 155 / 2
+        view.layer.cornerRadius = 74
+        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -39,8 +46,24 @@ class CommentView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private let commentTextFieldView: TextFieldView = {
-        let view = TextFieldView(text: "", placeholder: "Комментарий")
+    private let commentTextView: UITextView = {
+        let view = UITextView()
+        view.isScrollEnabled = false
+        view.textContainerInset = UIEdgeInsets(top: 30, left: 10, bottom: 5, right: 10)
+        view.keyboardAppearance = .dark
+        view.textColor = UIColor.white.withAlphaComponent(0.65)
+        view.layer.cornerRadius = 10
+        view.backgroundColor = Colors.textFieldBackgroundResponder.getValue()
+        view.font = UIFont(name: "SFProText-Regular", size: 15)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private let commentLabel: UILabel = {
+        let view = UILabel()
+        view.textAlignment = .left
+        view.text = "Комментарий"
+        view.textColor = UIColor.white.withAlphaComponent(0.3)
+        view.font = UIFont(name: "SFProText-Regular", size: 15)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -50,27 +73,45 @@ class CommentView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
-    convenience init() {
+    private var delegate: CommentViewDelegate?
+    lazy var bottomConstraint = backView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 300)
+    lazy var commentTextViewHeightConstraint = commentTextView.heightAnchor.constraint(equalToConstant: 80)
+    lazy var backButtonViewBottomConstraint = backButtonView.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -350)
+    
+    convenience init(withDelegate commentViewDelegate: CommentViewDelegate) {
         self.init(frame: .zero)
+        delegate = commentViewDelegate
+        addDismissKeyboardByTap()
         self.isHidden = true
+        translatesAutoresizingMaskIntoConstraints = false
+        //backgroundColor = Colors.backgroundBlack.getValue().withAlphaComponent(1)
+        ratingView.delegate = self
+        commentTextView.delegate = delegate
         let tap = UITapGestureRecognizer(target: self, action: #selector(backButtonViewTapped))
         backButtonView.addGestureRecognizer(tap)
+        setupSubviews()
     }
 
-    private func setupViews() {
+    private func setupSubviews() {
+        addSubview(blurEffectView)
         addSubview(backView)
         backView.addSubview(partyImageView)
         backView.addSubview(titleLabel)
         backView.addSubview(ratingView)
-        backView.addSubview(commentTextFieldView)
+        backView.addSubview(commentTextView)
+        backView.addSubview(commentLabel)
         backView.addSubview(backButtonView)
         
         NSLayoutConstraint.activate([
-            backView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.66),
+            blurEffectView.topAnchor.constraint(equalTo: self.topAnchor),
+            blurEffectView.bottomAnchor.constraint(equalTo: backView.topAnchor),
+            blurEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            blurEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            
+            backView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.66, constant: 300),
             backView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             backView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            backView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            bottomConstraint,
             
             partyImageView.centerYAnchor.constraint(equalTo: backView.topAnchor),
             partyImageView.heightAnchor.constraint(equalToConstant: 155),
@@ -83,22 +124,50 @@ class CommentView: UIView {
             titleLabel.heightAnchor.constraint(equalToConstant: 40),
             
             ratingView.heightAnchor.constraint(equalToConstant: 23),
-            ratingView.widthAnchor.constraint(equalToConstant: 152),
+            ratingView.widthAnchor.constraint(equalToConstant: 114),
             ratingView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
-            commentTextFieldView.topAnchor.constraint(equalTo: ratingView.bottomAnchor, constant: 52.5),
-            commentTextFieldView.bottomAnchor.constraint(equalTo: backButtonView.topAnchor, constant: -75),
-            commentTextFieldView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            commentTextFieldView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            commentTextView.topAnchor.constraint(equalTo: ratingView.bottomAnchor, constant: 32.5),
+            commentTextViewHeightConstraint,
+            commentTextView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            commentTextView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            
+            commentLabel.topAnchor.constraint(equalTo: commentTextView.topAnchor, constant: 10),
+            commentLabel.heightAnchor.constraint(equalToConstant: 20),
+            commentLabel.leadingAnchor.constraint(equalTo: commentTextView.leadingAnchor, constant: 15),
+            commentLabel.trailingAnchor.constraint(equalTo: commentTextView.trailingAnchor, constant: -15),
             
             backButtonView.heightAnchor.constraint(equalToConstant: 50),
-            backButtonView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -50),
             backButtonView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             backButtonView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            backButtonViewBottomConstraint,
         ])
     }
     
-    @objc private func backButtonViewTapped() {
-        self.isHidden = true
+    private func checkRating() {
+        if ratingView.eventRating != 0.0 || (commentTextView.text != nil && commentTextView.text != "") {
+            backButtonView.changeTitle(newTitle: "Сохранить")
+        } else {
+            backButtonView.changeTitle(newTitle: "Назад")
+        }
     }
+    
+    @objc private func commentTextChanged() {
+        checkRating()
+    }
+    
+    @objc private func backButtonViewTapped() {
+        delegate?.hideView()
+    }
+}
+
+//MARK: - RatingDelegate
+extension CommentView: RatingDelegate {
+    func ratingChanged(newRating: Double) {
+        checkRating()
+    }
+}
+
+protocol CommentViewDelegate: UITextViewDelegate {
+    func hideView()
 }

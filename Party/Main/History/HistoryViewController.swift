@@ -71,6 +71,8 @@ class HistoryViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private lazy var commentView: CommentView = CommentView(withDelegate: self)
+    private lazy var organizedEventPreview: OrganizedEventPreview = OrganizedEventPreview()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,6 +90,9 @@ class HistoryViewController: ViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
         organizeButtonView.addGestureRecognizer(tap)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func setupViews() {
@@ -98,8 +103,20 @@ class HistoryViewController: ViewController {
         view.addSubview(organizeButtonView)
         view.addSubview(segmentedControl)
         view.addSubview(tableView)
+        view.addSubview(commentView)
+        view.addSubview(organizedEventPreview)
         
         NSLayoutConstraint.activate([
+            commentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            commentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            commentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            commentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            organizedEventPreview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            organizedEventPreview.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            organizedEventPreview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            organizedEventPreview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 90),
             titleLabel.bottomAnchor.constraint(equalTo: segmentedControl.topAnchor, constant: -33),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 14),
@@ -132,9 +149,34 @@ class HistoryViewController: ViewController {
         
     }
     
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard
+            let userInfo = notification.userInfo,
+            let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+            else { return }
+        let keyboardFrame = keyboardSize.cgRectValue
+        DispatchQueue.main.async {
+            self.commentView.bottomConstraint.constant = 400 - keyboardFrame.height
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        DispatchQueue.main.async {
+            self.commentView.bottomConstraint.constant = 300
+        }
+    }
 }
 
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tabBarController?.tabBar.isHidden = true
+        if segmentedControl.selectedSegmentIndex == 0 {
+            commentView.isHidden = false
+        } else {
+            organizedEventPreview.isHidden = false
+        }
+    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return EventsHeaderView(ofType: EventType.allCases[section])
@@ -162,6 +204,31 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configure(withModel: event, forType: EventType.allCases[indexPath.section])
         return cell
     }
+}
+
+//MARK: - CommentViewDelegate
+extension HistoryViewController: CommentViewDelegate {
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard text.count < 2 else { return false }
+        if textView.text.count == 215 && text != "" {
+            return false
+        } else {
+            return true
+        }
+    }
     
+    func textViewDidChange(_ textView: UITextView) {
+        let fixedWidth = textView.frame.size.width
+        let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        if newSize.height > 80 && newSize.height < 150 {
+            commentView.commentTextViewHeightConstraint.constant = newSize.height
+            //commentView.backButtonViewBottomConstraint.constant = (newSize.height - 80) - 350
+        }
+    }
+    
+    func hideView() {
+        commentView.isHidden = true
+        tabBarController?.tabBar.isHidden = false
+    }
 }

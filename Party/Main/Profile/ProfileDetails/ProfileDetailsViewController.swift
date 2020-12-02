@@ -9,7 +9,7 @@
 import UIKit
 import SkyFloatingLabelTextField
 
-class ProfileDetailsViewController: UIViewController {
+class ProfileDetailsViewController: ViewController {
     
     var profileFieldType: ProfileFieldType = .exit
     private let exitButton: UIButton = {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CitiesViewController: UIViewController {
+class CitiesViewController: ViewController {
     
     private var places: Array<Place> = []
     private var filteredPlaces: Array<Place> = []
