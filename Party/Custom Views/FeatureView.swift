@@ -46,10 +46,15 @@ class FeatureView: UIView {
         titleLabel.text = title
         subtitleLabel.text = subtitle
         imageView.image = image
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - Setup
+    private func setupSubviews() {
         backgroundColor = .clear
         addSubview(imageView)
         addSubview(titleLabel)
@@ -73,9 +78,4 @@ class FeatureView: UIView {
             subtitleLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16)
         ])
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
 }

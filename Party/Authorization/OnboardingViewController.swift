@@ -10,6 +10,7 @@ import UIKit
 
 class OnboardingViewController: ViewController {
     
+    // MARK: - Subviews
     private let whyImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -49,14 +50,17 @@ class OnboardingViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
     var authViewIsHiddenConstraint: NSLayoutConstraint!
     var authViewIsVisibleConstraint: NSLayoutConstraint!
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         
-        setupViews()
+        setupSubviews()
         
         let tap0 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
         buttonView.addGestureRecognizer(tap0)
@@ -65,7 +69,13 @@ class OnboardingViewController: ViewController {
         authView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
     }
     
-    private func setupViews() {
+    override func viewWillLayoutSubviews() {
+        authView.roundCorners(corners: [.topLeft, .topRight], radius: 10)
+        navigationController?.navigationBar.isHidden = true
+    }
+    
+    //MARK: - Setup
+    private func setupSubviews() {
         view.addSubview(stackView)
         view.addSubview(whyImageView)
         view.addSubview(exitButton)
@@ -106,7 +116,7 @@ class OnboardingViewController: ViewController {
             blurEffectView1.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        if UIScreen.main.bounds.height < 740 {
+        if smallScreen {
             NSLayoutConstraint.activate([
                 exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 34),
                 whyImageView.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 20),
@@ -125,12 +135,7 @@ class OnboardingViewController: ViewController {
         }
     }
     
-    override func viewWillLayoutSubviews() {
-        authView.roundCorners(corners: [.topLeft, .topRight], radius: 10)
-        navigationController?.navigationBar.isHidden = true
-        
-    }
-    
+    //MARK: - Objc methods
     @objc private func buttonViewTapped() {
         blurEffectView1.isHidden = false
         blurEffectView2.isHidden = false
@@ -194,6 +199,7 @@ class OnboardingViewController: ViewController {
     }
 }
 
+//MARK: - AuthTapDelegate
 extension OnboardingViewController: AuthTapDelegate {
     func authTapped(tag: Int) {
         switch tag {

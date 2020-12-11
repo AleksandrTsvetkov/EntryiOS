@@ -82,7 +82,8 @@ class UserResponse: Codable {
         }
     }
     
-    enum CodinKeys: String, CodingKey {
+    //MARK: - CodingKeys
+    enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
         case secondName = "second_name"
         case accessToken = "access_token"

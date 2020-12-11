@@ -10,6 +10,7 @@ import UIKit
 
 class CommentView: UIView {
     
+    //MARK: - Subviews
     private let blurEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let view = UIVisualEffectView(effect: blurEffect)
@@ -27,7 +28,7 @@ class CommentView: UIView {
     private let partyImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "eventImage")
-        view.layer.cornerRadius = 74
+        view.layer.cornerRadius = 74.5
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -49,6 +50,7 @@ class CommentView: UIView {
     private let commentTextView: UITextView = {
         let view = UITextView()
         view.isScrollEnabled = false
+        view.textContainer.lineBreakMode = .byWordWrapping
         view.textContainerInset = UIEdgeInsets(top: 30, left: 10, bottom: 5, right: 10)
         view.keyboardAppearance = .dark
         view.textColor = UIColor.white.withAlphaComponent(0.65)
@@ -73,11 +75,14 @@ class CommentView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
     private var delegate: CommentViewDelegate?
     lazy var bottomConstraint = backView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 300)
     lazy var commentTextViewHeightConstraint = commentTextView.heightAnchor.constraint(equalToConstant: 80)
     lazy var backButtonViewBottomConstraint = backButtonView.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -350)
     
+    //MARK: - Init
     convenience init(withDelegate commentViewDelegate: CommentViewDelegate) {
         self.init(frame: .zero)
         delegate = commentViewDelegate
@@ -92,6 +97,7 @@ class CommentView: UIView {
         setupSubviews()
     }
 
+    //MARK: - Setup
     private func setupSubviews() {
         addSubview(blurEffectView)
         addSubview(backView)
@@ -144,6 +150,7 @@ class CommentView: UIView {
         ])
     }
     
+    //MARK: - Supporting methods
     private func checkRating() {
         if ratingView.eventRating != 0.0 || (commentTextView.text != nil && commentTextView.text != "") {
             backButtonView.changeTitle(newTitle: "Сохранить")
@@ -152,6 +159,7 @@ class CommentView: UIView {
         }
     }
     
+    //MARK: - Objc methods
     @objc private func commentTextChanged() {
         checkRating()
     }

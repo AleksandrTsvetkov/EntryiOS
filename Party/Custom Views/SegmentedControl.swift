@@ -10,8 +10,7 @@ import UIKit
 
 class SegmentedControl: UIView {
     
-    private var selectionReceiverDelegate: SelectionReceiverDelegate?
-    
+    //MARK: - Subviews
     private let yesLabel: UILabel = {
         let view = UILabel()
         view.text = "Да"
@@ -48,7 +47,11 @@ class SegmentedControl: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
+    private var selectionReceiverDelegate: SelectionReceiverDelegate?
 
+    //MARK: - Init
     convenience init(withDelegate delegate: SelectionReceiverDelegate?) {
         self.init(frame: .zero)
         selectionReceiverDelegate = delegate
@@ -56,10 +59,11 @@ class SegmentedControl: UIView {
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(noTapped))
         yesView.addGestureRecognizer(tap0)
         noView.addGestureRecognizer(tap1)
-        setupViews()
+        setupSubviews()
     }
 
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(yesView)
         addSubview(noView)
         yesView.addSubview(yesLabel)
@@ -89,6 +93,7 @@ class SegmentedControl: UIView {
         
     }
     
+    //MARK: - Objc methods
     @objc private func yesTapped() {
         selectionReceiverDelegate?.segmentSelected(.left)
     }
@@ -97,6 +102,7 @@ class SegmentedControl: UIView {
         selectionReceiverDelegate?.segmentSelected(.right)
     }
     
+    //MARK: - External methods
     func selectYes() {
         yesView.backgroundColor = Colors.gray.getValue().withAlphaComponent(0.1)
         noView.backgroundColor = .clear

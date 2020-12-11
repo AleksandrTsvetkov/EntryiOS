@@ -11,6 +11,8 @@ import UIKit
 class SearchCell: UITableViewCell {
 
     static let reuseId = "SearchCell"
+    
+    //MARK: - Subviews
     private let titleLabel: UILabel = {
         let view = UILabel()
         view.textAlignment = .left
@@ -83,18 +85,22 @@ class SearchCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
     private lazy var pan = UIPanGestureRecognizer(target: self, action: #selector(cellDragged))
     private var likeIsShowing = false
     private var previousTranslation: CGFloat = 0
     
+    //MARK: - Configure
     func configure() {
         backgroundColor = .clear
         selectionStyle = .none
-        setupViews()
+        setupSubviews()
         backView.addGestureRecognizer(pan)
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(likeView)
         addSubview(likeImageView)
         addSubview(backView)
@@ -153,6 +159,7 @@ class SearchCell: UITableViewCell {
         ])
     }
     
+    //MARK: - Pan gesture handling
     @objc private func cellDragged() {
         switch pan.state {
         case .began:

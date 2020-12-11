@@ -10,6 +10,7 @@ import UIKit
 
 class HistoryViewController: ViewController {
 
+    //MARK: - Subviews
     private let titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .white
@@ -72,15 +73,17 @@ class HistoryViewController: ViewController {
         return view
     }()
     private lazy var commentView: CommentView = CommentView(withDelegate: self)
-    private lazy var organizedEventPreview: OrganizedEventPreview = OrganizedEventPreview()
+    private lazy var organizedEventPreview: OrganizedEventPreview = OrganizedEventPreview(withDelegate: self)
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        setupViews()
+        initialSetup()
+        setupSubviews()
     }
     
-    private func setup() {
+    //MARK: - Setup
+    private func initialSetup() {
         tableView.showsVerticalScrollIndicator = false
         tableView.isUserInteractionEnabled = true
         tableView.delegate = self
@@ -95,8 +98,8 @@ class HistoryViewController: ViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    private func setupViews() {
-        view.backgroundColor = Colors.backgroundBlack.getValue()
+    private func setupSubviews() {
+        view.backgroundColor = Colors.backgroundBlack.getValue().withAlphaComponent(1)
         view.addSubview(titleLabel)
         view.addSubview(counterLabel)
         view.addSubview(countLabel)
@@ -113,7 +116,7 @@ class HistoryViewController: ViewController {
             commentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             organizedEventPreview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            organizedEventPreview.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            organizedEventPreview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -18),
             organizedEventPreview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             organizedEventPreview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
@@ -145,6 +148,7 @@ class HistoryViewController: ViewController {
         ])
     }
     
+    //MARK: - Objc methods
     @objc private func buttonViewTapped() {
         
     }
@@ -167,6 +171,7 @@ class HistoryViewController: ViewController {
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -211,7 +216,7 @@ extension HistoryViewController: CommentViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         guard text.count < 2 else { return false }
-        if textView.text.count == 215 && text != "" {
+        if textView.text.count == 180 && text != "" {
             return false
         } else {
             return true
@@ -230,5 +235,15 @@ extension HistoryViewController: CommentViewDelegate {
     func hideView() {
         commentView.isHidden = true
         tabBarController?.tabBar.isHidden = false
+    }
+}
+
+//MARK: - OrganizedEventPresenter
+extension HistoryViewController: OrganizedEventPresenter {
+    
+    func presentOrganizedEventVC() {
+        let vc = OrganizedEventViewController()
+        tabBarController?.tabBar.isHidden = false
+        present(vc, animated: true)
     }
 }

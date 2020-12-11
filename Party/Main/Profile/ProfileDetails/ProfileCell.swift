@@ -11,7 +11,8 @@ import UIKit
 class ProfileCell: UITableViewCell {
     
     static let reuseId = "ProfileCell"
-    var profileCellDelegate: ProfileCellDelegate?
+    
+    //MARK: - Subviews
     private let textFieldView: TextFieldView = {
         let view = TextFieldView(text: "", placeholder: "")
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -23,10 +24,14 @@ class ProfileCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
+    var profileCellDelegate: ProfileCellDelegate?
     private var cellType: ProfileFieldType = .exit
     private var cellRow = 0
     private let phoneMaskService = PhoneMaskService()
     
+    //MARK: - Reuse
     func configure(forUser user: UserRequest, forType type: ProfileFieldType, row: Int) {
         cellRow = row
         cellType = type
@@ -111,6 +116,13 @@ class ProfileCell: UITableViewCell {
         textFieldView.setPlaceholder(placeholder: placeHolder)
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    //MARK: - Setup
     private func setupTextFieldView(forType type: ProfileFieldType, row: Int) {
         textFieldView.floatingTextField.selectedTitleColor = Colors.gray.getValue()
         textFieldView.floatingTextField.onProfileScreen = true
@@ -140,6 +152,7 @@ class ProfileCell: UITableViewCell {
         ])
     }
     
+    //MARK: - External methods
     func getTextField() -> FloatingField {
         return textFieldView.floatingTextField
     }
@@ -152,12 +165,7 @@ class ProfileCell: UITableViewCell {
         textFieldView.floatingTextField.titleColor = color
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
+    //MARK: - Objc methods
     @objc private func openPicker() {
         profileCellDelegate?.openPicker()
     }

@@ -11,7 +11,7 @@ import SkyFloatingLabelTextField
 
 class SignUpViewController: ViewController {
     
-    var delegate: OnboardingViewController?
+    //MARK: - Subviews
     private let label: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -53,19 +53,21 @@ class SignUpViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private lazy var buttonView = ButtonView(color: Colors.pink.getValue(), title: "Дальше", left: 16, right: 16)
+    
+    //MARK: - Properties
+    var delegate: OnboardingViewController?
     private var timer: Timer?
     private var timerCount: Int = 60
-    private lazy var buttonView = ButtonView(color: Colors.pink.getValue(), title: "Дальше", left: 16, right: 16)
     private var phoneNumber: String = ""
     private var phoneMaskService = PhoneMaskService()
     private var plainNumber = ""
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
-        textFieldView.floatingTextField.delegate = self
-        let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
-        buttonView.addGestureRecognizer(tap)
+        
+        initialSetup()
         setupViews()
     }
     
@@ -86,15 +88,12 @@ class SignUpViewController: ViewController {
         }
     }
     
-    private func setupViews() {
-        view.addSubview(label)
-        view.addSubview(textFieldView)
-        view.addSubview(codeTextField)
-        view.addSubview(timerLabel)
-        view.addSubview(timeLabel)
-        view.addSubview(buttonView)
-        view.addSubview(errorLabel)
-        codeTextField.isHidden = true
+    //MARK: - Setup
+    private func initialSetup() {
+        view.backgroundColor = .black
+        textFieldView.floatingTextField.delegate = self
+        let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        buttonView.addGestureRecognizer(tap)
         
         textFieldView.configure(withKeyboardType: .namePhonePad, textContentType: .telephoneNumber)
         textFieldView.setBackgroundColor(color: Colors.textFieldBackgroundResponder.getValue())
@@ -155,6 +154,17 @@ class SignUpViewController: ViewController {
                 } // Check code
             }
         }
+    }
+    
+    private func setupViews() {
+        view.addSubview(label)
+        view.addSubview(textFieldView)
+        view.addSubview(codeTextField)
+        view.addSubview(timerLabel)
+        view.addSubview(timeLabel)
+        view.addSubview(buttonView)
+        view.addSubview(errorLabel)
+        codeTextField.isHidden = true
         
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -185,7 +195,7 @@ class SignUpViewController: ViewController {
             errorLabel.heightAnchor.constraint(equalToConstant: 28),
         ])
         
-        if UIScreen.main.bounds.height < 740 {
+        if smallScreen {
             NSLayoutConstraint.activate([
                 textFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
                 timerLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 66),
@@ -203,6 +213,7 @@ class SignUpViewController: ViewController {
         
     }
     
+    //MARK: - Objc methods
     @objc private func textFieldChanged(_ textfield: UITextField) {
         guard let text = textfield.text else { return }
         if let floatingLabelTextField = textfield as? SkyFloatingLabelTextField {
@@ -233,6 +244,7 @@ class SignUpViewController: ViewController {
         }
     } // textFieldChanged
     
+    //MARK: - Supporting methods
     private func sendCode() {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
             guard self.plainNumber.count >= 11 || !(self.plainNumber.first == "7") else { return }
@@ -289,6 +301,7 @@ class SignUpViewController: ViewController {
         self.codeTextField.resignFirstResponder()
     }
     
+    //MARK: - Objc methods
     @objc private func buttonViewTapped() {
         if buttonView.state == .error {
             buttonView.setColor(color: Colors.pink.getValue())
@@ -347,6 +360,7 @@ class SignUpViewController: ViewController {
     }
 }
 
+//MARK: - UITextFieldDelegate
 extension SignUpViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let floatingTextField = textField as? SkyFloatingLabelTextField else { return false }

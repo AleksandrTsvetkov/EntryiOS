@@ -11,7 +11,7 @@ import SkyFloatingLabelTextField
 
 class ProfileDetailsViewController: ViewController {
     
-    var profileFieldType: ProfileFieldType = .exit
+    //MARK: - Subviews
     private let exitButton: UIButton = {
         let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -53,25 +53,30 @@ class ProfileDetailsViewController: ViewController {
         return view
     }()
     let buttonView = ButtonView(color: Colors.pink.getValue(), title: "Сохранить", left: 16, right: 16)
+    private lazy var picker = UIPickerView()
+    private lazy var toolBar = UIToolbar()
+    
+    //MARK: - Properties
+    var profileFieldType: ProfileFieldType = .exit
     var isKeyboardShown = false
     var phoneMaskService = PhoneMaskService()
     var plainNumber = ""
-    private lazy var picker = UIPickerView()
-    private lazy var toolBar = UIToolbar()
     var updatedFields: Array<(String, String, Bool)> = []
     var cityOfUser: String = ""
     var user: UserRequest!
     var passwordsForRequest: (String, String, String) = ("", "", "")
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setup()
-        setupViews()
+        initialSetup()
+        setupSubviews()
         configureForType()
     }
     
-    private func setup() {
+    //MARK: - Setup
+    private func initialSetup() {
         plainNumber = user.phoneNumber.filter{ "0123456789".contains($0)}
         tableView.showsVerticalScrollIndicator = false
         exitButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
@@ -82,7 +87,7 @@ class ProfileDetailsViewController: ViewController {
         tableView.isScrollEnabled = false
     }
     
-    private func setupViews() {
+    private func setupSubviews() {
         let color = Colors.backgroundBlack.getValue()
         view.backgroundColor = color.withAlphaComponent(1)
         view.addSubview(exitButton)
@@ -112,33 +117,6 @@ class ProfileDetailsViewController: ViewController {
             buttonView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
             buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-    }
-    
-    func presentPicker() {
-        view.endEditing(true)
-        picker.delegate = self
-        picker.dataSource = self
-        picker.backgroundColor = Colors.textFieldBackgroundResponder.getValue()
-        picker.tintColor = .white
-        picker.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(picker)
-        view.addSubview(toolBar)
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
-        toolBar.barStyle = .blackTranslucent
-        toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(doneButtonTapped))]
-        picker.selectRow(PickerData.days.rawValue / 2, inComponent: 0, animated: false)
-        picker.selectRow(PickerData.months.rawValue / 2, inComponent: 1, animated: false)
-        picker.selectRow(PickerData.years.rawValue / 2, inComponent: 2, animated: false)
-        NSLayoutConstraint.activate([
-            picker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            picker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            picker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            toolBar.heightAnchor.constraint(equalToConstant: 50),
-            toolBar.widthAnchor.constraint(equalTo: view.widthAnchor),
-            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            toolBar.bottomAnchor.constraint(equalTo: picker.topAnchor)
         ])
     }
     
@@ -195,6 +173,35 @@ class ProfileDetailsViewController: ViewController {
         }
     }
     
+    //MARK: - External methods
+    func presentPicker() {
+        view.endEditing(true)
+        picker.delegate = self
+        picker.dataSource = self
+        picker.backgroundColor = Colors.textFieldBackgroundResponder.getValue()
+        picker.tintColor = .white
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(picker)
+        view.addSubview(toolBar)
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.barStyle = .blackTranslucent
+        toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(doneButtonTapped))]
+        picker.selectRow(PickerData.days.rawValue / 2, inComponent: 0, animated: false)
+        picker.selectRow(PickerData.months.rawValue / 2, inComponent: 1, animated: false)
+        picker.selectRow(PickerData.years.rawValue / 2, inComponent: 2, animated: false)
+        NSLayoutConstraint.activate([
+            picker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            picker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            picker.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            toolBar.heightAnchor.constraint(equalToConstant: 50),
+            toolBar.widthAnchor.constraint(equalTo: view.widthAnchor),
+            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            toolBar.bottomAnchor.constraint(equalTo: picker.topAnchor)
+        ])
+    }
+    
+    //MARK: - Objc methods
     @objc private func buttonViewTapped() {
         if !updatedFields.isEmpty {
             NetworkService.shared.updateUserDetails(updatedFields: updatedFields) { result in
@@ -240,6 +247,7 @@ class ProfileDetailsViewController: ViewController {
     }
 }
 
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension ProfileDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -274,6 +282,7 @@ extension ProfileDetailsViewController: UITableViewDelegate, UITableViewDataSour
     }
 }
 
+//MARK: - CityPickerDelegate
 extension ProfileDetailsViewController: CityPickerDelegate {
     func pickCity(city: String) {
         guard let cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ProfileCell else { return }

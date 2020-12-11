@@ -11,6 +11,8 @@ import UIKit
 class ShishaCell: UITableViewCell {
 
     static let reuseId = "ShishaCell"
+    
+    //MARK: - Subviews
     private let shishaIcon: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "shishaIcon")
@@ -26,18 +28,22 @@ class ShishaCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    private var selectionReceiverDelegate: SelectionReceiverDelegate?
     lazy var shishaSegmentedControl: SegmentedControl = SegmentedControl(withDelegate: selectionReceiverDelegate)
     
+    //MARK: - Properties
+    private var selectionReceiverDelegate: SelectionReceiverDelegate?
+    
+    //MARK: - Configure
     func configure(withDelegate delegate: SelectionReceiverDelegate) {
         backgroundColor = .clear
         selectionStyle = .none
         selectionReceiverDelegate = delegate
         
-        setupViews()
+        setupSubviews()
     }
 
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(shishaIcon)
         addSubview(shishaLabel)
         addSubview(shishaSegmentedControl)

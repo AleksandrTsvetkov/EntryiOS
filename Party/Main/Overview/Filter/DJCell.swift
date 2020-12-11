@@ -11,6 +11,8 @@ import UIKit
 class DJCell: UITableViewCell {
 
     static let reuseId = "DJCell"
+    
+    //MARK: - Subviews
     private let djIcon: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "djIcon")
@@ -42,14 +44,16 @@ class DJCell: UITableViewCell {
         return view
     }()
 
+    //MARK: - Configure
     func configure() {
         backgroundColor = .clear
         selectionStyle = .none
         
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(djIcon)
         addSubview(djLabel)
         addSubview(djTextView)

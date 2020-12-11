@@ -1,6 +1,6 @@
 //
 //  UIAlertController + Fix.swift
-//  TinkoffChat
+//  Party
 //
 //  Created by Александр Цветков on 22.09.2020.
 //  Copyright © 2020 Александр Цветков. All rights reserved.

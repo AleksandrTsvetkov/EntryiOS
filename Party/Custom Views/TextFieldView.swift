@@ -11,6 +11,7 @@ import SkyFloatingLabelTextField
 
 class TextFieldView: UIView, ColorDelegate {
     
+    //MARK: - Subviews
     private let textFieldBackgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +41,7 @@ class TextFieldView: UIView, ColorDelegate {
         return view
     }()
     
+    //MARK: - Init
     convenience init(text: String, placeholder: String) {
         self.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
@@ -48,10 +50,19 @@ class TextFieldView: UIView, ColorDelegate {
         floatingTextField.text = text
         floatingTextField.placeholder = placeholder
         floatingTextField.title = placeholder
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(textFieldBackgroundView)
         addSubview(floatingTextField)
         
@@ -68,6 +79,7 @@ class TextFieldView: UIView, ColorDelegate {
         ])
     }
     
+    //MARK: - External methods
     func setPlaceholder(placeholder: String) {
         floatingTextField.placeholder = placeholder
         floatingTextField.title = placeholder
@@ -82,14 +94,6 @@ class TextFieldView: UIView, ColorDelegate {
         if let type = textContentType {
             floatingTextField.textContentType = type
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
     }
 }
 

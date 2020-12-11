@@ -10,8 +10,7 @@ import UIKit
 
 class CheckEmailView: UIView {
     
-    var delegate: ExitDelegate?
-    
+    //MARK: - Subviews
     private let emailImageView: UIImageView = {
         let view = UIImageView()
         let image = UIImage(named: "emailPicture")
@@ -45,16 +44,25 @@ class CheckEmailView: UIView {
         return view
     }()
     
+    //MARK: - Properties
+    var delegate: ExitDelegate?
+    
+    //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
     
     convenience init() {
         self.init(frame: .zero)
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - Setup
+    private func setupSubviews() {
         exitButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .black
@@ -81,7 +89,7 @@ class CheckEmailView: UIView {
             exitButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
         ])
         
-        if UIScreen.main.bounds.width < 740 {
+        if smallScreen {
             NSLayoutConstraint.activate([
                 titleLabel.topAnchor.constraint(equalTo: emailImageView.bottomAnchor, constant: 30),
                 emailImageView.heightAnchor.constraint(equalToConstant: 222),
@@ -100,14 +108,10 @@ class CheckEmailView: UIView {
         }
     }
     
+    //MARK: - Objc methods
     @objc private func exitButtonTapped() {
         delegate?.exitTapped()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
 }
 
 protocol ExitDelegate {

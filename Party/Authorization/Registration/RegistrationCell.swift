@@ -12,10 +12,12 @@ class RegistrationCell: UITableViewCell {
     
     static let reuseId = "RegistrationCell"
     var textFieldView = TextFieldView(text: "", placeholder: "")
+    var picker = UIPickerView()
     var fieldType: FieldType = .name
     var statusDelegate: StatusDelegate?
-    var picker = UIPickerView()
     
+    
+    //MARK: - Configure
     func configure(withType type: FieldType) {
         fieldType = type
         backgroundColor = .clear
@@ -52,6 +54,7 @@ class RegistrationCell: UITableViewCell {
         
     }
     
+    //MARK: - Objc methods
     @objc private func openDatePicker() {
         statusDelegate?.presentPicker(picker)
     }
@@ -97,6 +100,7 @@ class RegistrationCell: UITableViewCell {
     } // textFieldChanged
 }
 
+//MARK: - UITextFieldDelegate
 extension RegistrationCell: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

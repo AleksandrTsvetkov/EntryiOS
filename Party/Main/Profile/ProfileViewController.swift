@@ -10,7 +10,7 @@ import UIKit
 
 class ProfileViewController: ViewController {
     
-    var userState: UserState = .authorized
+    //MARK: - Subviews
     private lazy var profileImageView: UIImageView = {
         let view = UIImageView()
         view.backgroundColor = .darkGray
@@ -38,12 +38,16 @@ class ProfileViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
+    var userState: UserState = .authorized
     var cityOfUser = ""
     var user: UserRequest = UserRequest(phoneNumber: "", firstName: "", secondName: "", birthYear: "", birthMonth: "", birthDay: "", locationId: "", password: "", email: "")
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
+        setupSubviews()
         configureStackView()
         if userState == .unauthorized { unauthorizedSetup() } else { authorizedSetup() }
         cityOfUser = UserDefaults.standard.string(forKey: "city") ?? ""
@@ -69,7 +73,8 @@ class ProfileViewController: ViewController {
         }
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         view.backgroundColor = Colors.backgroundBlack.getValue()
         view.addSubview(label)
         view.addSubview(stackView)
@@ -164,6 +169,7 @@ class ProfileViewController: ViewController {
         }
     }
     
+    //MARK: - Objc methods
     @objc private func profileImageTapped() {
         let addPhotoAlertController = UIAlertController(title: "Какое фото добавить?", message: nil, preferredStyle: .actionSheet)
         let galleryAction = UIAlertAction(title: "Из галлереи", style: .default) { [weak self] _ in
@@ -194,11 +200,7 @@ class ProfileViewController: ViewController {
         self.present(addPhotoAlertController, animated: true)
     }
     
-    enum UserState {
-        case authorized
-        case unauthorized
-    }
-    
+    //MARK: - Supporting methods
     private func showCityPicker() {
         let ac = UIAlertController(title: "Не удалось получить вашу геопозицию", message: "Пожалуйста, выберите город из списка", preferredStyle: .alert)
         let ok = UIAlertAction(title: "Ок", style: .default) { _ in
@@ -229,10 +231,16 @@ extension ProfileViewController: TextViewDelegate {
     }
 }
 
+//MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
         profileImageView.image = image
     }
+}
+
+enum UserState {
+    case authorized
+    case unauthorized
 }

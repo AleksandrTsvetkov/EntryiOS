@@ -10,7 +10,7 @@ import UIKit
 
 class MapViewController: ViewController {
 
-    //MARK: - Properties
+    //MARK: - Subviews
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -39,6 +39,7 @@ class MapViewController: ViewController {
         initialSetup()
     }
     
+    //MARK: - Setup
     private func initialSetup() {
         view.backgroundColor = Colors.backgroundBlack.getValue()
         
@@ -48,11 +49,11 @@ class MapViewController: ViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SearchCell.self, forCellReuseIdentifier: SearchCell.reuseId)
-        
-        setupViews()
+        addMapPlaceholder()
+        setupSubviews()
     }
 
-    private func setupViews() {
+    private func setupSubviews() {
         view.addSubview(collectionView)
         view.addSubview(searchBarView)
         view.addSubview(tableView)
@@ -82,6 +83,19 @@ class MapViewController: ViewController {
         ])
     }
     
+    private func addMapPlaceholder() {
+        let mapPlaceholderView = UIImageView(image: UIImage(named: "mapBigPlaceholder"))
+        mapPlaceholderView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mapPlaceholderView)
+        NSLayoutConstraint.activate([
+            mapPlaceholderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mapPlaceholderView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mapPlaceholderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mapPlaceholderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+    }
+    
+    //MARK: - Supporting methods
     private func switchStateToResults() {
         tableView.isHidden = false
         collectionView.isHidden = true
@@ -97,6 +111,7 @@ class MapViewController: ViewController {
 
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }

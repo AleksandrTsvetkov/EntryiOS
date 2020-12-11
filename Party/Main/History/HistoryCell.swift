@@ -11,6 +11,8 @@ import UIKit
 class HistoryCell: UITableViewCell {
 
     static let reuseId = "HistoryCell"
+    
+    //MARK: - Subviews
     private let backView: UIView = {
         let view = UIView()
         view.backgroundColor = Colors.cellBackground.getValue()
@@ -88,8 +90,12 @@ class HistoryCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
     private lazy var dateFormatter = DateFormatter()
     
+    
+    //MARK: - Configure
     func configure(withModel event: Event, forType type: EventType) {
         selectionStyle = .none
         backgroundColor = .clear
@@ -111,11 +117,12 @@ class HistoryCell: UITableViewCell {
             timeString = "time"
             dateLabel.text = "date"
         }
-        setupViews()
+        setupSubviews()
         if type == .history { configureForPastEvent(withModel: event) } else { configureForFutureEvent(time: timeString, description: event.description) }
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(backView)
         addSubview(dateLabel)
         addSubview(titleLabel)

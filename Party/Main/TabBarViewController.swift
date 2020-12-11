@@ -10,6 +10,7 @@ import UIKit
 
 class TabBarViewController: UITabBarController {
 
+    //MARK: - Init
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         let mapVC = generateViewController(vcType: MapViewController.self, title: "Обзор", imageName: "overview")
@@ -26,10 +27,12 @@ class TabBarViewController: UITabBarController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
+    //MARK: - Supporting methods
     private func generateViewController<T: UIViewController>(vcType: T.Type, title: String, imageName: String) -> T {
         let vc = T()
         let image = UIImage(named: imageName)

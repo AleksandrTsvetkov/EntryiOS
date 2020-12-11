@@ -10,19 +10,25 @@ import UIKit
 
 class CitiesViewController: ViewController {
     
-    private var places: Array<Place> = []
-    private var filteredPlaces: Array<Place> = []
+    //MARK: - Subviews
     private let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
     private let tableView = UITableView()
+    
+    //MARK: - Properties
+    private var places: Array<Place> = []
+    private var filteredPlaces: Array<Place> = []
     weak var delegate: CityPickerDelegate?
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
-        setupViews()
+        initialSetup()
+        setupSubviews()
     }
     
-    private func setup() {
+    
+    //MARK: - Setup
+    private func initialSetup() {
         let color = Colors.backgroundBlack.getValue().withAlphaComponent(1)
         view.backgroundColor = color
         tableView.backgroundColor = color
@@ -46,7 +52,7 @@ class CitiesViewController: ViewController {
         searchBar.delegate = self
     }
     
-    private func setupViews() {
+    private func setupSubviews() {
         view.addSubview(searchBar)
         view.addSubview(tableView)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -66,6 +72,8 @@ class CitiesViewController: ViewController {
     }
 }
 
+
+//MARK: - UITableViewDelegate, UITableViewDataSource
 extension CitiesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -113,6 +121,7 @@ extension CitiesViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+//MARK: - UISearchBarDelegate
 extension CitiesViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredPlaces = places.filter { place -> Bool in

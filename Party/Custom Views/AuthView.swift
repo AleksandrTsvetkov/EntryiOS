@@ -27,6 +27,7 @@ class AuthView: UIView {
     }()
     weak var delegate: AuthTapDelegate!
 
+    //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -39,6 +40,11 @@ class AuthView: UIView {
         setupViews()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - Setup
     private func setupViews() {
         let stackView = UIStackView()
         for i in 0...4 {
@@ -64,7 +70,7 @@ class AuthView: UIView {
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
         ])
         
-//        if UIScreen.main.bounds.height < 740 {
+//        if smallScreen {
 //            NSLayoutConstraint.activate([
 //
 //            ])
@@ -75,13 +81,12 @@ class AuthView: UIView {
 //        }
     }
     
+    //MARK: - Objc methods
     @objc private func authTapped(sender: UITapGestureRecognizer) {
         guard let button = sender.view as? AuthTypeView else { return }
         delegate.authTapped(tag: button.tag)
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    
     
 }

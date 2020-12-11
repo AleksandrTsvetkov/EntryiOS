@@ -14,12 +14,14 @@ class RatingView: UIStackView {
     private var stars: Array<UIImageView> = []
     var delegate: RatingDelegate?
     
+    //MARK: - Init
     convenience init(withRating rating: Double) {
         self.init(frame: .zero)
         initialSetup()
         setRating(rating)
     }
     
+    //MARK: - Setup
     private func initialSetup() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(starTapped))
         self.addGestureRecognizer(tap)
@@ -37,6 +39,7 @@ class RatingView: UIStackView {
         distribution = .fillEqually
     }
     
+    //MARK: - External methods
     func setRating(_ rating: Double) {
         eventRating = rating
         deleteStars()
@@ -58,12 +61,14 @@ class RatingView: UIStackView {
         }
     }
     
+    //MARK: - Supporting methods
     private func deleteStars() {
         for star in stars {
             star.image = UIImage(named: "emptyStar")
         }
     }
     
+    //MARK: - Objc methods
     @objc private func starTapped(_ sender: UITapGestureRecognizer) {
         switch sender.location(in: self).x {
         case 0...9:

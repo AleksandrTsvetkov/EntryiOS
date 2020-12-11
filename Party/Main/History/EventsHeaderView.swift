@@ -10,6 +10,7 @@ import UIKit
 
 class EventsHeaderView: UIView {
 
+    //MARK: - Subviews
     private let iconView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -23,8 +24,11 @@ class EventsHeaderView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
     private var iconWidth: CGFloat = 15.5
     
+    //MARK: - Init
     convenience init(ofType type: EventType) {
         self.init(frame: .zero)
         
@@ -49,6 +53,7 @@ class EventsHeaderView: UIView {
         initialSetup()
     }
     
+    //MARK: - Setup
     private func initialSetup() {
         addSubview(label)
         addSubview(iconView)

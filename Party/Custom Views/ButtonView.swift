@@ -10,21 +10,7 @@ import UIKit
 
 class ButtonView: UIView {
     
-    enum ButtonState {
-        case next
-        case error
-    }
-    var state: ButtonState = .next {
-        willSet {
-            switch newValue {
-            case .next:
-                self.setTitle(title: "Дальше")
-            case .error:
-                self.setTitle(title: "Попробовать еще раз")
-            }
-        }
-    }
-    
+    //MARK: - Subviews
     private let backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -46,6 +32,19 @@ class ButtonView: UIView {
         return view
     }()
     
+    //MARK: - Properties
+    var state: ButtonState = .next {
+        willSet {
+            switch newValue {
+            case .next:
+                self.setTitle(title: "Дальше")
+            case .error:
+                self.setTitle(title: "Попробовать еще раз")
+            }
+        }
+    }
+    
+    //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -58,6 +57,11 @@ class ButtonView: UIView {
         setupViews(color: color, left: left, right: right)
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - External methods
     func setColor(color: UIColor) {
         backgroundView.backgroundColor = color
     }
@@ -74,6 +78,7 @@ class ButtonView: UIView {
         imageView.image = UIImage(named: newImageName)
     }
     
+    //MARK: - Setup
     private func setupViews(color: UIColor, left: CGFloat, right: CGFloat) {
         backgroundColor = .clear
         addSubview(backgroundView)
@@ -97,9 +102,9 @@ class ButtonView: UIView {
             imageView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -17)
         ])
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+}
+
+enum ButtonState {
+    case next
+    case error
 }

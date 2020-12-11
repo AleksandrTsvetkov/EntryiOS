@@ -10,6 +10,7 @@ import UIKit
 
 class DeclineView: UIView {
 
+    //MARK: - Subviews
     private let blurEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let view = UIVisualEffectView(effect: blurEffect)
@@ -57,6 +58,8 @@ class DeclineView: UIView {
         return view
     }()
     
+    
+    //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         isHidden = true
@@ -68,6 +71,11 @@ class DeclineView: UIView {
         setupViews()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - Setup
     private func setupViews() {
         addSubview(blurEffectView)
         addSubview(closeButton)
@@ -111,11 +119,8 @@ class DeclineView: UIView {
         ])
     }
     
+    //MARK: - Objc methods
     @objc private func close() {
         isHidden = true
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

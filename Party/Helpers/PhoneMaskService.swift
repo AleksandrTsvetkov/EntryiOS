@@ -9,6 +9,8 @@
 import Foundation
 
 class PhoneMaskService {
+    
+    //MARK: - Properties
     var originalNumber: String = "" {
         didSet {
             if oldValue.first == "+" {
@@ -20,6 +22,7 @@ class PhoneMaskService {
     var visibleNumber: String = ""
     private let mask: String = "+_ (___) ___-__-__"
     
+    //MARK: - External methods
     func convert() {
         var newVisibleNumber = mask
         for char in originalNumber {

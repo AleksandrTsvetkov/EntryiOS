@@ -11,9 +11,7 @@ import CoreLocation
 
 class RegistrationViewController: ViewController, StatusDelegate {
     
-    //MARK: - Properties
-    private var locationManager: CLLocationManager = CLLocationManager()
-    private var geoCoder: CLGeocoder = CLGeocoder()
+    //MARK: - Subviews
     private let label: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -25,6 +23,9 @@ class RegistrationViewController: ViewController, StatusDelegate {
     }()
     private lazy var buttonView = ButtonView(color: Colors.buttonGray.getValue(), title: "Дальше", left: 16, right: 16)
     private let tableView = UITableView(frame: .zero, style: .grouped)
+    var picker: UIPickerView?
+    var toolBar: UIToolbar?
+    //MARK: - Properties
     var fieldsStatus = [false, false, false, false] {
         willSet {
             if newValue[0] && newValue[1] && newValue[2] && newValue[3] {
@@ -36,8 +37,8 @@ class RegistrationViewController: ViewController, StatusDelegate {
             }
         }
     }
-    var picker: UIPickerView?
-    var toolBar: UIToolbar?
+    private var locationManager: CLLocationManager = CLLocationManager()
+    private var geoCoder: CLGeocoder = CLGeocoder()
     var phoneNumber: String = ""
     private var location: Location?
     private var locationId: Int = 0
@@ -56,7 +57,7 @@ class RegistrationViewController: ViewController, StatusDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(RegistrationCell.self, forCellReuseIdentifier: RegistrationCell.reuseId)
-        setupViews()
+        setupSubviews()
         
         initLocation()
         let tap = UITapGestureRecognizer(target: self, action: #selector(doneButtonTapped))
@@ -92,7 +93,7 @@ class RegistrationViewController: ViewController, StatusDelegate {
         }
     }
     
-    private func setupViews() {
+    private func setupSubviews() {
         view.addSubview(tableView)
         view.addSubview(label)
         view.addSubview(buttonView)
@@ -113,7 +114,7 @@ class RegistrationViewController: ViewController, StatusDelegate {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.heightAnchor.constraint(equalToConstant: 376)
         ])
-        if UIScreen.main.bounds.height < 740 {
+        if smallScreen {
             NSLayoutConstraint.activate([
                 tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
@@ -126,6 +127,7 @@ class RegistrationViewController: ViewController, StatusDelegate {
         }
     }
     
+    //MARK: - Delegate methods
     func presentPicker(_ pickerView: UIPickerView) {
         view.endEditing(true)
         picker = pickerView
@@ -157,6 +159,7 @@ class RegistrationViewController: ViewController, StatusDelegate {
         ])
     }
     
+    //MARK: - Supporting methods
     private func receiveServerError() {
         for row in 0...(tableView.numberOfRows(inSection: 0) - 1) {
             let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0)) as! RegistrationCell

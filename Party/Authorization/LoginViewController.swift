@@ -10,7 +10,7 @@ import UIKit
 
 class LoginViewController: ViewController {
     
-    var delegate: OnboardingViewController?
+    //MARK: - Subviews
     private let label: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -68,15 +68,38 @@ class LoginViewController: ViewController {
     }()
     private let buttonView = ButtonView(color: Colors.buttonGray.getValue(), title: "Дальше", left: 16, right: 16)
     
+    //MARK: - Properties
+    var delegate: OnboardingViewController?
+    
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         
-        setupViews()
+        setupSubviews()
         configureTextFields()
         setupActions()
     }
     
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        if parent == nil {
+            guard let navigationVC = navigationController else { return }
+            if navigationVC.viewControllers.count > 2 {
+                let count = navigationVC.viewControllers.count
+                navigationVC.removeControllers(in: 1...count - 2)
+            }
+            delegate?.blurEffectView1.isHidden = true
+            delegate?.blurEffectView2.isHidden = true
+            delegate?.authView.isHidden = true
+            delegate?.authView.transform = .identity
+            delegate?.authViewIsVisibleConstraint.isActive = false
+            delegate?.authViewIsHiddenConstraint.isActive = true
+            navigationController?.navigationBar.isHidden = true
+        }
+    }
+    
+    //MARK: - Setup
     private func setupActions() {
         let tap0 = UITapGestureRecognizer(target: self, action: #selector(forgotPasswordTapped))
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(registerTapped))
@@ -90,7 +113,7 @@ class LoginViewController: ViewController {
         passwordTextFieldView.floatingTextField.addTarget(self, action: #selector(passwordTextFieldChanged), for: .editingChanged)
     }
     
-    private func setupViews() {
+    private func setupSubviews() {
         view.addSubview(label)
         view.addSubview(emailTextFieldView)
         view.addSubview(passwordTextFieldView)
@@ -145,7 +168,7 @@ class LoginViewController: ViewController {
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
                 emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
             ])
-        } else if UIScreen.main.bounds.height < 740 {
+        } else if smallScreen {
             NSLayoutConstraint.activate([
                 errorLabel.topAnchor.constraint(equalTo: noAccountLabel.bottomAnchor, constant: 30),
                 forgotPasswordLabel.bottomAnchor.constraint(equalTo: registerLabel.topAnchor, constant: -30),
@@ -179,24 +202,7 @@ class LoginViewController: ViewController {
         passwordTextFieldView.floatingTextField.errorColor = Colors.red.getValue()
     }
     
-    override func willMove(toParent parent: UIViewController?) {
-        super.willMove(toParent: parent)
-        if parent == nil {
-            guard let navigationVC = navigationController else { return }
-            if navigationVC.viewControllers.count > 2 {
-                let count = navigationVC.viewControllers.count
-                navigationVC.removeControllers(in: 1...count - 2)
-            }
-            delegate?.blurEffectView1.isHidden = true
-            delegate?.blurEffectView2.isHidden = true
-            delegate?.authView.isHidden = true
-            delegate?.authView.transform = .identity
-            delegate?.authViewIsVisibleConstraint.isActive = false
-            delegate?.authViewIsHiddenConstraint.isActive = true
-            navigationController?.navigationBar.isHidden = true
-        }
-    }
-    
+    //MARK: - Supporting methods
     private func checkFields() {
         let emailIsReady = emailTextFieldView.floatingTextField.text != "" && emailTextFieldView.floatingTextField.text != nil
         let passwordIsReady = passwordTextFieldView.floatingTextField.text != "" && passwordTextFieldView.floatingTextField.text != nil
@@ -331,6 +337,7 @@ class LoginViewController: ViewController {
     }
 }
 
+//MARK: - UITextFieldDelegate
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

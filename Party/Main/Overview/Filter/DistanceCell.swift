@@ -11,6 +11,8 @@ import UIKit
 class DistanceCell: UITableViewCell {
     
     static let reuseId = "DistanceCell"
+    
+    //MARK: - Subviews
     private let distanceIcon: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "distanceIcon")
@@ -66,14 +68,16 @@ class DistanceCell: UITableViewCell {
         return view
     }()
     
+    //MARK: - Configure
     func configure() {
         backgroundColor = .clear
         selectionStyle = .none
         
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(distanceIcon)
         addSubview(distanceLabel)
         addSubview(radiusLabel)
@@ -113,6 +117,7 @@ class DistanceCell: UITableViewCell {
         ])
     }
     
+    //MARK: - Objc methods
     @objc private func sliderValueChanged() {
         switch radiusSlider.value {
         case 0:

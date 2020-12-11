@@ -10,6 +10,7 @@ import UIKit
 
 class NewPasswordViewController: ViewController {
     
+    //MARK: - Subviews
     private let label: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -23,11 +24,23 @@ class NewPasswordViewController: ViewController {
     private let confirmPasswordTextFieldView = TextFieldView(text: "", placeholder: "Пароль еще раз")
     private let buttonView = ButtonView(color: Colors.buttonGray.getValue(), title: "Дальше", left: 16, right: 16)
 
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        
+        initialSetup()
         setupViews()
         configureTextFields()
+    }
+    
+    //MARK: - Setup
+    private func initialSetup() {
+        view.backgroundColor = .black
+        passwordTextFieldView.floatingTextField.delegate = self
+        confirmPasswordTextFieldView.floatingTextField.delegate = self
+        let tap0 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
+        buttonView.addGestureRecognizer(tap0)
+        buttonView.isUserInteractionEnabled = false
     }
     
     private func setupViews() {
@@ -39,12 +52,6 @@ class NewPasswordViewController: ViewController {
         passwordTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         confirmPasswordTextFieldView.translatesAutoresizingMaskIntoConstraints = false
         buttonView.translatesAutoresizingMaskIntoConstraints = false
-        
-        passwordTextFieldView.floatingTextField.delegate = self
-        confirmPasswordTextFieldView.floatingTextField.delegate = self
-        let tap0 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
-        buttonView.addGestureRecognizer(tap0)
-        buttonView.isUserInteractionEnabled = false
         
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -66,7 +73,7 @@ class NewPasswordViewController: ViewController {
             buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
-        if UIScreen.main.bounds.height < 740 {
+        if smallScreen {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             ])
@@ -97,6 +104,7 @@ class NewPasswordViewController: ViewController {
         confirmPasswordTextFieldView.floatingTextField.addTarget(self, action: #selector(confirmPasswordTextFieldChanged), for: .editingChanged)
     }
     
+    //MARK: - Supporting methods
     private func checkFields() {
         let isEqual = passwordTextFieldView.floatingTextField.text == confirmPasswordTextFieldView.floatingTextField.text
         let passwordNotEmpty = passwordTextFieldView.floatingTextField.text != "" && passwordTextFieldView.floatingTextField.text != nil
@@ -114,6 +122,7 @@ class NewPasswordViewController: ViewController {
         }
     }
     
+    //MARK: - Objc methods
     @objc private func passwordTextFieldChanged() {
         checkFields()
     }
@@ -128,6 +137,7 @@ class NewPasswordViewController: ViewController {
 
 }
 
+//MARK: - UITextFieldDelegate
 extension NewPasswordViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

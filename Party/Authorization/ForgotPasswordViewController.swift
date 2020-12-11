@@ -10,6 +10,7 @@ import UIKit
 
 class ForgotPasswordViewController: ViewController {
     
+    //MARK: - Subviews
     private let label: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -46,23 +47,17 @@ class ForgotPasswordViewController: ViewController {
     }()
     private let checkEmailView = CheckEmailView()
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
-        setupViews()
+        
+        initialSetup()
+        setupSubviews()
     }
     
-    private func setupViews() {
-        view.addSubview(label)
-        view.addSubview(buttonView)
-        view.addSubview(emailTextFieldView)
-        view.addSubview(noAccountLabel)
-        view.addSubview(registerLabel)
-        view.addSubview(checkEmailView)
-        
-        buttonView.translatesAutoresizingMaskIntoConstraints = false
-        emailTextFieldView.translatesAutoresizingMaskIntoConstraints = false
-        buttonView.isUserInteractionEnabled = false
+    //MARK: - Setup
+    private func initialSetup() {
+        view.backgroundColor = .black
         emailTextFieldView.floatingTextField.delegate = self
         emailTextFieldView.configure(withKeyboardType: .emailAddress, textContentType: .emailAddress)
         emailTextFieldView.floatingTextField.title = "E-MAIL"
@@ -77,6 +72,19 @@ class ForgotPasswordViewController: ViewController {
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
         buttonView.addGestureRecognizer(tap1)
         checkEmailView.delegate = self
+    }
+    
+    private func setupSubviews() {
+        view.addSubview(label)
+        view.addSubview(buttonView)
+        view.addSubview(emailTextFieldView)
+        view.addSubview(noAccountLabel)
+        view.addSubview(registerLabel)
+        view.addSubview(checkEmailView)
+        
+        buttonView.translatesAutoresizingMaskIntoConstraints = false
+        emailTextFieldView.translatesAutoresizingMaskIntoConstraints = false
+        buttonView.isUserInteractionEnabled = false
         checkEmailView.isHidden = true
         
         NSLayoutConstraint.activate([
@@ -108,7 +116,7 @@ class ForgotPasswordViewController: ViewController {
             checkEmailView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
         
-        if UIScreen.main.bounds.height < 740 {
+        if smallScreen {
             NSLayoutConstraint.activate([
                 buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
                 emailTextFieldView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
@@ -121,6 +129,7 @@ class ForgotPasswordViewController: ViewController {
         }
     }
     
+    //MARK: - Supporting methods
     private func checkField() {
         let emailIsReady = emailTextFieldView.floatingTextField.text != "" && emailTextFieldView.floatingTextField.text != nil
         let noErrors = (emailTextFieldView.floatingTextField.errorMessage == "" || emailTextFieldView.floatingTextField.errorMessage == nil)
@@ -133,6 +142,7 @@ class ForgotPasswordViewController: ViewController {
         }
     }
     
+    //MARK: - Objc methods
     @objc private func buttonViewTapped() {
         navigationController?.navigationBar.isHidden = true
         checkEmailView.isHidden = false
@@ -173,6 +183,7 @@ class ForgotPasswordViewController: ViewController {
     }
 }
 
+//MARK: - UITextFieldDelegate
 extension ForgotPasswordViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -180,6 +191,7 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
     }
 }
 
+//MARK: - ExitDelegate
 extension ForgotPasswordViewController: ExitDelegate {
     func exitTapped() {
         navigationController?.navigationBar.isHidden = false

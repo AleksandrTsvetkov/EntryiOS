@@ -10,6 +10,7 @@ import UIKit
 
 class SearchBarView: UIView {
     
+    //MARK: - Subviews
     private let backView: UIView = {
         let view = UIView()
         view.backgroundColor = Colors.searchBarBackground.getValue()
@@ -46,6 +47,8 @@ class SearchBarView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
     var delegate: SearchBarViewDelegate?
     private var searchBarType: SearchBarType = .withFilter
     private lazy var textFieldLeftSpaceConstraint = textField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 35)
@@ -55,7 +58,7 @@ class SearchBarView: UIView {
         return [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color]
     }()
     
-
+    //MARK: - Init
     convenience init(ofType type: SearchBarType, withDelegate delegateVC: SearchBarViewDelegate) {
         self.init(frame: .zero)
         
@@ -76,10 +79,11 @@ class SearchBarView: UIView {
             textFieldLeftSpaceConstraint.constant = 15
             searchIcon.isHidden = true
         }
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(backView)
         addSubview(textField)
         addSubview(buttonBackView)
@@ -120,6 +124,7 @@ class SearchBarView: UIView {
         ])
     }
     
+    //MARK: - External methods
     func clearSearch() {
         textField.text = ""
         textField.resignFirstResponder()
@@ -145,6 +150,7 @@ class SearchBarView: UIView {
         }
     }
     
+    //MARK: - Objc methods
     @objc private func buttonTapped() {
         delegate?.buttonTapped(ofType: searchBarType)
     }

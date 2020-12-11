@@ -10,7 +10,7 @@ import UIKit
 
 class TextView: UIView {
     
-    var delegate: TextViewDelegate?
+    //MARK: - Subviews
     var textViewType: ProfileFieldType = .personalData
     private let label: UILabel = {
         let view = UILabel()
@@ -29,6 +29,10 @@ class TextView: UIView {
         return view
     }()
     
+    //MARK: - Properties
+    var delegate: TextViewDelegate?
+    
+    //MARK: - Init
     convenience init(ofType type: ProfileFieldType) {
         self.init(frame: .zero)
         backgroundColor = Colors.backgroundGray.getValue()
@@ -70,10 +74,11 @@ class TextView: UIView {
             label.text = "Войти через Google"
             configureRoundSide(.bottom)
         }
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(label)
         
         NSLayoutConstraint.activate([

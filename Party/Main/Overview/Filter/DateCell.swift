@@ -11,6 +11,8 @@ import UIKit
 class DateCell: UITableViewCell {
     
     static let reuseId = "DateCell"
+    
+    //MARK: - Subviews
     private let dateIcon: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "dateIcon")
@@ -66,14 +68,16 @@ class DateCell: UITableViewCell {
         return view
     }()
     
+    //MARK: - Configure
     func configure() {
         backgroundColor = .clear
         selectionStyle = .none
         
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(dateIcon)
         addSubview(dateIconLabel)
         addSubview(dateLabel)
@@ -113,6 +117,7 @@ class DateCell: UITableViewCell {
         ])
     }
     
+    //MARK: - Objc methods
     @objc private func sliderValueChanged() {
         print(dateSlider.value)
         switch Int(dateSlider.value) {

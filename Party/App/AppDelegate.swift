@@ -55,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
     }
 
+    //MARK: - Private methods
     private func showOnboarding() {
         let rootViewController = OnboardingViewController()
         //let rootViewController = CitiesViewController()

@@ -10,6 +10,7 @@ import UIKit
 
 class FilterViewController: ViewController {
     
+    //MARK: - Subviews
     private lazy var tableView: UITableView = {
         let view = UITableView()
         view.isScrollEnabled = true
@@ -37,15 +38,19 @@ class FilterViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    //MARK: - Properties
     private var isKeyboardShown = false
     
+    //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        setupViews()
+        setupSubviews()
         setupConstraints()
     }
     
+    //MARK: - Setup
     private func initialSetup() {
         let backColor = Colors.overViewCellBack.getValue().withAlphaComponent(0.94)
         view.backgroundColor = backColor
@@ -63,7 +68,7 @@ class FilterViewController: ViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    private func setupViews() {
+    private func setupSubviews() {
         view.addSubview(tableView)
         view.addSubview(closeButton)
         view.addSubview(titleLabel)
@@ -95,6 +100,7 @@ class FilterViewController: ViewController {
         ])
     }
     
+    //MARK: - Objc methods
     @objc func keyboardWillShow(notification: NSNotification) {
         guard !isKeyboardShown else { return }
         //tableView.isScrollEnabled = true

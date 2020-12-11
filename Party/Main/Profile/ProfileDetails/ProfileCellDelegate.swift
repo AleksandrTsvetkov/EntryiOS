@@ -17,7 +17,10 @@ protocol ProfileCellDelegate: UITextFieldDelegate {
     func openCities()
 }
 
+//MARK: - ProfileCellDelegate
 extension ProfileDetailsViewController: ProfileCellDelegate {
+    
+    //MARK: - TextField methods
     func textFieldChanged() {
         var noChanges = true
         var notEmpty = true
@@ -255,6 +258,7 @@ extension ProfileDetailsViewController: ProfileCellDelegate {
         }
     }
     
+    //MARK: - External methods
     func openPicker() {
         guard profileFieldType == .personalData else { return }
         presentPicker()

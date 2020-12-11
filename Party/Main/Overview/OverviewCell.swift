@@ -11,6 +11,8 @@ import UIKit
 class OverviewCell: UICollectionViewCell {
 
     static let reuseId = "OverviewCell"
+    
+    //MARK: - Subviews
     private let partyImage: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "partyImage")
@@ -62,13 +64,15 @@ class OverviewCell: UICollectionViewCell {
         return view
     }()
     
+    //MARK: - Configure
     func configure() {
         layer.cornerRadius = 10
         backgroundColor = Colors.overViewCellBack.getValue()
-        setupViews()
+        setupSubviews()
     }
     
-    private func setupViews() {
+    //MARK: - Setup
+    private func setupSubviews() {
         addSubview(partyImage)
         addSubview(titleLabel)
         addSubview(timeIcon)
