@@ -83,7 +83,7 @@ class ProfileDetailsViewController: ViewController {
         tableView.isUserInteractionEnabled = true
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ProfileCell.self, forCellReuseIdentifier: ProfileCell.reuseId)
+        tableView.register(ProfileCell.self)
         tableView.isScrollEnabled = false
     }
     
@@ -275,7 +275,7 @@ extension ProfileDetailsViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileCell.reuseId, for: indexPath) as? ProfileCell else { return UITableViewCell() }
+        let cell: ProfileCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
         cell.profileCellDelegate = self
         cell.configure(forUser: user, forType: profileFieldType, row: indexPath.row)
         return cell

@@ -49,10 +49,10 @@ class OrganizedEventViewController: ViewController {
         view.backgroundColor = Colors.backgroundBlack.getValue().withAlphaComponent(1)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(PhotosEventCell.self, forCellReuseIdentifier: PhotosEventCell.reuseId)
-        tableView.register(InfoEventCell.self, forCellReuseIdentifier: InfoEventCell.reuseId)
-        tableView.register(WhereEventCell.self, forCellReuseIdentifier: WhereEventCell.reuseId)
-        tableView.register(DescriptionEventCell.self, forCellReuseIdentifier: DescriptionEventCell.reuseId)
+        tableView.register(PhotosEventCell.self)
+        tableView.register(InfoEventCell.self)
+        tableView.register(WhereEventCell.self)
+        tableView.register(DescriptionEventCell.self)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     
@@ -116,27 +116,27 @@ extension OrganizedEventViewController: UITableViewDelegate, UITableViewDataSour
         
         switch indexPath.row {
         case 0:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: PhotosEventCell.reuseId, for: indexPath) as? PhotosEventCell else { return UITableViewCell() }
+            let cell: PhotosEventCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure()
             return cell
         case 1:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: InfoEventCell.reuseId, for: indexPath) as? InfoEventCell else { return UITableViewCell() }
+            let cell: InfoEventCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure(forType: .time)
             return cell
         case 2:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: InfoEventCell.reuseId, for: indexPath) as? InfoEventCell else { return UITableViewCell() }
+            let cell: InfoEventCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure(forType: .price)
             return cell
         case 3:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: WhereEventCell.reuseId, for: indexPath) as? WhereEventCell else { return UITableViewCell() }
+            let cell: WhereEventCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure()
             return cell
         case 4:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: InfoEventCell.reuseId, for: indexPath) as? InfoEventCell else { return UITableViewCell() }
+            let cell: InfoEventCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure(forType: .dj)
             return cell
         case 5:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: DescriptionEventCell.reuseId, for: indexPath) as? DescriptionEventCell else { return UITableViewCell() }
+            let cell: DescriptionEventCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure()
             return cell
         default:

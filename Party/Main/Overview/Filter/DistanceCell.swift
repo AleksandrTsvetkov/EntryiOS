@@ -8,9 +8,7 @@
 
 import UIKit
 
-class DistanceCell: UITableViewCell {
-    
-    static let reuseId = "DistanceCell"
+class DistanceCell: TableViewCell {
     
     //MARK: - Subviews
     private let distanceIcon: UIImageView = {
@@ -69,10 +67,8 @@ class DistanceCell: UITableViewCell {
     }()
     
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
-        selectionStyle = .none
-        
+    override func configure() {
+        super.configure()
         setupSubviews()
     }
     

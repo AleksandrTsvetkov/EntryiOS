@@ -96,7 +96,7 @@ class OrganizedEventPreview: UIView {
         isHidden = true
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ReviewCell.self, forCellReuseIdentifier: ReviewCell.reuseId)
+        tableView.register(ReviewCell.self)
         watchFullInfoButton.addTarget(self, action: #selector(watchFullInfoButtonTapped), for: .touchUpInside)
     }
     
@@ -167,7 +167,7 @@ extension OrganizedEventPreview: UITableViewDelegate, UITableViewDataSource {
 //    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ReviewCell.reuseId, for: indexPath) as? ReviewCell else { return UITableViewCell() }
+        let cell: ReviewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
         cell.configure()
         return cell
     }

@@ -8,10 +8,8 @@
 
 import UIKit
 
-class WhereEventCell: UITableViewCell {
+class WhereEventCell: TableViewCell {
 
-    static let reuseId = "WhereEventCell"
-    
     //MARK: - Subviews
     private let icon: UIImageView = {
         let view = UIImageView()
@@ -51,9 +49,8 @@ class WhereEventCell: UITableViewCell {
     }()
     
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
-        selectionStyle = .none
+    override func configure() {
+        super.configure()
         
         setupSubviews()
     }

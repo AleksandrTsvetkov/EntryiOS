@@ -8,10 +8,8 @@
 
 import UIKit
 
-class ShishaCell: UITableViewCell {
+class ShishaCell: TableViewCell {
 
-    static let reuseId = "ShishaCell"
-    
     //MARK: - Subviews
     private let shishaIcon: UIImageView = {
         let view = UIImageView()

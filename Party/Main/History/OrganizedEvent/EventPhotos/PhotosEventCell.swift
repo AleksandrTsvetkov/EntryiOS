@@ -8,10 +8,8 @@
 
 import UIKit
 
-class PhotosEventCell: UITableViewCell {
+class PhotosEventCell: TableViewCell {
 
-    static let reuseId = "PhotosEventCell"
-    
     //MARK: - Subviews
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -26,9 +24,8 @@ class PhotosEventCell: UITableViewCell {
     }()
     
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
-        selectionStyle = .none
+    override func configure() {
+        super.configure()
         
         collectionView.dataSource = self
         collectionView.delegate = self

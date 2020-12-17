@@ -8,10 +8,8 @@
 
 import UIKit
 
-class HistoryCell: UITableViewCell {
+class HistoryCell: TableViewCell {
 
-    static let reuseId = "HistoryCell"
-    
     //MARK: - Subviews
     private let backView: UIView = {
         let view = UIView()
@@ -93,7 +91,6 @@ class HistoryCell: UITableViewCell {
     
     //MARK: - Properties
     private lazy var dateFormatter = DateFormatter()
-    
     
     //MARK: - Configure
     func configure(withModel event: Event, forType type: EventType) {

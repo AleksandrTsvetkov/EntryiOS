@@ -8,9 +8,8 @@
 
 import UIKit
 
-class ReviewCell: UITableViewCell {
+class ReviewCell: TableViewCell {
 
-    static let reuseId = "ReviewCell"
     private let textView: UITextView = {
         let view = UITextView()
         view.textContainerInset = UIEdgeInsets(top: 20, left: 15, bottom: 18, right: 15)
@@ -29,8 +28,8 @@ class ReviewCell: UITableViewCell {
     }()
     
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
+    override func configure() {
+        super.configure()
         setupSubviews()
     }
     

@@ -29,8 +29,12 @@ class MapViewController: ViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    let mapPlaceholderView = UIImageView()
     private lazy var declineView = DeclineView()
     private lazy var searchBarView = SearchBarView(ofType: .withFilter, withDelegate: self)
+    
+    //MARK: - Properties
+    var isScrolling = false
     
     //MARK: - View lifecycle
     override func viewDidLoad() {
@@ -42,13 +46,13 @@ class MapViewController: ViewController {
     //MARK: - Setup
     private func initialSetup() {
         view.backgroundColor = Colors.backgroundBlack.getValue()
-        
+        mapPlaceholderView.backgroundColor = Colors.backgroundBlack.getValue()
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(OverviewCell.self, forCellWithReuseIdentifier: OverviewCell.reuseId)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(SearchCell.self, forCellReuseIdentifier: SearchCell.reuseId)
+        tableView.register(SearchCell.self)
         addMapPlaceholder()
         setupSubviews()
     }
@@ -84,7 +88,7 @@ class MapViewController: ViewController {
     }
     
     private func addMapPlaceholder() {
-        let mapPlaceholderView = UIImageView(image: UIImage(named: "mapBigPlaceholder"))
+        mapPlaceholderView.image = UIImage(named: "mapBigPlaceholder")
         mapPlaceholderView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapPlaceholderView)
         NSLayoutConstraint.activate([
@@ -99,12 +103,14 @@ class MapViewController: ViewController {
     private func switchStateToResults() {
         tableView.isHidden = false
         collectionView.isHidden = true
+        mapPlaceholderView.image = nil
         searchBarView.switchState(to: .withResults)
     }
     
     private func switchStateToFilter() {
         tableView.isHidden = true
         collectionView.isHidden = false
+        mapPlaceholderView.image = UIImage(named: "mapBigPlaceholder")
         searchBarView.switchState(to: .withFilter)
     }
 }
@@ -142,6 +148,15 @@ extension MapViewController: UICollectionViewDelegate, UICollectionViewDataSourc
 
 //MARK: - UITableViewDelegate, UITableViewDataSource
 extension MapViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isScrolling = true
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        isScrolling = false
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 116
     }
@@ -151,8 +166,8 @@ extension MapViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchCell.reuseId, for: indexPath) as? SearchCell else { return UITableViewCell() }
-        cell.configure()
+        let cell: SearchCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+        cell.configure(withDelegate: self)
         return cell
     }
 }
@@ -186,5 +201,13 @@ extension MapViewController: SearchBarViewDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
+    }
+}
+
+//MARK: - SearchCellGestureDelegate
+extension MapViewController: SearchCellGestureDelegate {
+    
+    func checkScrollingStatus() -> Bool {
+        return isScrolling
     }
 }

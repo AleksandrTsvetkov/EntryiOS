@@ -56,7 +56,7 @@ class RegistrationViewController: ViewController, StatusDelegate {
         tableView.backgroundColor = .clear
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(RegistrationCell.self, forCellReuseIdentifier: RegistrationCell.reuseId)
+        tableView.register(RegistrationCell.self)
         setupSubviews()
         
         initLocation()
@@ -359,7 +359,7 @@ extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource
         return 4
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RegistrationCell.reuseId, for: indexPath) as! RegistrationCell
+        let cell: RegistrationCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
         cell.configure(withType: FieldType.allCases[indexPath.row])
         cell.statusDelegate = self
         return cell

@@ -57,6 +57,8 @@
 		1F96F650254D6D100018C302 /* SFProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F96F64F254D6D100018C302 /* SFProText-Medium.ttf */; };
 		1F96F652254D6D670018C302 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F96F651254D6D670018C302 /* TabBarViewController.swift */; };
 		1F96F654254F2E600018C302 /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F96F653254F2E600018C302 /* SFProDisplay-Regular.ttf */; };
+		1F99BD0B2583B04800468172 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99BD0A2583B04800468172 /* TableViewCell.swift */; };
+		1F99BD0D2583B2FA00468172 /* UITableView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99BD0C2583B2FA00468172 /* UITableView + Extension.swift */; };
 		1FA47C3525613D7A00F87D10 /* ProfileCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA47C3425613D7A00F87D10 /* ProfileCellDelegate.swift */; };
 		1FA917BE253ADD720009CF38 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */; };
 		1FAD8F022563F445001D5152 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAD8F012563F445001D5152 /* FilterViewController.swift */; };
@@ -142,6 +144,8 @@
 		1F96F64F254D6D100018C302 /* SFProText-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Medium.ttf"; sourceTree = "<group>"; };
 		1F96F651254D6D670018C302 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		1F96F653254F2E600018C302 /* SFProDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Regular.ttf"; sourceTree = "<group>"; };
+		1F99BD0A2583B04800468172 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		1F99BD0C2583B2FA00468172 /* UITableView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView + Extension.swift"; sourceTree = "<group>"; };
 		1FA47C3425613D7A00F87D10 /* ProfileCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellDelegate.swift; sourceTree = "<group>"; };
 		1FA917BD253ADD720009CF38 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		1FAD8F012563F445001D5152 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
@@ -272,6 +276,7 @@
 				1F86BDEB25456D3400468955 /* String + InsertRow.swift */,
 				1F5D512F255073A400CE1502 /* String + Replace.swift */,
 				1F5D512D25505F5400CE1502 /* PhoneMaskService.swift */,
+				1F99BD0C2583B2FA00468172 /* UITableView + Extension.swift */,
 				1F61CECE2538F7D500096D71 /* UIView + Corners.swift */,
 				1F6B0A6A254AA4BC004EBD1D /* UIViewController + Alert.swift */,
 				1F710B4C25388C98008F0F7D /* UIColor + HexValue.swift */,
@@ -390,6 +395,7 @@
 		1FF469F625388EA500926E82 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				1F99BD0A2583B04800468172 /* TableViewCell.swift */,
 				1FB680872574F7EB0099147E /* DeclineView.swift */,
 				1FF469F425388E9900926E82 /* ButtonView.swift */,
 				1F61CEC52538D33E00096D71 /* FeatureView.swift */,
@@ -568,6 +574,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FBA1F4D25570DD500CCF0B0 /* UIAlertController + Fix.swift in Sources */,
+				1F99BD0D2583B2FA00468172 /* UITableView + Extension.swift in Sources */,
 				1FBB861E256BF74C0095CE8C /* SearchCell.swift in Sources */,
 				1F74D9B92556C6890014692C /* UIView + FirstResponder.swift in Sources */,
 				1F39B520257832E500D9F3F2 /* OrganizedEventPreview.swift in Sources */,
@@ -608,6 +615,7 @@
 				1FECFEC1256EB9AE00076BC4 /* SegmentedControl.swift in Sources */,
 				1F39B5242578DF0200D9F3F2 /* ReviewCell.swift in Sources */,
 				1FEC955D25796DCD00BB375A /* InfoEventCell.swift in Sources */,
+				1F99BD0B2583B04800468172 /* TableViewCell.swift in Sources */,
 				1F6867E82539CE0A00543498 /* OneTimeCodeTextField.swift in Sources */,
 				1F39B5222578330400D9F3F2 /* OrganizedEventViewController.swift in Sources */,
 				1FFB84162559E2AE00B2FE68 /* HistoryCell.swift in Sources */,

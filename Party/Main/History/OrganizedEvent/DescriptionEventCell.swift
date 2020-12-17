@@ -8,10 +8,8 @@
 
 import UIKit
 
-class DescriptionEventCell: UITableViewCell {
+class DescriptionEventCell: TableViewCell {
 
-    static let reuseId = "DescriptionEventCell"
-    
     //MARK: - Subviews
     private let icon: UIImageView = {
         let view = UIImageView()
@@ -43,9 +41,8 @@ class DescriptionEventCell: UITableViewCell {
     }()
     
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
-        selectionStyle = .none
+    override func configure() {
+        super.configure()
         
         setupSubviews()
     }

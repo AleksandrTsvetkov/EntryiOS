@@ -8,10 +8,8 @@
 
 import UIKit
 
-class DJCell: UITableViewCell {
+class DJCell: TableViewCell {
 
-    static let reuseId = "DJCell"
-    
     //MARK: - Subviews
     private let djIcon: UIImageView = {
         let view = UIImageView()
@@ -45,10 +43,8 @@ class DJCell: UITableViewCell {
     }()
 
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
-        selectionStyle = .none
-        
+    override func configure() {
+        super.configure()
         setupSubviews()
     }
     

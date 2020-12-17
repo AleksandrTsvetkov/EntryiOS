@@ -8,10 +8,8 @@
 
 import UIKit
 
-class SearchCell: UITableViewCell {
+class SearchCell: TableViewCell {
 
-    static let reuseId = "SearchCell"
-    
     //MARK: - Subviews
     private let titleLabel: UILabel = {
         let view = UILabel()
@@ -90,12 +88,16 @@ class SearchCell: UITableViewCell {
     private lazy var pan = UIPanGestureRecognizer(target: self, action: #selector(cellDragged))
     private var likeIsShowing = false
     private var previousTranslation: CGFloat = 0
+    private var gestureDelegate: SearchCellGestureDelegate?
     
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
+    func configure(withDelegate delegate: SearchCellGestureDelegate) {
         selectionStyle = .none
+        backgroundColor = .clear
         setupSubviews()
+
+        gestureDelegate = delegate
+        pan.delegate = self
         backView.addGestureRecognizer(pan)
     }
     
@@ -161,6 +163,13 @@ class SearchCell: UITableViewCell {
     
     //MARK: - Pan gesture handling
     @objc private func cellDragged() {
+        let isScrolling = gestureDelegate?.checkScrollingStatus() ?? false
+        guard !isScrolling else {
+            pan.isEnabled = false
+            pan.isEnabled = true
+            return
+        }
+        pan.isEnabled = true
         switch pan.state {
         case .began:
             handleStartDragging()
@@ -180,7 +189,6 @@ class SearchCell: UITableViewCell {
     
     private func handleDragging() {
         let translationX = pan.translation(in: backView).x
-        print(translationX)
         if translationX >= 0 && !likeIsShowing {
             let newTranslationX = translationX > 70 ? 70 : translationX
             //backView.center.x = newTranslationX + self.center.x
@@ -205,4 +213,21 @@ class SearchCell: UITableViewCell {
             likeIsShowing = false
         }
     }
+}
+
+//MARK: - UIGestureRecognizerDelegate
+extension SearchCell {
+    
+    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer is UIPanGestureRecognizer && otherGestureRecognizer is UIPanGestureRecognizer {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+}
+
+protocol SearchCellGestureDelegate {
+    func checkScrollingStatus() -> Bool
 }

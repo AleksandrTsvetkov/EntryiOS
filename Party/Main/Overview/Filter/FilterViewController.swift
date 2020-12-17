@@ -52,17 +52,17 @@ class FilterViewController: ViewController {
     
     //MARK: - Setup
     private func initialSetup() {
-        let backColor = Colors.overViewCellBack.getValue().withAlphaComponent(0.94)
+        let backColor = Colors.overViewCellBack.getValue().withAlphaComponent(1)
         view.backgroundColor = backColor
         addDismissKeyboardByTap()
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(DistanceCell.self, forCellReuseIdentifier: DistanceCell.reuseId)
-        tableView.register(ShishaCell.self, forCellReuseIdentifier: ShishaCell.reuseId)
-        tableView.register(DJCell.self, forCellReuseIdentifier: DJCell.reuseId)
-        tableView.register(DateCell.self, forCellReuseIdentifier: DateCell.reuseId)
+        tableView.register(DistanceCell.self)
+        tableView.register(ShishaCell.self)
+        tableView.register(DJCell.self)
+        tableView.register(DateCell.self)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -141,19 +141,19 @@ extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: DistanceCell.reuseId, for: indexPath) as? DistanceCell else { return UITableViewCell() }
+            let cell: DistanceCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure()
             return cell
         case 1:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ShishaCell.reuseId, for: indexPath) as? ShishaCell else { return UITableViewCell() }
+            let cell: ShishaCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure(withDelegate: self)
             return cell
         case 2:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: DJCell.reuseId, for: indexPath) as? DJCell else { return UITableViewCell() }
+            let cell: DJCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure()
             return cell
         case 3:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: DateCell.reuseId, for: indexPath) as? DateCell else { return UITableViewCell() }
+            let cell: DateCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
             cell.configure()
             return cell
         default:

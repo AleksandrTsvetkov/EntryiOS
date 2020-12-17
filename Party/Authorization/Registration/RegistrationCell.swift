@@ -8,9 +8,8 @@
 
 import UIKit
 
-class RegistrationCell: UITableViewCell {
+class RegistrationCell: TableViewCell {
     
-    static let reuseId = "RegistrationCell"
     var textFieldView = TextFieldView(text: "", placeholder: "")
     var picker = UIPickerView()
     var fieldType: FieldType = .name

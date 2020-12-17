@@ -8,9 +8,7 @@
 
 import UIKit
 
-class ProfileCell: UITableViewCell {
-    
-    static let reuseId = "ProfileCell"
+class ProfileCell: TableViewCell {
     
     //MARK: - Subviews
     private let textFieldView: TextFieldView = {

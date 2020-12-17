@@ -8,9 +8,7 @@
 
 import UIKit
 
-class DateCell: UITableViewCell {
-    
-    static let reuseId = "DateCell"
+class DateCell: TableViewCell {
     
     //MARK: - Subviews
     private let dateIcon: UIImageView = {
@@ -69,10 +67,8 @@ class DateCell: UITableViewCell {
     }()
     
     //MARK: - Configure
-    func configure() {
-        backgroundColor = .clear
-        selectionStyle = .none
-        
+    override func configure() {
+        super.configure()
         setupSubviews()
     }
     

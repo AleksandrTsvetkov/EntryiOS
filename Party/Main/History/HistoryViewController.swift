@@ -88,7 +88,7 @@ class HistoryViewController: ViewController {
         tableView.isUserInteractionEnabled = true
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(HistoryCell.self, forCellReuseIdentifier: HistoryCell.reuseId)
+        tableView.register(HistoryCell.self)
         tableView.isScrollEnabled = true
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
@@ -204,7 +204,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: HistoryCell.reuseId, for: indexPath) as? HistoryCell else { return UITableViewCell() }
+        let cell: HistoryCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
         let event = Event(title: "Drug", beginning: "2020-12-13 20:00", description: "description", location_id: "", price: "", ending: "", shisha: "", age_bottom_limit: "", age_top_limit: "", count_bottom_limit: "", count_top_limit: "")
         cell.configure(withModel: event, forType: EventType.allCases[indexPath.section])
         return cell
