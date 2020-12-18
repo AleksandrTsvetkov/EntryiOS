@@ -101,6 +101,11 @@ class SearchCell: TableViewCell {
         backView.addGestureRecognizer(pan)
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        backView.transform = .identity
+    }
+    
     //MARK: - Setup
     private func setupSubviews() {
         addSubview(likeView)

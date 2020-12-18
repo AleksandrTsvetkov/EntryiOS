@@ -17,7 +17,7 @@ class TabBarViewController: UITabBarController {
         let historyVC = generateViewController(vcType: HistoryViewController.self, title: "Мои вечеринки", imageName: "history")
         let profileVC = generateViewController(vcType: ProfileViewController.self, title: "Профиль", imageName: "profile")
         setViewControllers([mapVC, historyVC, profileVC], animated: false)
-        selectedViewController = historyVC
+        selectedViewController = mapVC
         tabBar.tintColor = Colors.pink.getValue()
         tabBar.unselectedItemTintColor = Colors.buttonGray.getValue()
         tabBar.barTintColor = Colors.tabBarBlack.getValue()
