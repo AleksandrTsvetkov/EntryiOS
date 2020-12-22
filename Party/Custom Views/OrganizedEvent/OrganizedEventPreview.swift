@@ -92,12 +92,14 @@ class OrganizedEventPreview: UIView {
     
     //MARK: - Setup
     private func initialSetup() {
+        backgroundColor = .clear
         translatesAutoresizingMaskIntoConstraints = false
         isHidden = true
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ReviewCell.self)
         watchFullInfoButton.addTarget(self, action: #selector(watchFullInfoButtonTapped), for: .touchUpInside)
+        hide()
     }
     
     private func setupSubviews() {
@@ -147,6 +149,12 @@ class OrganizedEventPreview: UIView {
             tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         ])
+    }
+    
+    //MARK: - External methods
+    func hide() {
+        let height = UIScreen.main.bounds.height
+        self.transform = CGAffineTransform(translationX: 0, y: height)
     }
     
     //MARK: - Objc methods

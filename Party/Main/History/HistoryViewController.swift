@@ -75,6 +75,9 @@ class HistoryViewController: ViewController {
     private lazy var commentView: CommentView = CommentView(withDelegate: self)
     private lazy var organizedEventPreview: OrganizedEventPreview = OrganizedEventPreview(withDelegate: self)
     
+    //MARK: - Properties
+    private lazy var organizedEventPreviewGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(eventPreviewDragged))
+    
     //MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,6 +96,7 @@ class HistoryViewController: ViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(buttonViewTapped))
         organizeButtonView.addGestureRecognizer(tap)
+        organizedEventPreview.addGestureRecognizer(organizedEventPreviewGestureRecognizer)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -115,7 +119,7 @@ class HistoryViewController: ViewController {
             commentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             commentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            organizedEventPreview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            organizedEventPreview.topAnchor.constraint(equalTo: view.topAnchor),
             organizedEventPreview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -18),
             organizedEventPreview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             organizedEventPreview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -169,17 +173,58 @@ class HistoryViewController: ViewController {
             self.commentView.bottomConstraint.constant = 300
         }
     }
+    
+    @objc private func eventPreviewDragged() {
+        switch organizedEventPreviewGestureRecognizer.state {
+        case .began:
+            break
+        case .changed:
+            handlePanChangedState(gesture: organizedEventPreviewGestureRecognizer)
+        case .ended:
+            handlePanEndedState(gesture: organizedEventPreviewGestureRecognizer)
+        default:
+            break
+        }
+    }
+    
+    //MARK: HANDLE PAN GESTURES
+    private func handlePanChangedState(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        if translation.y > 0 {
+            self.organizedEventPreview.transform = CGAffineTransform(translationX: 0, y: translation.y)
+        }
+    }
+    
+    private func handlePanEndedState(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        if translation.y > 120 {
+            UIView.animate(withDuration: 0.4, animations: {
+                self.organizedEventPreview.hide()
+                self.tabBarController?.tabBar.isHidden = false
+            }, completion: { _ in
+                self.organizedEventPreview.isHidden = true
+            }) // Animate
+        } else {
+            UIView.animate(withDuration: 0.2) {
+                self.organizedEventPreview.transform = .identity
+            }
+        }
+    }
 }
 
 //MARK: - UITableViewDelegate, UITableViewDataSource
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tabBarController?.tabBar.isHidden = true
         if segmentedControl.selectedSegmentIndex == 0 {
+            tabBarController?.tabBar.isHidden = true
             commentView.isHidden = false
         } else {
             organizedEventPreview.isHidden = false
+            UIView.animate(withDuration: 0.4) {
+                self.tabBarController?.tabBar.isHidden = true
+                self.organizedEventPreview.transform = .identity
+            }
         }
     }
     
