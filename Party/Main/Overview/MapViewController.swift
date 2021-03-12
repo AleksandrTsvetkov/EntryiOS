@@ -32,6 +32,8 @@ class MapViewController: ViewController {
     let mapPlaceholderView = UIImageView()
     private lazy var declineView = DeclineView()
     private lazy var searchBarView = SearchBarView(ofType: .withFilter, withDelegate: self)
+    private lazy var grabberView = UIView()
+    private lazy var grabberImageView = UIImageView(image: UIImage(named: "grabber"))
     
     //MARK: - Properties
     var isScrolling = false
@@ -62,6 +64,11 @@ class MapViewController: ViewController {
         view.addSubview(searchBarView)
         view.addSubview(tableView)
         view.addSubview(declineView)
+        view.addSubview(grabberView)
+        grabberView.addSubview(grabberImageView)
+        
+        grabberView.translatesAutoresizingMaskIntoConstraints = false
+        grabberImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             declineView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -84,6 +91,16 @@ class MapViewController: ViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            grabberView.heightAnchor.constraint(equalToConstant: 24),
+            grabberView.bottomAnchor.constraint(equalTo: collectionView.topAnchor),
+            grabberView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            grabberView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            grabberImageView.heightAnchor.constraint(equalToConstant: 4),
+            grabberImageView.widthAnchor.constraint(equalToConstant: 44),
+            grabberImageView.centerYAnchor.constraint(equalTo: grabberView.centerYAnchor),
+            grabberImageView.centerXAnchor.constraint(equalTo: grabberView.centerXAnchor),
         ])
     }
     

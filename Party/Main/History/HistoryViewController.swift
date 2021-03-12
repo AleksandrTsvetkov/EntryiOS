@@ -207,7 +207,7 @@ class HistoryViewController: ViewController {
         } else {
             UIView.animate(withDuration: 0.2) {
                 self.organizedEventPreview.transform = .identity
-            }
+            } // Animate
         }
     }
 }
